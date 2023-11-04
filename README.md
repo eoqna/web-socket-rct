@@ -98,3 +98,7 @@ React가 뜨면서 DOM이 느리다는 의견이 나왔지만 사실 DOM은 충�
  > npm -v
  npm version 출력
 ```
+
+<font size=2>이제 위에서 준비한 npm을 이용해서 React 프로젝트를 만든다.</font><br />
+<font size=2>React 프로젝트를 시작하기 위해선 npm install react 명령어로 React를 설치하면 된다.</font><br />
+<font size=2>그러나 이렇게 설치하면 바펠이나 웹팩 등 다양한 설정을 하나씩 수동으로 해야 되기 때문에 번거롭다.</font><br />
