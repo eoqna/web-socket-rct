@@ -115,5 +115,63 @@ React 프로젝트를 간편하게 시작하기 위해서 무조건 CRA를 사�
 ▪ 참고 : https://vitejs.dev/guide
 ```
 
-<font size=2></font><br />
+### 02-2. React 대표 함수
+<font size=2>이번 input 예제는 직접 구현하지 않는다.</font><br />
+<font size=2>구현된 예제 이미지와 코드를 보면서 React의 기능을 알아보려고 한다.</font><br />
+<font size=2>다음 파트에서 더 머진 React 예제를 만들어 볼 것이다.</font><br />
+<font size=2>다음 그림의 input 박스는 간단하게 텍스트를 입력받는 기능이 있다.</font><br />
+<font size=2>입력받은 내용은 바로 하단에 출력된다.</font><br />
+<font size=2>처음에 출력되는 'Hi'는 input 박스의 초기값이다.</font><br />
+<font size=2>만약 input 박스에 'Hello'를 입력하면 아래처럼 그대로 노출된다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/Input_Box.png)
+
+<font size=2>이제 코드를 살펴보겠다.</font><br />
+
+```
+// 1
+import React, { useState, useEffect, useRef } from "react";
+import ./App.css;
+
+const App = () => {
+    // 2
+    const textRef = useRef("");
+    // 3
+    const [ text, setText ] = useState("");
+    // 4
+    useEffect(() => {
+        setText("Hi");
+        console.log("once");
+    }, []);
+    // 5
+    useEffect(() => {
+        console.log(textRef.current);
+    }, [text]);
+    // 6
+    const onTextStateChangeHandler = (e) => {
+        const msg = e.target.value;
+        setText(msg);
+    };
+    return (
+        // 7
+        <div className="App">
+            <input 
+                ref={textRef}
+                className="text-input"
+                type="text"
+                value={text}
+                onChange={onTextStateChangeHandler}
+                placeholder="Enter yout Message"
+            />
+            <div>Message: {text}</div>
+        </div>
+    );
+
+    export default App;
+}
+```
+
+<font size=2>사실 이번 예제의 input 박스는 리엑트 기능을 설명하기 위한 억지스러운 점이 있다.</font><br />
+<font size=2>하지만 간단할수록 확실히 이해할 수 있다는 장점이 있다.</font><br />
+<font size=2>하나씩 살펴보겠다.</font><br />
 <font size=2></font><br />
