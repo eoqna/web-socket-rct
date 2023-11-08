@@ -1,6 +1,8 @@
 # 리엑트로 배우는 소켓 프로그래밍
+<br />
 
 ## 01. React
+<br />
 
 <font size=2>state of js에서 발표한 프런트엔드 프레임워크의 사용량을 보면 React의 사용량은 지속적으로 증가한 것을 볼 수 있다.</font><br />
 <font size=2>React는 페이스북에서 개발한 JavaScript UI 라이브러리이다.</font><br />
@@ -11,9 +13,12 @@
 <font size=2>Angular, Vue.js와 같은 Framework는 MVC(Model-View-Controller) 모델 혹은 MVVM(Model-View-View Model) 모델을 지향한다.</font><br />
 <font size=2>이런 모델에 따라 데이터와 뷰가 유기적으로 관리되고 있다.</font><br />
 <font size=2>그러나 React는 이런 틀에서 벗어나 오직 사용자에게 보여지는 View만을 생각해서 만들었다.</font><br />
-<font size=2>페이스북에서는 이런 View를 사용자 입장에서 어떻게 하면 자연스럽게 보일까 연구하다가 가상 DOM(Virtual DOM)을 생각하게 되었다.</font><br />
+<font size=2>페이스북에서는 이런 View를 사용자 입장에서 어떻게 하면 자연스럽게 보일까 연구하다가 가상 DOM(Virtual DOM)을 생각하게 되었다.</font>
+<br /><br /><br />
 
 ### 01-1. Virtual DOM
+<br />
+
 <font size=2>DOM(Document Object Model)은 웹 페이지의 구조와 내용을 표현하는 역할을 한다.</font><br />
 <font size=2>HTML, CSS와 같은 정적 파일이 브라우저에 렌더링을 시작하면 HTML 코드를 브라우저가 이해할 수 있는 구조로 변환하여 DOM 트리(DOM tree)를 생성한다.</font><br />
 <font size=2>DOM 트리는 계층 구조로 표현되어 있어 요소들이 부모-자식 관계로 연결된다.</font><br />
@@ -35,9 +40,12 @@
 <font size=2>DOM 구조를 변경하는 과정은 일반적으로 빠르게 진행되며, CPU 자원을 적게 소모한다.</font><br />
 <font size=2>그러나 DOM 트리의 깊이가 깊고 노드의 수가 많을수록 속도가 떨어진다.</font><br />
 <font size=2>여기서 한 가지 생각해볼 문제가 있다.</font><br />
-<font size=2>DOM 변화 속도에 왜 노드 수와 트리의 깊이가 영향을 준다는 것일까?</font><br />
+<font size=2>DOM 변화 속도에 왜 노드 수와 트리의 깊이가 영향을 준다는 것일까?</font>
+<br /><br /><br />
 
 ### 01-2. 비교 알고리즘
+<br />
+
 <font size=2>DOM을 변경하면 변화된 노드를 찾는 데 시간이 걸린다.</font><br />
 <font size=2>앞의 예시처럼 사이드 메뉴의 높이를 담당하는 노드를 찾기 위해서는 Root 노드부터 하나씩 탐색을 시작한다.</font><br />
 <font size=2>이때 비교 알고리즘(Diffing Algorithm)이라는 탐색 방법을 사용한다.</font><br />
@@ -53,8 +61,11 @@ React가 뜨면서 DOM이 느리다는 의견이 나왔지만 사실 DOM은 충�
 단지 인터렉션이 많거나 많은 변화가 있는 웹 페이지에서는 올바른 성능을 발휘하지 못할 뿐이다.
 만약 정적인 페이지라면 오히려 기존 DOM을 이용해서 작업하는 게 좋을 수 있다.
 ```
+<br /><br /><br />
 
 ### 01-2. 가상 DOM의 탄생
+<br />
+
 <font size=2>React 팀은 어떻게 하면 화면을 다시 그리는 리페인트와 리플로우 과정을 개선할 수 있을까 고민하다가 가상 DOM을 생각하게 된다.</font><br />
 
 ![BROWSER_RENDERING](./src/assets/Virtual_DOM.png)
@@ -69,16 +80,22 @@ React가 뜨면서 DOM이 느리다는 의견이 나왔지만 사실 DOM은 충�
 
 <font size=2>가상 DOM을 사용하는 이유는 렌더 트리를 직접 조작하는 것보다 가상 DOM을 수정하여 필요한 변경 사항을 파악하고 반영하는 것이 효율적이기 때문이다.</font><br />
 <font size=2>가상 DOM은 메모리상에 존재하기 때문에 실제 DOM을 조작하는 것보다 빠르게 변경 사항을 파악하고 적용할 수 있다.</font><br />
-<font size=2>이를 통해 웹 애플리케이션의 성능을 높일 수 있다.</font><br />
+<font size=2>이를 통해 웹 애플리케이션의 성능을 높일 수 있다.</font>
+<br /><br /><br />
 
 ## 02. React 대표 기능
+<br />
 
 <font size=2>이제는 React를 어떻게 사용하는지 알아보겠다.</font><br />
 <font size=2>사실 React 사용법만 제대로 설명하려고 해도 책 한 권 분량이 나온다.</font><br />
 <font size=2>이 책에서는 실전에서 바로바로 사용할 수 있는 주요 기능만 설명하려 한다.</font><br />
-<font size=2>이 기능을 이용해서 앞으로 진행될 모든 예제를 만들어볼 것이다.</font><br />
+<font size=2>이 기능을 이용해서 앞으로 진행될 모든 예제를 만들어볼 것이다.</font>
+<br /><br /><br />
+
 
 ### 02-1. React 프로젝트 준비
+<br />
+
 <font size=2>React 프로젝트를 시작하려면 제일 먼저 npm (Node Package Manager)을 설치해야 한다.</font><br />
 <font size=2>npm은 nodejs에서 사용할 수 있는 패키지 (소프트웨어) 관리 툴을 말한다.</font><br />
 <font size=2>과거에는 필요한 라이브러리가 있다면 직접 다운로드해서 프로젝트에 파일을 삽입하거나 혹은 CDN 주소를 import 했지만</font><br />
@@ -114,8 +131,11 @@ React 프로젝트를 간편하게 시작하기 위해서 무조건 CRA를 사�
 하지만 CRA에서 제공되는 부수적인 기능(lint, pwa 등)이 없기 때문에 따로 설치해야 해서 번거롭다
 ▪ 참고 : https://vitejs.dev/guide
 ```
+<br /><br /><br />
 
 ### 02-2. React 대표 함수
+<br />
+
 <font size=2>이번 input 예제는 직접 구현하지 않는다.</font><br />
 <font size=2>구현된 예제 이미지와 코드를 보면서 React의 기능을 알아보려고 한다.</font><br />
 <font size=2>다음 파트에서 더 머진 React 예제를 만들어 볼 것이다.</font><br />
@@ -173,5 +193,17 @@ const App = () => {
 
 <font size=2>사실 이번 예제의 input 박스는 리엑트 기능을 설명하기 위한 억지스러운 점이 있다.</font><br />
 <font size=2>하지만 간단할수록 확실히 이해할 수 있다는 장점이 있다.</font><br />
-<font size=2>하나씩 살펴보겠다.</font><br />
+<font size=2>하나씩 살펴보겠다.</font><br /><br />
+<font size=2>1. 상태</font><br />
+<font size=2>React의 핵심은 바로 상태(status) 관리이다.</font><br />
+<font size=2>React는 상태를 이용해서 모든 변수와 레이어 변화를 다룰 수 있다.</font><br />
+<font size=2>이런 상태를 관리하기 위해선 React에서 제공하는 함수를 추가해야 한다.</font><br />
+<font size=2>대표적인 함수로는 useState, useEffect, useRef가 있으며 이러한 함수를 훅(hook) 함수라고 한다.</font><br />
+<font size=2>React 버전 16.8 이상부터는 함수형 컴포넌트 클래스형 컴포넌트를 대체하는 주요한 방식이 되었다.</font><br />
+<font size=2>이전에는 클래스형 컴포넌트를 사용하여 상태 관리와 생명주기 메소드를 다뤘지만, 함수형 컴포넌트에서는 이러한 기능을 훅 함수를 통해 제공한다.</font><br />
+<font size=2>또한 사용자가 원하는 커스텀 훅(Custom hook)을 제작할 수도 있다.</font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
