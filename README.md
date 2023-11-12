@@ -230,4 +230,28 @@ const App = () => {
 ```
  const [ text, setText ] = useState("");
 ```
+<font size=2>위에서 정의된 text 변수는 input 태그의 value에 등록하여 setText 함수 내용이 업데이트될 때마다 동일하게 출력합니다.</font><br />
+```
+ <input
+  value={text}
+  onChange={onTextStateChangeHandler}
+  ...
+ />
+```
+<font size=2>리액트에서는 이벤트를 등록하는 방법은 매우 간단하다.</font><br />
+<font size=2>input에 onChange 이벤트를 등록하기 위해 미리 정의된 onTextStateChangeHandler()를 작성했다.</font><br />
+<font size=2>주석 6번의 onTextStateChangeHandler() 함수 내부를 보면 이벤트 파라미터인 e를 이용해서 setText() 내용을 업데이트하는 걸 볼 수 있다.</font><br />
+```
+ const onTextStateChangeHandler = (e) => {
+    const msg = e.target.value;
+    setText(msg);
+ };
+```
+<br />
+<font size=2>4. useEffect()</font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
