@@ -249,7 +249,7 @@ const App = () => {
 ```
 <br />
 <font size=2>4. useEffect()</font><br />
-<font size=2></font><br />
+<font size=2>useEffect()</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
