@@ -253,6 +253,7 @@ const App = () => {
 <font size=2>useEffect는 컴포넌트가 마운트 / 언마운트되었을 때나 특정 상태가 변경되었을 때 원하는 동작을 수행할 수 있게 도와준다.</font><br />
 <font size=2>이를 통해 API 호출, 이벤트 등록, 상태 감지 등의 작업을 처리할 수 있다.</font><br />
 <font size=2>그래서 내부적으로 렌더링 시점 이후에 동작되는 로직들을 주로 추가한다.</font><br />
+
 ```
 // 4
 useEffect(() => {
@@ -265,6 +266,7 @@ useEffect(() => {
     console.log(textRef.current);
 }, [text]);
 ```
+
 <br />
 <font size=2>위에는 두 개의 useEffect()가 있다.</font><br />
 <font size=2>4번의 useEffect()의 경우 두 번째 인자로 빈 배열이 들어있다.</font><br />
