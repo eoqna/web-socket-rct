@@ -1,7 +1,7 @@
 # 리엑트로 배우는 소켓 프로그래밍
 <br />
 
-## 01. React
+## 01. React (4p)
 <br />
 
 <font size=2>state of js에서 발표한 프런트엔드 프레임워크의 사용량을 보면 React의 사용량은 지속적으로 증가한 것을 볼 수 있다.</font><br />
@@ -16,7 +16,7 @@
 <font size=2>페이스북에서는 이런 View를 사용자 입장에서 어떻게 하면 자연스럽게 보일까 연구하다가 가상 DOM(Virtual DOM)을 생각하게 되었다.</font>
 <br /><br /><br />
 
-### 01-1. Virtual DOM
+### 01-1. Virtual DOM (5p)
 <br />
 
 <font size=2>DOM(Document Object Model)은 웹 페이지의 구조와 내용을 표현하는 역할을 한다.</font><br />
@@ -43,7 +43,7 @@
 <font size=2>DOM 변화 속도에 왜 노드 수와 트리의 깊이가 영향을 준다는 것일까?</font>
 <br /><br /><br />
 
-### 01-2. 비교 알고리즘
+### 01-2. 비교 알고리즘 (7p)
 <br />
 
 <font size=2>DOM을 변경하면 변화된 노드를 찾는 데 시간이 걸린다.</font><br />
@@ -63,7 +63,7 @@ React가 뜨면서 DOM이 느리다는 의견이 나왔지만 사실 DOM은 충�
 ```
 <br /><br /><br />
 
-### 01-2. 가상 DOM의 탄생
+### 01-2. 가상 DOM의 탄생 (7p)
 <br />
 
 <font size=2>React 팀은 어떻게 하면 화면을 다시 그리는 리페인트와 리플로우 과정을 개선할 수 있을까 고민하다가 가상 DOM을 생각하게 된다.</font><br />
@@ -83,7 +83,7 @@ React가 뜨면서 DOM이 느리다는 의견이 나왔지만 사실 DOM은 충�
 <font size=2>이를 통해 웹 애플리케이션의 성능을 높일 수 있다.</font>
 <br /><br /><br />
 
-## 02. React 대표 기능
+## 02. React 대표 기능 (8p)
 <br />
 
 <font size=2>이제는 React를 어떻게 사용하는지 알아보겠다.</font><br />
@@ -93,7 +93,7 @@ React가 뜨면서 DOM이 느리다는 의견이 나왔지만 사실 DOM은 충�
 <br /><br /><br />
 
 
-### 02-1. React 프로젝트 준비
+### 02-1. React 프로젝트 준비 (8p)
 <br />
 
 <font size=2>React 프로젝트를 시작하려면 제일 먼저 npm (Node Package Manager)을 설치해야 한다.</font><br />
@@ -133,7 +133,7 @@ React 프로젝트를 간편하게 시작하기 위해서 무조건 CRA를 사�
 ```
 <br /><br /><br />
 
-### 02-2. React 대표 함수
+### 02-2. React 대표 함수 (10p)
 <br />
 
 <font size=2>이번 input 예제는 직접 구현하지 않는다.</font><br />
@@ -247,7 +247,7 @@ const App = () => {
     setText(msg);
  };
 ```
-<br />
+<br /><br />
 <font size=2>4. useEffect()</font><br />
 <font size=2>useEffect()는 리액트에서 컴포넌트들이 최초로 렌더링된 이후에 호출되는 함수이다.</font><br />
 <font size=2>useEffect는 컴포넌트가 마운트 / 언마운트되었을 때나 특정 상태가 변경되었을 때 원하는 동작을 수행할 수 있게 도와준다.</font><br />
@@ -272,6 +272,60 @@ useEffect(() => {
 <font size=2>4번의 useEffect()의 경우 두 번째 인자로 빈 배열이 들어있다.</font><br />
 <font size=2>그러나 5번의 useEffect()에는 text의 상태값이 배열 형태로 들어있다.</font><br />
 <font size=2>이 차이는 한 번만 실행시킬 것이냐 아니면 상태가 변할 때마다 실행할 것이냐이다.</font><br />
-<font size=2>만약 두 번째 인자로 아무 값도 넣지 않는다면 무한 반복할 수 있으니 주의해야 합니다.</font><br />
+<font size=2>만약 두 번째 인자로 아무 값도 넣지 않는다면 무한 반복할 수 있으니 주의해야 한다.</font><br /><br />
+
+<font size=2>5. 스타일</font><br />
+<font size=2>리액트에서는 기본적으로 스타일을 할당할 때 className이라는 속성으로 관리한다.</font><br />
+<font size=2>예제를 만들면서 다양한 형태의 스타일 방법을 사용할 예정이다.</font><br /><br />
+
+<font size=2>리액트는 위에서 설명한 기능 말고도 다양하고 놀라운 기능들이 있다.</font><br />
+<font size=2>그러나 우리가 만들 예제들은 위의 재료만으로도 충분히 구현할 수 있다.</font><br />
+<font size=2>가장 핵심적인 기능만을 이용해 빠르게 학습하고 이해의 폭을 조금씩 넓혀가는 것도 기술을 익히는 하나의 방법이다.</font><br />
+<font size=2>만약 리액트의 추가 기능이 더 필요하다면 리액트의 대표 문서를 참고해라.</font><br />
+
+```
+ * https://react.dev/learn
+```
+<br /><br />
+
+### 03. to-do 리스트 (14p)
+<font size=2>앞에서 리액트의 핵심 개념을 살펴봤다.</font><br />
+<font size=2>이번에는 직접 구현해보면서 리액트의 진가를 확인해보겠다.</font><br />
+<font size=2>우리가 작성할 예제는 to-do 리스트이다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/To_Do_List.png)
+
+<font size=2>화면 왼쪽 하단에는 + 버튼이 있다.</font><br />
+<font size=2>+ 버튼을 클릭하면 왼쪽에 오늘 날짜가 생성된다.</font><br />
+<font size=2>오른쪽으로는 to-do 리스트를 작성할 수 있는 영역이 활성화 된다.</font><br /><br />
+
+<font size=2>자신이 해야 할 일을 작성하고 Add 버튼을 클릭하면 상단으로 체크박스 리스트가 생성된다.</font><br />
+<font size=2>체크박스에 체크하면 자동으로 글에 줄이 그어진다.</font><br />
+<font size=2>또한 날짜를 클릭하면 해당 날짜에 존재하는 리스트가 나타난다.</font><br />
+<font size=2>여기서는 테스트를 위해 날짜에서 시, 분, 초까지 나오도록 했다.</font><br /><br />
+
+### 03-01. 프로젝트 초기 설정 (15p)
+<font size=2>먼저 빈 폴더를 생성한다. CRA를 이용해서 프로젝트를 만든다.</font><br />
+
+```
+ > mkdir react-ex
+ > cd react-ex
+
+ > npx create-react-app react-app
+ Need to install the following packages:
+  create-react-app
+ Ok to proceed? (y) y
+
+ > cd react-app
+ > npm run start 
+```
+
+<font size=2>create-react-app 다음에 오는 부분이 여러분들이 지정한 프로젝트명이다.</font><br />
+
+```
+ npx create-react-app [프로젝트명]
+```
+
+<font size=2>코트 편집기에서 react-ex/react-app 폴더를 연다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
