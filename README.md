@@ -326,6 +326,97 @@ useEffect(() => {
  npx create-react-app [프로젝트명]
 ```
 
-<font size=2>코트 편집기에서 react-ex/react-app 폴더를 연다.</font><br />
+<font size=2>npm run start 또는 yarn start 명령어를 치고 서버가 실행되면 브라우저를 열어준다.</font><br />
+<font size=2>주소는 http://localhost:3000이고, 다음과 같은 화면이 나오면 성공이다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/React_Start.png)
+
+<font size=2>이제는 CRA에서 기본으로 설정된 파일 중에 사용하지 않을 파일들을 삭제하겠다.</font><br />
+
+```
+ App.test.js -
+ logo.svg -
+ reportWebVitals.js -
+ setupTests.js -
+ index.css -
+ App.css -
+```
+
+<font size=2>위 파일들을 삭제하게 되면 "Module not found"라는 오류 문구가 나타난다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/Model_Not_Found.png)
+
+<font size=2>이유는 삭제한 파일을 App.jsx와 index.jsx 파일에서 사용하고 있기 때문이다.</font><br />
+<font size=2>바로 App.jsx와 index.jsx를 수정해준다.</font><br /><br />
+
+<font size=2>App.js의 방금 지웠던 import 항목들과 로고를 사용하는 부분을 삭제한다.</font><br />
+
+```
+const App = () => {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<font size=2>마지막으로 index.jsx의 React.StrictMode 태그를 제거하고 저장한다.</font><br />
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
+root.render(
+  <App />
+);
+
+```
+
+```
+ReactStrictMode는 무엇인가?
+
+리엑트에서는 자바스크립트의 strict mode와 비슷한 문법을 지원한다.
+이름에서 유추할 수 있듯이 특정한 문법을 엄격하게 규정해 우리가 만든 서비스가 운영 환경에서 안전하게 동작하도록 하는 역할을 한다.
+React.StrictMode의 대표적인 기능으로는 컴포넌트의 생명주기를 확인하고 문제있는 부분을 개발자에게 알려주는 역할이다.
+
+아직 리액트 사용에 미숙한 분들을 이유도 없이 useEffect()가 두 번 실행된다고 의문을 제기한다.
+이렇게 두 번 실행되는 원인은 React.StrictMode에서 개발자에게 해당 컴포넌트는 안전하지 않다는 것을 알리는 동작이다.
+이걸 double-invoking이라고 부르기도 한다.
+
+React.StrictMode의 이런 경고 행위는 개발단계에서만 적용되고 운영에 배포가 되면 자동으로 사라진다.
+그러나 예상치 못한 동작으로 인해서 개발단계에서 개발자들에게 혼란을 야기할 수 있다.
+이 책에서는 복잡한 부분을 제거하고 핵심에만 집중할 수 있도록 React.StrictMode를 삭제했다.
+```
+
+### 03-02. Input 컴포넌트 (20p)
+<font size=2>먼저 필요한 컴포넌트부터 만든다.</font><br />
+<font size=2>우리가 만들 컴포넌트는 글을 작성하는 Input 컴포넌트이다.</font><br />
+<font size=2>컴포넌트를 만들기 위해 src 폴더 아래 components라는 폴더를 생성하고 그 아래에 input 폴더를 생성한다.</font><br /><br />
+<font size=2>input 폴더 아래로 input.js와 input.module.css 파일을 만든다</font><br />
+<font size=2>폴더의 구조는 아래와 같다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/Input_Folder.png)
+
+<font size=2>이제 input.js부터 코드를 작성한다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
