@@ -418,5 +418,164 @@ React.StrictMode의 이런 경고 행위는 개발단계에서만 적용되고 �
 ![BROWSER_RENDERING](./src/assets/Input_Folder.png)
 
 <font size=2>이제 input.js부터 코드를 작성한다.</font><br />
+
+```
+ // 1
+ import React from "react";
+ import styles from "./Input.module.css";
+
+ // 2
+ const Input = ({ onChange, onClick, value }) => {
+  return (
+    <form className={styles.inputBox} onSubmit={onClick}>
+      <input
+        className={styles.input}
+        type="text"
+        placeholder="What is your goal?"
+        onChange={onChange}
+        value={value}
+      />
+      <button type="submit" className={styles.button}>
+        Send
+      </button>
+    </form>
+  );
+ }
+
+ export default Input;
+```
+
+<font size=2>1. react를 import한다.</font><br />
+<font size=2>훅 함수가 없다면 해당 import 문은 삭제해도 무방하다.</font><br />
+<font size=2>또한 module.css로 작성된 스타일 객체를 불러온다.</font><br />
+
+```
+module.css란 뭔가?
+
+.css로 제작할 경우 전역 범위에 해당하는 스타일이 적용되기 때문에 스타일 이름을 지정할 때 신중하게 작성해야 한다.
+이런 단점을 쉽게 해결하고자 CRA에서는 module이라는 개념을 추가하여 전역 범위에 해당하는 스타일이 아닌 스타일을 import한 파일에만 스타일이 적용되도록 했다.
+
+개발자 도구에서 확인해보면 다음과 같이 클래스명에 임의 해시(hash)값이 할당된 것을 알 수 있다.
+이런 방법으로 전역 범위에 적용될 수 있는 스타일을 방지한다.
+
+ex.
+<div class="homeContainer_img_wrap__akjBn">
+...
+```
+
+<font size=2>2. Input 컴포넌트의 props로 onChange 함수와 value와 Add 버튼을 클릭할 때 동작하는 onClick 함수를 받는다.</font><br />
+<font size=2>다음으로 Input.module.css는 아래와 같이 작성한다.</font><br />
+
+```
+.inputBox {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 10px;
+}
+.input {
+  flex: 1 1 auto;
+  border: 0;
+  outline: none;
+  padding: 10px;
+  background-color: #cecece;
+  border-radius: 5px;
+}
+.button {
+  cursor: pointer;
+}
+```
+
+### 03-02. Input 컴포넌트 (22p)
+<font size=2>Goal 컴포넌트를 위해 폴더를 생성한다.</font><br />
+<font size=2>components 폴더 아래 goal 폴더를 만들어준다.</font><br />
+<font size=2>goal 폴더 아래 우리가 필요한 Goal.js와 Goal.module.css를 추가한다.</font><br /><br />
+
+<font size=2>다음으로 Goal.js부터 만들어보겠다.</font><br />
+
+```
+ // 1
+ import React from "react";
+ import styles from "./Goal.module.css";
+
+ // 2
+ const Goal = ({ id, status, msg, onCheckChange }) => {
+  return (
+    <div className={styles.goalWrap}>
+      <label
+        className={status ? styles.textDisabled : styles.text}
+        htmlFor={id}
+      >
+        {
+          //2
+          status && <div className={styles.clean} />
+        }
+        <input
+          type="checkbox"
+          id={id}
+          name={id}
+          data-msg={msg}
+          onChange={onCheckChange}
+          checked={status}
+        />
+      </label>
+    </div>
+  );
+ };
+
+ export default Goal;
+```
+
+<font size=2>Goal.js 또한 위에서 만든 Input.js와 비슷하다.</font><br />
+<font size=2>1. props로 라벨을 구분할 수 있는 id 값과 to-do 메시지, 체크 상태인지를 구분하는 status 값을 받는다.</font><br />
+<font size=2>또한 check 이벤트를 등록할 수 있는 함수를 추가한다.</font><br />
+<font size=2>2. status 값이 true라면 to-do 메세지에 줄을 긋는 역할을 한다.</font><br /><br />
+
+<font size=2>다음은 Goal.module.css이다.</font><br />
+
+```
+.goalWrap {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  gap: 5px;
+}
+.text {
+  color: #edd200;
+  cursor: pointer;
+  position: relative;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+}
+.textDisabled {
+  color: rgba(189, 189, 189, 0.5);
+  cursor: pointer;
+  position: relative;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+}
+.clean {
+  content: "";
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 8px;
+  width: lac(100% - 20px);
+  height: 2px;
+  background-color: #edd200;
+}
+```
+
+<font size=2>마지막으로 위에서 작성한 컴포넌트를 쉽게 불러올 수 있도록 components 폴더 아래에 index.js를 작성한다.</font><br />
+
+```
+export { default as Input } from "./input/Input";
+export { default as Goal } from "./goal/Goal";
+```
+
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
