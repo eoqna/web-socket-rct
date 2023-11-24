@@ -575,7 +575,83 @@ export { default as Input } from "./input/Input";
 export { default as Goal } from "./goal/Goal";
 ```
 
-<font size=2></font><br />
+### 03-03. MainContainer (25p)
+
+```
+필요한 라이브러리
+ • dayjs : 날짜 관련 객체를 관리하고 생성하는 라이브러리이다.
+ • react-icons : 간단하게 아이콘 이미지를 사용할 수 있는 라이브러리이다.
+```
+
+<font size=2>먼저 npm이나 yarn을 이용해서 필요한 라이브러리를 추가한다.</font><br />
+
+```
+> npm install dayjs
+> npm install react-icons
+```
+
+<font size=2>지금부터 작성할 MainContainer는 컴포넌트의 부모 역할을 하며 다양한 상태를 종합적으로 관리하는 역할을 한다.</font><br /><br />
+
+<font size=2>첫 번째로 폴더를 생성한다.</font><br />
+<font size=2>src 폴더 아래에 containers 폴더를 만들고 그 아래 mainContainer 폴더를 추가한다.</font><br />
+<font size=2>마지막으로 MainContainer.js와 MainContainer.module.css 파일까지 만들면 준비가 완료된다.</font><br /><br />
+
+<font size=2>본격적으로 MainContainer.js를 작성해보겠다.</font><br />
+
+```
+// 1
+import React, { useState } from "react";
+import styles from "./MainContainer.module.css";
+import dayjs from "dayjs";
+import { Input, Goal } from "../../components";
+import { MdPlaylistAdd } from "react-icons/md";
+
+const MainContainer = () => {
+  // 2
+  const [ memoData, setMemoData ] = useState(new Map());
+  const [ currentDate, setCurrentDate ] = useState("");
+  const [ goalMsg, setGoalMsg ] = useState("");
+
+  // 3
+  const onAddDateHandler = () => {
+    const tempCurrentDate = dayjs().format("YYYY.MM.DD HH:mm:ss");
+    if ( memoData.has(tempCurrentData) ) return;
+
+    setCurrentDate(tempCurrentDate);
+    setMemoData((prev) => new Map(prev).set(tempCurrentDate, []));
+  };
+
+  // 4
+  const onDateClick = (e) => {
+    const { id } = e.target.dataset;
+    setCurrentDate(id);
+  };
+
+  // 5
+  const onMsgClickHandler = (e) => {
+    e.preventDefault();
+    const newGoalList = memoData.get(currentDate);
+    setMemoData((prev) => 
+      new Map(prev).set(currentDate, [
+        ...newGoalList,
+        { msg: goalMsg, status: false },
+      ])
+    );
+    setGoalMsg("");
+  };
+  
+  // 6
+  const onChangeMsgHandler = (e) => {
+    setGoalMsg(e.target.value);
+  };
+
+  // 7
+  const onCheckChange = (e) => {
+    const checked = e.target.checked;
+  }
+;}
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
