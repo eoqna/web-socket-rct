@@ -648,8 +648,75 @@ const MainContainer = () => {
   // 7
   const onCheckChange = (e) => {
     const checked = e.target.checked;
-  }
-;}
+    const msg = e.target.dataset.msg;
+    const currentGoalList = memoData.get(currentDate);
+    const newGoal = currentGoalList.map((v) => {
+      let temp = { ...v };
+      if ( v.msg === msg ) {
+        temp = { msg: v.msg, status: checked };
+      }
+      return temp;
+    });
+    setMemoData((prev) => new Map(prev).set(currentDate, [...newGoal]));
+  };
+
+  return (
+    <div className={styles.memnoContainer}>
+      <div className={styles.memoWrap}>
+        <nav className={styles.sidebar}>
+          <ul className={styles.dateList}>
+            {
+              // 8
+              Array.from(memoData.keys()).map((v) => {
+                <li
+                  className={styles.li}
+                  key={v}
+                  data-id={v}
+                  onClick={onDateClick}
+                >
+                  {v}
+                </li>
+              })
+            }
+          </ul>
+          <div className={styles.addWrap}>
+            <MdPlaylistAdd
+              size="30"
+              color="#edd200"
+              style={{ cursor: "pointer" }}
+              onClick={onAddDateHandler}
+            />
+          </div>
+        </nav>
+        <section className={styles.content}>
+          {memoData.size > 0 && (
+            <>
+              <ul className={styles.goals}>
+                {memoData.get(currentDate).map((v, i) => {
+                  <li key={`goal_${i}`}>
+                    <Goal
+                      id={`goal_${i}`}
+                      msg={v.msg}
+                      status={v.status}
+                      onCheckChange={onCheckChange}
+                    />
+                  </li>
+                })}
+              </ul>
+              <Input
+                value={goalMsg}
+                onClick={onMsgClickHandler}
+                onChange={onChangeMsgHandler}
+              />
+            </>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default MainContainer;
 ```
 
 <font size=2></font><br />
