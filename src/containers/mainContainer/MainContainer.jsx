@@ -1,13 +1,8 @@
-import React, { useState, MouseEvent, ChangeEvent, ChangeEventHandler } from "react";
+import React, { useState } from "react";
 import styles from "./MainContainer.module.css";
 import dayjs from "dayjs";
 import { Input, Goal } from "../../components";
 import { MdPlaylistAdd } from "react-icons/md";
-
-interface GoalProps {
-  msg: string;
-  status: boolean;
-}
 
 const MainContainer = () => {
   // 2
@@ -25,13 +20,13 @@ const MainContainer = () => {
   };
 
   // 4
-  const onDateClick = (e: MouseEvent<HTMLElement>) => {
+  const onDateClick = (e) => {
     const { id } = e.target.dataset;
     setCurrentDate(id);
   };
 
   // 5
-  const onMsgClickHandler = (e: MouseEvent<HTMLElement>) => {
+  const onMsgClickHandler = (e) => {
     e.preventDefault();
     const newGoalList = memoData.get(currentDate);
     setMemoData((prev) => 
@@ -44,16 +39,16 @@ const MainContainer = () => {
   };
   
   // 6
-  const onChangeMsgHandler = (e: ChangeEvent<HTMLElement>) => {
+  const onChangeMsgHandler = (e) => {
     setGoalMsg(e.target.value);
   };
 
   // 7
-  const onCheckChange = (e: ChangeEventHandler<HTMLElement>) => {
+  const onCheckChange = (e) => {
     const checked = e.target.checked;
     const msg = e.target.dataset.msg;
     const currentGoalList = memoData.get(currentDate);
-    const newGoal = currentGoalList.map((v: GoalProps) => {
+    const newGoal = currentGoalList.map((v) => {
       let temp = { ...v };
       if ( v.msg === msg ) {
         temp = { msg: v.msg, status: checked };
@@ -69,7 +64,8 @@ const MainContainer = () => {
         <nav className={styles.sidebar}>
           <ul className={styles.dateList}>
             {
-              Array.from(memoData.keys()).map((v: GoalProps) => {
+              // 8
+              Array.from(memoData.keys()).map((v) => (
                 <li
                   className={styles.li}
                   key={v}
@@ -78,7 +74,7 @@ const MainContainer = () => {
                 >
                   {v}
                 </li>
-              })
+              ))
             }
           </ul>
           <div className={styles.addWrap}>
@@ -94,7 +90,7 @@ const MainContainer = () => {
           {memoData.size > 0 && (
             <>
               <ul className={styles.goals}>
-                {memoData.get(currentDate).map((v: GoalProps, i: number) => {
+                {memoData.get(currentDate).map((v, i) => (
                   <li key={`goal_${i}`}>
                     <Goal
                       id={`goal_${i}`}
@@ -103,7 +99,7 @@ const MainContainer = () => {
                       onCheckChange={onCheckChange}
                     />
                   </li>
-                })}
+                ))}
               </ul>
               <Input
                 value={goalMsg}

@@ -1,13 +1,7 @@
-import React, { ChangeEventHandler, FormEventHandler, MouseEvent } from "react";
+import React from "react";
 import styles from "./Input.module.css";
 
-type InputProps = {
-  onChange: ChangeEventHandler<HTMLInputElement>,
-  onClick: FormEventHandler<HTMLFormElement> | MouseEvent<HTMLElement>,
-  value: string,
-};
-
-const Input = (props: InputProps) => {
+const Input = (props) => {
   const { onChange, onClick, value } = props;
 
   return (

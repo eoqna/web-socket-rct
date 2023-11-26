@@ -494,12 +494,12 @@ ex.
 <font size=2>다음으로 Goal.js부터 만들어보겠다.</font><br />
 
 ```
- // 1
- import React from "react";
- import styles from "./Goal.module.css";
+// 1
+import React from "react";
+import styles from "./Goal.module.css";
 
- // 2
- const Goal = ({ id, status, msg, onCheckChange }) => {
+const Goal = ({ id, status, msg, onCheckChange }) => {
+
   return (
     <div className={styles.goalWrap}>
       <label
@@ -507,7 +507,7 @@ ex.
         htmlFor={id}
       >
         {
-          //2
+          // 2
           status && <div className={styles.clean} />
         }
         <input
@@ -518,12 +518,13 @@ ex.
           onChange={onCheckChange}
           checked={status}
         />
+        {msg}
       </label>
     </div>
   );
- };
+};
 
- export default Goal;
+export default Goal;
 ```
 
 <font size=2>Goal.js 또한 위에서 만든 Input.js와 비슷하다.</font><br />
@@ -615,7 +616,7 @@ const MainContainer = () => {
   // 3
   const onAddDateHandler = () => {
     const tempCurrentDate = dayjs().format("YYYY.MM.DD HH:mm:ss");
-    if ( memoData.has(tempCurrentData) ) return;
+    if ( memoData.has(tempCurrentDate) ) return;
 
     setCurrentDate(tempCurrentDate);
     setMemoData((prev) => new Map(prev).set(tempCurrentDate, []));
@@ -667,7 +668,7 @@ const MainContainer = () => {
           <ul className={styles.dateList}>
             {
               // 8
-              Array.from(memoData.keys()).map((v) => {
+              Array.from(memoData.keys()).map((v) => (
                 <li
                   className={styles.li}
                   key={v}
@@ -676,7 +677,7 @@ const MainContainer = () => {
                 >
                   {v}
                 </li>
-              })
+              ))
             }
           </ul>
           <div className={styles.addWrap}>
@@ -692,7 +693,7 @@ const MainContainer = () => {
           {memoData.size > 0 && (
             <>
               <ul className={styles.goals}>
-                {memoData.get(currentDate).map((v, i) => {
+                {memoData.get(currentDate).map((v, i) => (
                   <li key={`goal_${i}`}>
                     <Goal
                       id={`goal_${i}`}
@@ -701,7 +702,7 @@ const MainContainer = () => {
                       onCheckChange={onCheckChange}
                     />
                   </li>
-                })}
+                ))}
               </ul>
               <Input
                 value={goalMsg}
@@ -719,6 +720,209 @@ const MainContainer = () => {
 export default MainContainer;
 ```
 
+<font size=2>1. 앞에서 만든 컴포넌트와 필요한 라이브러리를 불러온다.</font><br />
+<font size=2>2. 날짜에 맞는 to-do 리스트와 현재 클릭한 날짜, 목표를 작성하는 input value 변수를 작성한다.</font><br />
+
+```
+ const [ memoData, setMemoData ] = useState(new Map());
+
+ 각 날짜에 맞는 to-do 리스트를 관리하기 위해서 Map 객체를 이용했다.
+ Map 객체는 키-값 형태로 키로는 날짜를 할당하고 값으로는 to-do 리스트를 할당한다.
+ 앞으로 Map 객체를 이용해서 다양한 데이터를 저장할 예정이다.
+```
+
+<font size=2>3. onAddDateHandler()는 화면에 '+' 버튼을 누르면 호출된다.</font><br />
+
+```
+const tempCurrentDate = dayjs().format("YYYY.MM.DD HH:mm:ss");
+if ( memoData.has(tempCurrentDate) ) return;
+setCurrentDate(tempCurrentDate);
+setMemoData((prev) => new Map(prev).set(tempCurrentDate, []));
+
+tempCurrentDate는 dayjs를 이용해서 현재 날짜로 설정했다.
+이 데이터를 이용해서 Map 객체를 할당한다.
+초기 데이터 값으로는 빈 배열이 들어 있다.
+
+setMemoData()를 보면 (prev)라는 파라미터 값을 확인할 수 있다.
+리엑트의 useState 내부에 함수를 정의하면 바로 전 상태값을 사용할 수 있는 prev와 같은 파라미터를 제공한다.
+```
+
+<font size=2>4. onDateClick()은 왼쪽에 있는 날짜를 클릭하면 호출된다.</font><br />
+<font size=2>5. onMsgClickHandler()는 목표를 작성한 후 Add 버튼을 클릭하면 실행된다.</font><br />
+
+```
+const newGoalList = memoData.get(currentDate);
+setMemoData((prev) => 
+  new Map(prev).set(currentDate, [
+    ...newGoalList,
+    { msg: goalMsg, status: false },
+  ])
+);
+
+먼저 memoData에서 현재 날짜에 해당하는 to-do 리스트 데이터를 불러온다.
+불러온 to-do 데이터와 새로 작성한 to-do 목록을 배열에 추가한 후에 setMemoData()를 업데이트한다.
+
+위 로직에서 status: false라는 값이 보인다.
+이 status는 체크박스에서 체크했을 때 true로 변환되며 글에 밑줄을 긋는 역할을 한다.
+```
+
+<font size=2>6. onChangeMsgHandler()는 input 박스의 onChange 이벤트에 등록되고 to-do 목록을 작성할 때 호출된다.</font><br />
+<font size=2>7. onCheckChange()는 체크박스를 클릭했을 때 실행된다.</font><br />
+
+```
+const checked = e.target.checked;
+const msg = e.target.dataset.msg;
+const currentGoalList = memoData.get(currentDate);
+const newGoal = currentGoalList.map((v) => {
+  let temp = { ...v };
+  if ( v.msg === msg ) {
+    temp = { msg: v.msg, status: checked };
+  }
+  return temp;
+});
+setMemoData((prev) => new Map(prev).set(currentDate, [...newGoal]));
+
+파라미터로 전달받은 이벤트 객체(e)에서 체크 유무와 메시지 내용을 확인할 수 있다.
+전달받은 to-do 항목과 가지고 있는 to-do 리스트의 값을 순회하며 비교한다.
+동일한 값이 있다면 status를 알맞게 변환한다.
+```
+
+<font size=2>8. Map 객체를 배열로 변환하는 과정이다.</font><br />
+
+```
+Array.from(memoData.keys()).map((v) => {
+  <li
+    className={styles.li}
+    key={v}
+    data-id={v}
+    onClick={onDateClick}
+  >
+    {v}
+  </li>
+})
+
+Array.from()을 이용해서 Map의 key() 메소드를 이용해서 배열로 반환한다.
+```
+
+<font size=2>이제 App.js에서 기존 내용을 모두 삭제하고 다음과 같이 업데이트한다.</font><br />
+
+```
+import MainContainer from "./containers/mainContainer/MainContainer";
+
+const App = () => {
+  return <MainContainer />;
+}
+
+export default App;
+```
+
+<font size=2>MainContainer.module.css는 다음과 같이 작성한다.</font><br />
+
+```
+.memoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.memoWrap {
+  width: 700px;
+  height: 500px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+.sidebar {
+  background-color: #363636;
+  height: inherit;
+  width: 200px;
+}
+.dateList {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  height: 425px;
+  overflow: auto;
+}
+.li {
+  cursor: pointer;
+  padding: 10px;
+  position: relative;
+  color: #fff;
+  font-weight: bold;
+}
+.li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0.5px;
+  width: 180px;
+  background-color: #cecece;
+}
+.li:first-of-type::after {
+  height: 0;
+}
+.content {
+  width: 500px;
+  height: inherit;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.addWrap {
+  text-align: right;
+  padding: 10px;
+}
+.goals {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+```
+
+<font size=2>우리가 구현한 예제가 잘 실행되는지 확인해보자.</font><br />
+<font size=2>먼저 프로젝트 폴더 루프에서 터미널을 실행해준다.</font><br />
+<font size=2>그리고 다음 명령어를 실행한다.</font><br />
+
+```
+> npm run start
+```
+
+<font size=2>이제 '+' 버튼을 클릭해서 자신이 원하는 to-do 항목을 작성하면 된다.</font><br />
+<font size=2>'To wash my hands'라고 작성하겠다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/Add_To_Do_List.png)
+
+<font size=2>잘 등록되었다.</font><br />
+<font size=2>이번에는 다양한 리스트를 작성하고 새로운 날짜도 등록해보겠다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/Add_A_Lot_To_Do_List.png)
+
+<font size=2>모든 기능이 정상적으로 동작하는 걸 확인할 수 있다.</font><br /><br />
+
+<font size=2>리액트의 기본적인 설명은 끝났다.</font><br />
+<font size=2>이번에 리액트의 핵심 원리와 상태 관리를 학습했다.</font><br />
+<font size=2>또한 함수형 컴포넌트 제작 방식을 이용해서 훅 함수인 useState, useEffect를 살펴봤다.</font><br />
+<font size=2>마지막으로 Map 객체를 이용해서 어떻게 데이터를 다루는지도 예제를 통해서 확인했다.</font><br />
+<font size=2>다음에는 리액트와 카운터파트를 이루는 서버 사이드를 알아보겠다.</font><br />
+
+## 04. nodejs (36p)
+<font size=2>자바스크립트는 지금까지 웹을 지탱하는 중요한 요소로 동작하고 있다.</font><br />
+<font size=2>1990년대 자바스크립트가 등장하면서 웹 브라우저 세계는 엄청난 진화를 시작했다.</font><br />
+<font size=2>기존의 웹은 HTML과 CSS로 정적인 모습만 보여줬지만, 자바스크립트를 이용해 사용자와 웹이 동적으로 상호작용을 할 수 있게 되었다.</font><br />
+<font size=2>또한 사용자 친화적인 다양한 라이브러리와 프레임워크가 대거 등장하면서 웹 플랫폼 시장을 빠른 속도로 성장시켰다.</font><br /><br />
+
+<font size=2>현재는 자바스크립트가 브라우저 환경을 넘어서 서버와 앱과 사물 인터넷의 영역까지 제작할 수 있는 스크립트 언어가 되었다.</font><br />
+
+### 04-01. nodejs의 탄생 (36p)
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />

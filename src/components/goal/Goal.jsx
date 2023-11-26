@@ -1,16 +1,9 @@
-import React, { ChangeEventHandler } from "react";
+import React from "react";
 import styles from "./Goal.module.css";
 
-type GoalProps = {
-  id: string;
-  status: boolean;
-  msg: string;
-  onCheckChange: ChangeEventHandler<HTMLElement>;
-}
-
-const Goal = (props: GoalProps) => {
+const Goal = (props) => {
   const { id, status, msg, onCheckChange } = props;
-
+  
   return (
     <div className={styles.goalWrap}>
       <label
@@ -18,7 +11,7 @@ const Goal = (props: GoalProps) => {
         htmlFor={id}
       >
         {
-          //2
+          // 2
           status && <div className={styles.clean} />
         }
         <input
@@ -29,6 +22,7 @@ const Goal = (props: GoalProps) => {
           onChange={onCheckChange}
           checked={status}
         />
+        {msg}
       </label>
     </div>
   );
