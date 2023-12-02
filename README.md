@@ -990,5 +990,163 @@ export default App;
 
 ### 04-04. nodejs 웹서버 (39p)
 <font size=2>앞에서 nodejs의 배경과 장단점을 살펴봤다.</font><br />
+<font size=2>이제는 nodejs를 이용해서 얼마나 간단히 서버를 설계할 수 있는지 살펴보겠다.</font><br />
+<font size=2>index.html을 서빙하는 nodejs 서버를 만들려고 한다.</font><br /><br />
+
+### 04-05. 프로젝트 초기 설정 (40p)
+<font size=2>먼저 nodejs를 설치한다.</font><br />
+<font size=2>지금 nodejs 설정을 해두면 Part 2의 실전 예제를 원활하게 진행할 수 있다.</font><br /><br />
+
+<font size=2>https://nodejs.org/en 사이트에 접속해서 LTS 버전을 운영체제에 맞게 다운로드 한다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/Node_Js.png)
+
+<font size=2>다운로드 이후에 mac의 경우 터미널, Windows는 cmd 창을 열고 다음 명령어를 입력해보자.</font><br />
+
+```
+> node -v
+v현재 버전
+```
+
+<font size=2>설치한 버전이 나온다면 설치 설공이다.</font><br /><br />
+
+### 04-06. server.js (41p)
+<font size=2>이제는 server.js 파일을 생성하겠다.</font><br />
+<font size=2>node-server-ex라는 빈 폴더를 만들고 그 아래에 server.js 파일을 만든다.</font><br /><br />
+
+<font size=2>server.js 파일을 열고 다음과 같이 코드를 작성한다.</font><br />
+
+```
+// 1
+const http = require("http");
+const fs = require("fs").promises;
+const url = require("url");
+
+// 2
+const server = http
+  .createServer(async (req, res) => {
+    // 3
+    const pathname = url.parse(req.url).pathname;
+    const method = req.method;
+    let data = null;
+
+    // 4
+    if (method === "GET") {
+      switch (pathname) {
+        case "/":
+          res.writeHead(200, {
+            "Content-Type": "text/html; charset=utf-8",
+          });
+          data = await fs.readFile("./index.html");
+          res.end(data);
+          break;
+        default:
+          res.writeHead(400, {
+            "Content-Type": "text/html; charset=utf-8",
+          });
+          data = await fs.readFile("./index.html");
+          res.end(data);
+      }
+    }
+  })
+  .listen(5000);
+
+// 5
+server.on("listening", () => {
+  console.log("5000 port is running");
+});
+
+// 6
+server.on("error", (err) => {
+  console.log(err);
+});
+```
+
+<font size=2>1. nodejs에서는 require라는 문법을 이용해서 모듈과 라이브러리를 불러올 수 있다.</font><br />
+<font size=2>예제에서 사용할 http, fs, url 이라는 모듈을 각각 불러왔다.</font><br />
+<font size=2> • http : 기본 모듈로 웹 서버를 만들 때 사용한다.</font><br />
+<font size=2> • fs : 파일을 읽을 때 사용한다.</font><br />
+<font size=2> • url : 요청 url을 파싱하여 간편하게 사용할 수 있도록 한다.</font><br />
+
+```
+http 모듈로만 서버를 만드나?
+
+실무에서는 기본 http 모듈보다 express라는 외부 모듈을 많이 사용한다.
+express 모듈을 사용하면 더 간결하게 웹 서버의 기능을 사용할 수 있다.
+
+ * https://expressjs.com/en/guide/routing.html
+
+우리가 위에서 작성한 라우팅 또한 express를 이용하면 더 직관적으로 코딩할 수 있다.
+
+const express = require("express");
+const app = express();
+
+// response with "hello world" when a GET request is made to the homepage
+app.get("/", function(req, res) => {
+  res.send("hello world");
+});
+```
+<br /><br />
+
+<font size=2>2. http.createServer() 메소드를 이용해서 서버를 만든다.</font><br />
+<font size=2>그 아래 36행에서 listen(5000) 메소드를 이용해서 포트 5000번으로 서버를 생성한다.</font><br />
+
+```
+ .listen(5000);
+```
+<br /><br />
+
+
+<font size=2>3. url.parse()라는 메소드를 이용해서 접속한 url 정보를 파싱한다.</font><br />
+<font size=2>만약 파싱된 정보를 살펴보고 싶다면 아래와 같이 코드에 console.log()를 추가해서 다음과 같은 속성이 있는 걸 확인할 수 있다.</font><br />
+
+```
+const method = req.method;
+let data = null;
+
+console.log(url.parse(req.url));
+
+// 4
+if( method === "GET" ) {
+  ...
+}
+```
+
+
+<font size=2>그중에서 우리는 pathname을 사용한다.</font><br />
+
+```
+Url {
+  protocol: null,
+  slashes: null,
+  auth: null,
+  host: null,
+  port: null,
+  hostname: null,
+  hash: null,
+  search: null,
+  query: null,
+  pathname: "/",
+  path: "/",
+  href: "/",
+}
+```
+<br /><br />
+
+<font size=2>4. method 값을 이용해서 "GET"으로 넘어온 경우 분기문 안에 들어가도록 했다.</font><br />
+
+```
+const method = req.method;
+
+node 서버가 제공하는 req 객체에는 요청에 해당하는 다양한 정보가 들어있다.
+기본적으로 HTTP 프로토콜과 REST API를 이용한 웹 서비스를 만들기 때문에 req 객체를 이용해 다양한 기능을 구현할 수 있다.
+```
+<br /><br />
+
+<font size=2>5. 서버에 최초로 진입할 때 실행되는 함수이다.</font><br /><br />
+
+<font size=2>6. 서버에 오류가 발생할 때 실행된다.</font><br /><br />
+
+### 04-07. index.js (45p)
 <font size=2></font><br />
 <font size=2></font><br />
