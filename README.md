@@ -1148,5 +1148,71 @@ node 서버가 제공하는 req 객체에는 요청에 해당하는 다양한 �
 <font size=2>6. 서버에 오류가 발생할 때 실행된다.</font><br /><br />
 
 ### 04-07. index.js (45p)
+<font size=2>이제 node 서버가 서빙할 HTML을 만든다.</font><br />
+<font size=2>위의 node-server-ex 폴더 아래 index.html을 만든다.</font><br />
+<font size=2>index.html 내용은 간단하다.</font><br />
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      background-color: #ffbb00;
+    }
+    .center {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+    .content {
+      max-width: 900px;
+      width: 100%;
+    }
+    h1 {
+      color: #fff;
+      margin-top: 50px;
+    }
+    section {
+      line-height: 25px;
+      font-size: 1rem;
+    }
+  </style>
+  <body>
+    <div class="center">
+      <div class="content">
+        <h1>What is a Nodejs?</h1>
+        <section>
+          Node.js is similar in design to, and influenced by, systems like Ruby's Event Machine and Python's Twisted. Node.js takes the event model a bit further. It presents an event loop as a runtime construct instead of as a library. In other systems, there is always a blocking call to start the event-loop. Typically, behavior is defined through callbacks at the beginning of a script, and at the end a server is started through a blocking call like EventMachine::run(). In Node.js, there is no such start-the-event-loop call. Node.js simply enters the event loop after executing the input script. Node.js exits the event loop when there are no more callbacks to perform. This behavior is like browser JavaScript — the event loop is hidden from the user.
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
+```
+
+<font size=2>이제 서버를 실행할 차례이다.</font><br />
+<font size=2>폴더의 루트 경로로 이동한 후에 다음과 같이 node 명령어를 실행한다.</font><br />
+
+```
+> node server.js
+5000 port is running
+```
+
+<font size=2>이제 브라우저를 열고 http://localhost:5000 으로 접속한다.</font><br />
+<font size=2>우리가 작성한 index.html 내용이 노출되면 성공이다.</font><br /><br />
+
+<font size=2>지금까지 nodejs의 기본적인 사용법을 학습했다.</font><br />
+<font size=2>지금의 내용이면 앞으로 작성할 소켓 서버를 구현하는 데 문제가 없다.</font><br />
+<font size=2>추가적인 기능이나 모듈은 예제를 진행하면서 하나씩 알아가보겠다.</font><br />
+<font size=2>다음 장에서는 드디어 소켓을 이야기할 차례이다.</font><br />
+
+## 05. 소켓 통신 (48p)
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
