@@ -1237,6 +1237,9 @@ node 서버가 제공하는 req 객체에는 요청에 해당하는 다양한 �
 
 <font size=2>이렇게 어지러운 네트워크 통신을 정리하기 위해 국제 표준화 기구인 ISO가 나서게 된다.</font><br />
 <font size=2>ISO는 네트워크 통신 규약(프로토콜)과 기본적인 네트워크 통신 구조 모델을 정하는데 그게 바로 OSI 7계층이다.</font><br />
+
+![BROWSER_RENDERING](./src/assets/OSI_7.png)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
