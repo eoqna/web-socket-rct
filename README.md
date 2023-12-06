@@ -1240,7 +1240,40 @@ node 서버가 제공하는 req 객체에는 요청에 해당하는 다양한 �
 
 ![BROWSER_RENDERING](./src/assets/OSI_7.png)
 
-<font size=2></font><br />
+<font size=2>1. 응용계층</font><br />
+<font size=2>사용자가 직접적으로 사용하는 인터넷과 이메일이 이 영역에 해당한다.</font><br />
+<font size=2>주로 사용자와 인터페이스 역할을 한다.</font><br /><br />
+
+<font size=2>2. 표현계층</font><br />
+<font size=2>데이터를 표현하는 역할을 한다.</font><br />
+<font size=2>표현하는 방법으로는 데이터 암호화, 복호화, 압축 등이 있다.</font><br /><br />
+
+<font size=2>3. 세션계층</font><br />
+<font size=2>두 장치 사이의 동기화를 담당한다.</font><br />
+<font size=2>오류가 발생한다면 복구하는 과정이 이루어진다.</font><br /><br />
+
+<font size=2>4. 전송 계층</font><br />
+<font size=2>장치 사이의 신뢰성 있는 데이터 전송을 담당한다.</font><br />
+<font size=2>그래서 오류 검출과 데이터 흐름 제어 등의 기능을 제공한다.</font><br />
+<font size=2>또한 우리가 흔히 알고 있는 포트(port)를 사용해서 데이터를 전송한다.</font><br /><br />
+
+<font size=2>5. 네트워크 계층</font><br />
+<font size=2>라우팅의 역할을 맡고 있다.</font><br />
+<font size=2>가장 안전하고 빠른 길을 안내한다.</font><br /><br />
+
+<font size=2>6. 데이터 링크 계층</font><br />
+<font size=2>물리적 연결을 담당하며 MAC 주소를 이용해서 통신한다.</font><br /><br />
+
+<font size=2>7. 물리 계층</font><br />
+<font size=2>전기적, 기계적인 특성을 이용해서 데이터를 전송한다.</font><br />
+<font size=2>데이터는 0과 1뿐이며 데이터 전달하는 기능만 있기 때문에 오류 제어와 알고리즘 같은 역할은 할 수 없다.</font><br /><br />
+
+<font size=2>일곱 단계마다 각각의 역할과 프로토콜의 영역이 다르다.</font><br />
+<font size=2>여기서 모든 단계를 설명하는 것은 의미가 없다.</font><br />
+<font size=2>중요한 점은 송신을 하는 입장에서는 각각의 단계를 거치면서 헤더 정보를 추가해서 수신자에게 보낸다는 사실이다.</font><br />
+<font size=2>그러면 이 데이터 덩어리를 받은 수신자는 반대로 헤더의 정보를 해석하면서 정보를 받게 된다.</font><br /><br /><br />
+
+### 05-03. TCP/IP 계층 (50p)
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
