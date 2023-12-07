@@ -1274,6 +1274,27 @@ node 서버가 제공하는 req 객체에는 요청에 해당하는 다양한 �
 <font size=2>그러면 이 데이터 덩어리를 받은 수신자는 반대로 헤더의 정보를 해석하면서 정보를 받게 된다.</font><br /><br /><br />
 
 ### 05-03. TCP/IP 계층 (50p)
+<font size=2>OSI 7계층의 탄생으로 이제 네트워크 통신에는 평화가 찾아왔다.</font><br />
+<font size=2>그러나 한 가지 문제가 있다.</font><br />
+<font size=2>인터넷의 발전으로 데이터를 어떻게 하면 원하는 위치에 안정적으로 전송할 수 있는 방법에 대해 고민하게 되었다.</font><br />
+<font size=2>이 과정에서 OSI 7계층이라는 거대한 구조보다 조금 더 실무적이고 단순화한 모델을 찾다가 TCP/IP 4계층이 나왔다.</font><br /><br />
+
+![BROWSER_RENDERING](./src/assets/TCP_IP_4.png)
+
+<font size=2>그림으로 봐도 OSI 7계층보다 조금 더 친숙할 것이다.</font><br />
+<font size=2>TCP/IP는 컴퓨터 사이의 정보를 주고받을 수 있는 통신 규약(protocol)의 집합을 말한다.</font><br /><br />
+
+<font size=2>TCP(Transmission Control Protocol)는 전송제어 프로토콜로 포트 번호를 사용하며 기기 간의 '안전한' 데이터 전송을 담당한다.</font><br />
+<font size=2>여기서 '안전한'을 강조했는데 이유는 신뢰를 보장하지 않는 UDP(User Datagram Protocol)도 있기 때문이다.</font><br />
+<font size=2>IP(Internet Protocol)는 기기 간의 가장 빠른 데이터 전송을 담당한다.</font><br />
+<font size=2>우리가 흔히 말하는 IP 주소가 바로 여기서 나왔다.</font><br /><br />
+
+<font size=2>우리가 실무에서 가장 많이 사용하는 데이터 통신이라고 하면 응용 계층에 있는 HTTP 프로토콜을 이용한 통신을 이야기한다.</font><br />
+<font size=2>앞으로 알아볼 소켓 통신은 전송 계층에 위치한 TCP혹은 UDP 프로토콜을 사용하게 된다.</font><br />
+<font size=2>결론적으로 HTTP는 사실 TCP 기반으로 만들어졌기 때문에 소켓 방식으로 만들어졌다고 볼 수 있다.</font><br />
+
+### 05-04. 소켓 통신 (51p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
