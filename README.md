@@ -1327,13 +1327,16 @@ HTTP를 통한 양방향 통신 기법도 있다.
 
 ### 05-05. 소켓 통신 프로세스 (52p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>그렇다면 소켓 통신은 어떤 방식으로 이루어지는 걸까?</font><br />
+<font size=2>위에서 살펴본 TCP/IP 통신을 토대로 말하겠다.</font><br /><br />
+
+### 05-06. 3방향 핸드셰이크 (52p)
+
+<font size=2>TCP 통신 혹은 소켓 통신의 원리를 말하다 보면 자연스럽게 나오는 키워드가 3방향 핸드셰이크(3-way-handshake)이다.</font><br />
+<font size=2>3방향 핸드셰이크란 신뢰성 있는 연결을 위해 서버와 클라이언트 간의 사전 약속이라 말할 수 있다.</font><br />
+<font size=2>앞에서 말한 것처럼 TCP 통신은 신뢰를 기반으로 동작한다.</font><br />
+<font size=2>안전한 TCP 통신을 위해선 클라이언트의 요청이 안전하게 서버에 도달하기 위한 사전 작업이 필요하다.</font><br />
+<font size=2>이런 사전 작업은 다음과 같이 이루어진다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
