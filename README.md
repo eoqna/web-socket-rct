@@ -1350,8 +1350,175 @@ HTTP를 통한 양방향 통신 기법도 있다.
 ```
 UDP 통신은 3방향 핸드셰이크가 없나요?
 
+UDP는 비신뢰성 연결을 지향하기 때문에 없다.
+신뢰성을 보장하지 않기 때문에 UDP는 TCP와는 다르게 빠른 성능을 가지고 있다.
+이런 특징을 기반으로 연속적인 데이터가 필요할 때는 UDP 프로토콜을 사용한다.
 ```
 
+### 05-07. net 모듈을 이용한 TCP 서버 (53p)
+
+<font size=2>드디어 지루했던 소켓의 이론 수업이 끝났다.</font><br />
+<font size=2>사실 소켓 구현보다 이론이 더 어렵다는 생각도 든다.</font><br />
+<font size=2>이제는 직접 구현해보겠다.</font><br />
+<font size=2>거창한 이론과는 다르게 직접 구현한다면 이런 생각을 할 것이다.</font><br />
+<font size=2>'이론은 거창하던데... 이렇게 간단하다고...?'</font><br /><br />
+
+<font size=2>앞의 이론에 따르면 소켓은 TCP, UDP 프로토콜을 사용한다고 배웠다.</font><br />
+<font size=2>그렇다면 이번에는 nodejs를 이용해서 간단한 소켓 통신을 구현해보겠다.</font><br />
+
+### 05-08. 프로젝트 초기 설정 (54p)
+
+<font size=2>간단하게 만들어볼 예제는 클라이언트에서 서버로 1초마다 'Hello.'를 전송하는 예제이다.</font><br />
+<font size=2>아래 로그는 서버 콘솔에 노출되는 모습을 보여준다.</font><br />
+
+```
+From client: Hello.
+From client: Hello.
+From client: Hello.
+From client: Hello.
+From client: Hello.
+```
+
+<font size=2>먼저 테스트할 폴더를 생성해준다.</font><br />
+<font size=2>'net-module'이라는 폴더를 생성하겠다.</font><br />
+<font size=2>아래에 server.js와 client.js를 생성한다.</font><br />
+<font size=2>코드 편집기에서 net-module 폴더를 연다.</font><br />
+
+### 05-09. server.js (54p)
+
+<font size=2>이제 서버 사이드인 server.js부터 구현을 시작하겠다.</font><br />
+<font size=2>nodejs에서 제공하는 내장 모듈인 net 모듈을 사용하겠다.</font><br />
+
+```
+net 모듈
+
+net 모듈은 TCP 스트림 기반의 비동기 네트워크 통신을 제공하는 모듈이다.
+nodejs에서는 net 모듈을 통해서 간단히 서버와 클라이언트 통신을 설계할 수 있다.
+하지만 net 모듈은 저수준의 TCP 통신을 제공하기때문에 브라우저와 서버의 통신은 지원하지 않는다.
+```
+
+```
+server.js
+
+// 1
+const net = require("net");
+
+// 2
+const server = net.createServer((socket) => {
+  // 3
+  socket.on("data", (data) => {
+    console.log("From client:", data.toString());
+  });
+
+  // 4
+  socket.on("close", () => {
+    console.log("client disconnected.");
+  });
+
+  // 5
+  socket.write("welcome to server");
+});
+
+server.on("error", (err) => {
+  console.log("err" + err);
+});
+
+// 6
+server.listen(5000, () => {
+  console.log("listen on 5000");
+});
+```
+
+<font size=2>1. net 모듈을 추가한다.</font><br />
+<font size=2>2. createServer()를 이용해 TCP 서버를 생성한다.</font><br />
+<font size=2>3. "data"라는 구분자로 클라이언트에서 오는 값을 받는다.</font><br />
+<font size=2>4. "close"는 net 모듈에 등록된 키워드로 클라이언트에서 소켓을 닫을 때 응답한다.</font><br />
+<font size=2>5. write()를 이용해 서버에서 클라이언트로 메시지를 전달한다.</font><br />
+<font size=2>6. 5000번 포트를 열고 기다린다.</font><br />
+
+### 05-10. client.js (56p)
+
+<font size=2>이번에는 client.js를 구현하겠다.</font><br />
+
+```
+client.js
+
+const net = require("net");
+
+// 1
+const socket = net.connect({ port: 5000 });
+socket.on("connect", () => {
+  console.log("connected to server!");
+  // 2
+  setInterval(() => {
+    socket.write("Hello.");
+  }, 1000);
+});
+
+// 3
+socket.on("data", (chunk) => {
+  console.log("From Server:" + chunk);
+});
+
+// 4
+socket.on("end", () => {
+  console.log("disconnected.");
+});
+
+socket.on("error", (err) => {
+  console.log(err);
+});
+
+// 5
+socket.on("timeout", () => {
+  console.log("connection timeout.");
+});
+```
+
+<font size=2>1. connect()를 사용해 5000번 포트의 서버에 접속을 시도한다.</font><br />
+<font size=2>2. 1초 간격으로 서버에 "Hello." 메시지를 요청한다.</font><br />
+<font size=2>3. "data" 구분자로 서버에서 오는 데이터를 수신한다.</font><br />
+<font size=2>4. 서버 연결이 끊길 때 응답한다.</font><br />
+<font size=2>5. 연결이 지연될 때 출력한다.</font><br /><br />
+
+<font size=2>이제 server.js부터 실행해보겠다.</font><br />
+<font size=2>터미널 창을 열고 다음과 같은 명령어를 입력한다.</font><br />
+
+```
+> cd net-module
+> node server.js
+listen on 5000
+```
+
+<font size=2>위와 같이 나오면 server.js가 정상적으로 실행된 것이다.</font><br />
+<font size=2>이번에는 별도의 터미널을 열고 클라이언트를 실행해보겠다.</font><br />
+
+```
+> cd net-module
+> node client.js
+connected to server!
+From Server:welcome to server
+```
+
+<font size=2>클라이언트도 정상적으로 실행됐다.</font><br />
+<font size=2>다시 돌아와서 서버 사이드 터미널을 확인한다.</font><br />
+
+```
+From client: Hello.
+From client: Hello.
+From client: Hello.
+From client: Hello.
+From client: Hello.
+...
+```
+
+<font size=2>서버 로그를 보면 1초 간격으로 클라이언트에서 보내는 메시지가 정삭적으로 출력되는 것을 볼 수 있다.</font><br />
+<font size=2>ctrl + c를 눌러서 실행을 중지한다.</font><br />
+
+### 05-11. HTML5 웹 소켓 채팅 서비스 (57p)
+
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
