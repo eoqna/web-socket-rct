@@ -1517,8 +1517,69 @@ From client: Hello.
 
 ### 05-11. HTML5 웹 소켓 채팅 서비스 (57p)
 
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>위에서 net 모듈을 이용한 TCP 서버를 만들었다.</font><br />
+<font size=2>그러나 터미널로만 실행하다 보니 조금은 지루한 느낌이 있다.</font><br />
+<font size=2>이번에는 UI를 포함한 브라우저를 이용해서 통신하겠다.</font><br /><br />
+
+<font size=2>HTML5의 등장과 함께 프런트엔드 개발 환경은 엄청난 변화를 겪게 되었다.</font><br />
+<font size=2>이유는 어마어마한 API와 기능을 제공했기 때문이다.</font><br />
+<font size=2>예를 들어 HTML5 이전에는 얻기 힘든 위치 정보 데이터를 브라우저 수준에서 손쉽게 다룰 수 있었다.</font><br />
+<font size=2>그중 하나가 지금 알아볼 HTML5 웹 소켓이다.</font><br />
+
+```
+HTML5 웹 소켓의 한계
+
+HTML5와 함께 등장한 웹 소켓은 IE8과 같은 하위 브라우저에서는 사용하지 못하는 단점이 있다.
+또한 TCP를 기반으로 하는 브라우저는 HTTP 통신을 사용하기 때문에 비연결을 지향하는 UDP 기반으로는 사용할 수 없다.
+```
+
+```
+RFC 6455
+
+웹 소켓이나 소켓을 공부하다 보면 RFC라는 용어를 마주치게 된다.
+RFC(Request For Comments)는 국제 인터넷 표준화 기구인 IETF(Internet Engineering Task Force)에서 관리하는 표준화 문서를 말한다.
+
+인터넷 세상에서 표준은 중요하다.
+표준을 통해서 신뢰성 있는 데이터 교환을 이룰 수 있고 간편한 방법으로 다양한 연결점들과 동기화할 수 있기 때문이다.
+이런 표준화 작업 중에서 RFC 6455는 웹 소켓 표준을 정의한 문서이다.
+시간이 있다면 인터넷에 RFC 6455를 검색해서 문서를 읽어보는 것을 추천한다.
+```
+
+<font size=2>앞에서 배웠던 리엑트를 기반으로 HTML5 웹 소켓을 이용한 채팅 서비스를 만들어 보겠다.</font><br />
+<font size=2>채팅 서비스의 이름은 WebChat이다.</font><br /><br />
+
+<font size=2>WebChat의 기능은 간단하다.</font><br />
+<font size=2>첫 페이지에서 자신이 원하는 아이디를 입력하고 로그인한다.</font><br /><br />
+
+<font size=2>로그인하게 되면 채팅 페이지로 전환된다.</font><br />
+<font size=2>채팅 페이지에서는 본인이 말한 내용은 왼쪽에 정렬되고 다른 사용자가 말한 내용은 오른쪽에 정렬된다.</font><br />
+<font size=2>새로운 사용자가 등장하면 'Tom joins the chat'이라는 메시지를 출력한다.</font><br />
+
+### 05-12. 프로젝트 초기 설정 (59p)
+
+<font size=2>먼저 html5-websocket이라는 폴더를 만들고 그 아래에 client, server라는 폴더를 생성한다.</font><br />
+<font size=2>client 폴더의 경우는 npx를 이용해서 CRA로 프로젝트를 생성할 예정이다.</font><br />
+
+```
+> mkdir html5-websocket
+> cd html5-websocket
+> mkdir server
+> npx create-react-app client
+```
+
+<font size=2>명령 실행이 완료되면 코드 편집기에서 html5-websocket 폴더를 연다.</font><br />
+
+### 05-13. 클라이언트 사이드 (59p)
+
+<font size=2>client 폴더 파일 중 다음과 같이 사용하지 않는 부분은 삭제하겠다.</font><br />
+
+```
+- App.test.js
+- logo.svg
+- reportWebVital.js
+- setupTests.js
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
