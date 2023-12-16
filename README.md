@@ -1580,7 +1580,7 @@ RFC(Request For Comments)는 국제 인터넷 표준화 기구인 IETF(Internet 
 - setupTests.js
 ```
 
-<font size=2></font><br />
+<font size=2>client/src/index.js에서 사용하지 않는 부분을 제거하겠다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
