@@ -1581,6 +1581,65 @@ RFC(Request For Comments)는 국제 인터넷 표준화 기구인 IETF(Internet 
 ```
 
 <font size=2>client/src/index.js에서 사용하지 않는 부분을 제거하겠다.</font><br />
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <App />
+);  
+```
+
+<font size=2>client/src/App.js의 logo 파일을 사용하는 부분도 삭제한다.</font><br />
+
+```
+import './App.css';
+
+const App = () => {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<font size=2>images 폴더를 생성해서 처음 진입할 때 보여지는 이미지 파일을 추가한다.</font><br />
+
+```
+> cd client/src
+> mkdir images
+```
+
+```
+이미지 파일 확인하기
+
+프로젝트에 사용되는 파일은 깃허브 주소를 참고하면 된다.
+https://github.com/devh-e/socket-programming-using-react/tree/master/part1/socket/html5-websocket/client/src/images
+```
+
+<font size=2>해당 주소에서 다운로드한 websocket.png 파일을 images 폴더에 넣는다.</font><br />
+
+### App.js (61p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
