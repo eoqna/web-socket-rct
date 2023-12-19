@@ -1638,7 +1638,7 @@ https://github.com/devh-e/socket-programming-using-react/tree/master/part1/socke
 
 <font size=2>해당 주소에서 다운로드한 websocket.png 파일을 images 폴더에 넣는다.</font><br />
 
-### App.js (61p)
+### 05-14. App.js (61p)
 
 ```
 import React, { useState, useEffect, useRef } from "react";
@@ -1904,9 +1904,124 @@ const onSendSubmitHandler = (e) => {
 <font size=2>10. isLogin이라는 값으로 로그인 화면인지 채팅 화면인지를 구분한다.</font>
 <br /><br /><br />
 
-### App.css (67p)
+### 05-15. App.css (67p)
 
-<font size=2></font><br />
+```
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.app-container > .wrap > .login-box > .login-title {
+  display: flex;
+  flex-direction: row;
+  font-size: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.app-container > .wrap > .login-box > .login-title > img {
+  border-radius: 50%;
+}
+.app-container > .wrap > .login-box > .login-form {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 20px;
+}
+.app-container > .wrap > .login-box > .login-form input {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+}
+.app-container > .wrap > .login-box > .login-form > button {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #00d8ff;
+  color: #fff;
+}
+.app-container > .wrap > .chat-box .chat {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  border: 1px solid #cecece;
+  border-radius: 10px;
+  width: 300px;
+  height: 300px;
+  overflow: auto;
+}
+.app-container > .wrap > .chat-box .chat li.me {
+  text-align: left;
+}
+.app-container > .wrap > .chat-box .chat li.other {
+  text-align: right;
+}
+.app-container > .wrap > .chat-box .chat li.welcome {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  gap: 10px;
+}
+.app-container > .wrap > .chatbox .chat li.welcome > .line {
+  height: 0.5px;
+  flex: 1 1 auto;
+  padding: 0 10px;
+  background-color: #cecece;
+}
+.app-container > .wrap > .chat-box .chat div.me {
+  padding: 5px;
+  display: inline-block;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #cecece;
+}
+.app-container > .wrap > .chat-box .chat div.other {
+  padding: 5px;
+  display: inline-block;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #000;
+  color: #fff;
+}
+.app-container > .wrap > .chat-box .chat .userId {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.app-container > .wrap > .chat-box .send-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.app-container > .wrap > .chat-box .send-form input {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+}
+.app-container > .wrap > .chat-box .send-form button {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #00d8ff;
+}
+```
+<br />
+
+### 05-16. 서버 사이드 (70p)
+
+<font size=2>이제 서버 사이드를 구현하겠다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
