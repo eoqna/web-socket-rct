@@ -2022,6 +2022,79 @@ const onSendSubmitHandler = (e) => {
 ### 05-16. 서버 사이드 (70p)
 
 <font size=2>이제 서버 사이드를 구현하겠다.</font><br />
+<font size=2>server 폴더로 들어가 npm 패키지를 이용해 nodejs 서버를 설정한다.</font><br />
+<font size=2>server 폴더 안에 server.js 파일을 생성한다.</font><br />
+
+```
+> cd server
+> npm init y
+```
+
+<font size=2>package.json 파일을 열어 확인해본다.</font><br />
+
+```
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "dbshin",
+  "license": "ISC"
+}
+
+```
+
+### 05-17. server.js (71p)
+
+```
+필요한 라이브러리
+ • ws : nodejs 소켓 구현을 위한 라이브러리이다.
+
+ > npm install ws
+```
+
+```
+왜 net 모듈을 사용하지 않고 외부 모듈인 ws를 사용하나요?
+
+예제에서 사용하는 패키지는 ws 8 버전을 사용한다.
+이렇게 외부 모듈을 사용하는 이유는 편리성 때문이다.
+내부 모듈인 net 모듈을 이용해 HTTP 서버와 TCP 서버를 모두 설정할 수 있지만 많은 수작업을 동반한다.
+그래서 간편하게 소켓 서버를 작성할 수 있는 ws 모듈을 사용한다.
+
+ws 모듈은 다양한 기능을 간편하게 사용할 수 있다.
+connection, message, close 관리와 스트림(stream), 브로드캐스트(broadcast)까지 큰 어려움 없이 사용할 수 있다.
+하지만 서버에서만 사용할 수 있기 때문에 브라우저에서 쓰고 싶다면 HTML5에서 제공하는 웹 소켓 API를 사용해야 한다.
+```
+
+<font size=2>아래는 package.json 소스 모습이다.</font><br />
+
+```
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "dbshin",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.15.1"
+  }
+}
+```
+
+```
+
+```
+
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
