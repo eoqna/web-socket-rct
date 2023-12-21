@@ -2091,9 +2091,61 @@ connection, message, close 관리와 스트림(stream), 브로드캐스트(broad
 ```
 
 ```
+// 1
+const WebSocket = require("ws");
 
+// 2
+const wss = new WebSocket.Server({ port: 5000 });
+
+// 3
+wss.on("connection", (ws) => {
+  // 4
+  const broadCastHandler = (msg) => {
+    wss.clients.forEach(function each(client, i) {
+      if( client !== ws && client.readyState === WebSocket.OPEN ) {
+        client.send(msg);
+      }
+    });
+  };
+
+  // 5
+  ws.on("message", (res) => {
+    const { type, data, id } = JSON.parse(res);
+
+    switch(type) {
+      case "id":
+        broadCastHandler(
+          JSON.stringify({ type: "welcome", data: data })
+        );
+        break;
+      case "msg":
+        broadCastHandler(
+          JSON.stringify({ type: "other", data: data, id: id })
+        );
+        break;
+      default:
+        break;
+    }
+  });
+
+  ws.on("close", () => {
+    console.log("client was disconnected");
+  });
+});
 ```
 
+<font size=2>1. ws 모듈을 추가한다.</font><br />
+<font size=2>2. ws 모듈을 이용해 5000번 포트로 접속할 수 있는 웹 소켓 서버를 생성한다.</font><br />
+```
+ const wss = new WebSocket.Server({ port: 5000 });
+```
+<font size=2>3. ws 모듈에서 on()을 이용해 connection, message, close와 같은 상태를 확인할 수 있다.</font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
