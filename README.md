@@ -2140,13 +2140,52 @@ wss.on("connection", (ws) => {
  const wss = new WebSocket.Server({ port: 5000 });
 ```
 <font size=2>3. ws 모듈에서 on()을 이용해 connection, message, close와 같은 상태를 확인할 수 있다.</font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>4. ws 모듈은 접속한 사용자에게 동일한 메세지를 출력하기 위한 브로드캐스트(broadcast)라는 메소드를 정의하고 있지 않다.</font><br />
+<font size=2>그래서 브로드캐스트 기능을 하는 broadCastHandler()라는 함수를 정의했다.</font><br />
+<font size=2>내가 보낸 메시지를 내가 다시 받지 않기 위해서 조건문에 client !== ws를 추가했다.</font><br />
+```
+if( client !== ws && client.readyState === WebSocket.OPEN ) {
+  client.send(msg);
+}
+```
+
+<font size=2>5. 클라이언트에서 오는 메시지를 수신한다.</font><br />
+<font size=2>switch 문을 이용해서 클라이언트에서 오는 정보를 구분한다.</font><br />
+<font size=2>id로 온다면 최초 메시지는 welcome 메시지이다.</font><br />
+<font size=2>수신한 메시지는 우리가 정의한 broadCastHandler() 함수를 이용해 다른 사용자에게 전달된다.</font><br /><br />
+
+<font size=2>우리가 만든 채팅 서비스를 실행해보겠다.</font><br />
+<font size=2>준비물은 두 개의 터미널 창이다.</font><br />
+<font size=2>먼저 server의 루트 경로로 이동해서 npm run start를 실행해준다.</font><br />
+
+```
+> cd server
+> npm run start
+```
+
+<font size=2>다음은 client 폴더로 이동한 후에 npm run start를 실행한다.</font><br />
+
+```
+> cd client
+> npm run start
+```
+
+<font size=2>이제 브라우저 창을 열고 http://localhost:3000으로 접속한다.</font><br />
+<font size=2>먼저 "Tom"으로 로그인 한 후 새로운 브라우저 창을 열고 http://localhost:3000 으로 접속한다.</font><br />
+<font size=2>그리고 "Jane"으로 로그인하게 되면 "Tom"으로 로그인한 브라우저 창에 Jane이 연결됐다는 문구가 뜰 것이다.</font><br />
+<font size=2>대화창에 문구를 입력하고 "send"를 누르면 대화가 정상적으로 오고가는 것을 확인할 수 있다.</font><br /><br />
+
+<font size=2>여기서 한 가지 확인해야 할 사항이 있다.</font><br />
+<font size=2>앞의 채팅 데이터 전송이 진짜 웹 소켓으로 이루어졌는지 어떻게 알 수 있을까?</font><br />
+<font size=2>확인하기 위해 개발자 도구의 네트워크 창을 열어보겠다.</font><br /><br />
+
+<font size=2>localhost 부분을 확인해보면 처음 소켓 연결을 요청할 때 Connection이라는 항목을 볼 수 있다.</font><br />
+<font size=2>Upgrade:websocket 부분도 확인된다.</font><br />
+<font size=2>앞서 살펴본 3방향 핸드셰이크의 과정은 사실 클라이언트가 브라우저에게 "소켓 통신 가능하니?"라고 물어보는 것과 같다.</font><br />
+<font size=2>이런 질문을 요청 헤더에 실어서 날린다.</font><br />
+<font size=2>위 부분에서 클라이언트는 서버에게 "소켓 통신이 가능하다면 웹 소켓 프로토콜로 업그레이드 해줘."라고 요청하는 것이다.</font><br /><br />
+
+<font size=2>서버는 응답으로 101이라는 상태를 전달하면 그때부터 HTTP 프로토콜이 아닌 웹 소켓 프로토콜로 통신하게 된다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
