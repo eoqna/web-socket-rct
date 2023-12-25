@@ -1,0 +1,55 @@
+## 04. socket.io
+
+<font size=2>socket.io는 기예므로 로치(Guillermo Rauch)가 만든 웹 서비스를 위한 라이브러리이다.</font><br />
+<font size=2>socket.io는 세상에 나온 지 벌써 10년이 넘었다.</font><br />
+<font size=2>초기에는 실시간 웹 서비스를 만드는 기술로 주목을 받았고 지금은 안정화 기간을 거치며 어느 누구나 쉽게 사용할 수 있는 라이브러리로 사랑받고 있다.</font><br />
+
+### socket.io의 특징
+
+<font size=2>그렇다면 사람들은 왜 socket.io를 선호하는 걸까?</font><br />
+<font size=2>그 이유는 socket.io가 가지고 있는 특징 때문이다.</font><br />
+
+```
+1. socket.io는 클라이언트 심지어 하위 브라우저까지 지원한다.
+  • 앞에서 살펴본 ws 모듈과는 다르게 socket.io는 브라우저인 클라이언트 레벨까지 지원한다.
+  • socket.io는 하위 브라우저의 실시간 서비스를 지원할 수 있다.
+    socket.io는 내부적으로 하위 브라우저로 판단하면 웹 소켓이 아닌 롱 폴링(Long polling) 방식으로 전환하여 실시간 통신을 한다.
+
+2. socket.io는 다양한 언어로 구현할 수 있다.
+  • socket.io는 다양한 서버 사이드 언어를 지원한다.
+  • https://socket.io/docs/v4/
+
+3. 자동 연결 기능(automatic reconnection)
+  • socket.io는 클라이언트와 서버의 연결에 문제가 발생하면 자동으로 재연결을 시도한다.
+
+4. socket.io는 API 추상화를 통해 복잡한 로직을 숨기고 간편하게 데이터를 전송할 수 있는 함수를 제공한다.
+
+5. 손쉽게 채널 및 방 단위를 설계할 수 있다.
+  • 흔히 실시간 서비스에는 private, broadcast, public과 같은 채널을 관리하게 된다.
+    이런 관리를 손쉽게 할 수 있다.
+
+6. socket.io는 웹 소켓의 구현체가 아니다.
+  • socket.io는 실시간 통신을 하기 때문에 웹 소켓의 구현체라고 생각하는 사람들이 있다.
+    그러나 다양한 API의 집합이기 때문에 웹 소켓도 socket.io를 구성하는 하나의 부품에 불과하다.
+  • 클라이언트 혹은 서버, 둘 중 하나가 socket.io로 제작되었다면 한쪽도 socket.io로 제작되어야 한다.
+```
+
+<font size=2>정리하자면 socket.io는 실시간 서비스를 위한 다양한 API의 추상화 라이브러리이다.</font><br />
+<font size=2>그래서 웹 소켓만으로는 불가능한 작업을 가능하게 하며 간편하게 실시간 웹 서비스를 구현할 수 있다.</font><br />
+
+### socket.io의 주요 기능
+
+<font size=2>위에서 socket.io의 특징들을 살펴봤다.</font><br />
+<font size=2>이런 특징을 기반으로 socket.io는 넓은 입지를 다져왔다.</font><br />
+<font size=2>이번에는 socket.io를 다룰 수 있는 주요 기능을 설명한다.</font><br />
+
+### 소켓 이벤트
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
