@@ -45,7 +45,71 @@
 
 ### 소켓 이벤트
 
-<font size=2></font><br />
+<font size=2>socket.io에서 주로 사용하는 이벤트 함수이다.</font><br />
+<font size=2>socket.io를 이용해 예제를 만들다 보면 자연스럽게 사용하기 때문에 지금 먼저 살펴보겠다.</font><br />
+
+```
+ • connection : 클라이언트 연결 시 동작한다.
+ • disconnection : 클라이언트 연결 해제 시 동작한다.
+ • on() : 소켓 이벤트를 연결한다.
+ • emit() : 소켓 이벤트가 생성된다.
+ • socket.join() : 클라이언트에게 방을 할당한다.
+ • sockets.in() / sockets.to() : 특정 방에 속해 있는 클라이언트를 선택한다.
+```
+
+### 통신 종류(채널 설정)
+
+<font size=2>socket.io가 지원하는 통신 종류는 총 3가지이다.</font><br />
+<font size=2>사실 모든 소켓 통신의 기본 방식이기 때문에 3가지 방식을 기반으로 모든 웹 서비스를 설계한다고 생각하면 된다.</font><br />
+
+```
+ • private
+ • public
+ • broadcast
+```
+
+#### private
+
+<font size=2>private은 1:1 통신을 말한다. 메신저를 예로 들면 1:1 채팅이다.</font><br />
+
+```
+ io.sockets.to(사용자 id).emit()
+```
+
+#### public
+
+<font size=2>전송자를 포함한 모두에게 메시지를 전송한다.</font><br />
+<font size=2>이 말은 만약 'Hello'라는 메시지를 서버로 전송했다면 서버는 이 메시지를 보낸 사람 구분 없이 모두에게 전송한다.</font><br />
+
+```
+ io.sockets.emit()
+```
+
+#### broadcast
+
+<font size=2>전송자를 제외한 모든 사용자에게 메시지를 전송한다.</font><br />
+
+```
+ socket.broadcast.emit()
+```
+
+### socket.io 구현
+
+<font size=2>socket.io의 특징과 대표적인 함수를 알아봤다.</font><br />
+<font size=2>새로운 기술을 학습하는 데 실습만큼 좋은 선생은 없다.</font><br />
+<font size=2>그래서 학습한 기능을 토대로 채팅 서비스를 만들어보겠다.</font><br />
+<font size=2>우리가 만들 채팅 서비스는 앞에서 미리 만들어본 WebChat의 UI를 그대로 사용할 예정이다.</font><br />
+<font size=2>또한 점진적으로 개선하면서 socket.io의 주요한 특징인 private, broadcast, public 채널을 알아보겠다.</font><br />
+
+### public IOchat
+
+<font size=2>우리가 작성할 채팅 서비스는 IOchat이라는 채팅 서비스이다.</font><br />
+<font size=2>기존에 작성했던 WebChat과 동일한 UI로 작성했다.</font><br />
+<font size=2>IOchat을 구현하면서 socket.io에서 제공하는 public 통신을 알아볼 예정이다.</font><br />
+<font size=2>먼저 프로젝트 설명부터 시작하겠다.</font><br />
+
+### 프로젝트 초기 설정
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
