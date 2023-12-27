@@ -110,10 +110,29 @@
 
 ### 프로젝트 초기 설정
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>IOchat을 만들 폴더를 생성하고 그 아래에 client와 server 폴더를 만든다.</font><br />
+
+```
+> mkdir IOchat
+> cd IOchat
+> mkdir client
+> mkdir server
+```
+
+<font size=2>기존에 만들었던 리엑트 프로젝트와 동일하게 CRA를 이용해서 client 폴더를 생성한다.</font><br />
+
+### 클라이언트 사이드
+
+<font size=2>이제 클라이언트 사이드부터 구현을 시작하겠다.</font><br />
+<font size=2>앞에서 진행했던 프로젝트와 동일하게 client 폴더에 사용하지 않는 파일과 폴더를 삭제한다.</font><br />
+
+```
+- App.test.js
+- logo.svg
+- reportWebVitals.js
+- setupTests.js
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
