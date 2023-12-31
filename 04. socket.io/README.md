@@ -133,6 +133,39 @@
 - setupTests.js
 ```
 
+<font size=2>마지막으로 images 폴더를 생성해서 처음 진입할 때 보여지는 이미지 파일을 추가하겠다.</font><br />
+
+```
+> cd client/src/
+> mkdir images
+```
+
+```
+이미지 파일 확인하기
+
+프로젝트에 사용되는 파일은 깃허브 주소를 참고하면 된다.
+
+ • https://github.com/devh-e/socket-programming-using-react/blob/master/part1/socket.io/IOchat/client/src/images/iologo.png
+```
+
+### App.js
+
+```
+필요한 라이브러리
+ • socket.io-client(4.6.1): 브라우저에서 socket.io를 사용하기 위한 라이브러리이다.
+
+설치
+ > npm install socket.io-client
+```
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
