@@ -158,7 +158,12 @@
  > npm install socket.io-client
 ```
 
-<font size=2></font><br />
+<font size=2>라이브러리까지 준비가 완료됐다면 App.js를 작성하겠다.</font><br />
+
+```
+
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
