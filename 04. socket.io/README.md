@@ -161,14 +161,232 @@
 <font size=2>라이브러리까지 준비가 완료됐다면 App.js를 작성하겠다.</font><br />
 
 ```
+import React, { useRef, useEffect, useState } from "react";
+import './App.css';
+import logo from "./images/iologo.png";
+// 1
+import { io } from "socket.io-client";
 
+// 2
+const webSocket = io("http://localhost:5000");
+
+const App = () => {
+  // 3
+  const messagesEndRef = useRef(null);
+  const [ userId, setUserId ] = useState("");
+  const [ isLogin, setIsLogin ] = useState(false);
+  const [ msg, setMsg ] = useState("");
+  const [ msgList, setMsgList ] = useState([]);
+
+  // 4
+  useEffect(() => {
+    if ( !webSocket ) return;
+
+    const sMessageCallback = (msg) => {
+      const { data, id } = msg;
+      setMsgList((prev) => [
+        ...prev,
+        {
+          msg: data,
+          type: "other",
+          id: id,
+        },
+      ]);
+    }
+
+    webSocket.on("sMessage", sMessageCallback);
+
+    return () => {
+      webSocket.off("sMessage", sMessageCallback);
+    };
+  }, []);
+
+  // 5
+  useEffect(() => {
+    if ( !webSocket ) return;
+
+    const sLoginCallback = (msg) => {
+      setMsgList((prev) => [
+        ...prev,
+        {
+          msg: `${msg} joins the chat`,
+          type: "welcome",
+          id: "",
+        },
+      ]);
+    }
+
+    webSocket.on("sLogin", sLoginCallback);
+
+    return () => {
+      webSocket.off("sLogin", sLoginCallback);
+    }
+  }, []);
+
+  // 6
+  useEffect(() => {
+    scrollToBottom();
+  }, [msgList]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 7
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    webSocket.emit("login", userId);
+    setIsLogin(true);
+  };
+
+  // 8
+  const onChangeUserIdHandler = (e) => {
+    setUserId(e.target.value);
+  };
+
+  // 9
+  const onSendSubmitHandler = (e) => {
+    e.preventDefault();
+    const sendData = {
+      data: msg,
+      id: userId,
+    };
+    webSocket.emit("message", sendData);
+    setMsgList((prev) => [...prev, { msg: msg, type: "me", id: userId }]);
+    setMsg("");
+  };
+
+  // 10
+  const onChangeMsgHandler = (e) => {
+    setMsg(e.target.value);
+  };
+
+  return (
+    <div className="app-container">
+      <div className="wrap">
+        {isLogin ? (
+          // 11
+          <div className="chat-box">
+            <h3>Login as a "{userId}"</h3>
+            <ul className="chat">
+              {msgList.map((v, i) => 
+                v.type === "welcome" ? (
+                  <li className="welcome">
+                    <div className="line" />
+                    <div>{v.msg}</div>
+                    <div className="line" />
+                  </li>
+                ) : (
+                  <li className={v.type} key={`${i}_li`}>
+                    <div className="userId">{v.id}</div>
+                    <div className={v.type}>{v.msg}</div>
+                  </li>
+                )
+              )}
+              <li ref={messagesEndRef} />
+            </ul>
+            <form
+              className="send-form"
+              onSubmit={onSendSubmitHandler}
+            >
+              <input 
+                placeholder="Enter your Message"
+                onChange={onChangeMsgHandler}
+                value={msg}
+              />
+              <button type="submit">send</button>
+            </form>
+          </div>
+        ) : (
+          // 11
+          <div className="login-box">
+            <div className="login-title">
+              <img 
+                src={logo}
+                width={40}
+                height={40}
+                alt="logo"
+              />
+              <div>IOChat</div>
+            </div>
+            <form className="login-form" onSubmit={onSubmitHandler}>
+              <input 
+                placeholder="Enter your ID"
+                onChange={onChangeUserIdHandler}
+                value={userId}
+              />
+              <button type="submit">Login</button>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default App;
 ```
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>먼저 만들었던 WebChat과 동일하다. socket.io를 제외한 부분은 빠르게 지나가겠다.</font><br />
+
+<font size=2>1. socket.io-client를 불러와 io객체를 생성한다.</font><br />
+<font size=2>io 객체를 이용해서 socket.io의 다양한 기능을 구현할 수 있다.</font><br /><br />
+
+<font size=2>2. socket.io를 초기화하는 작업이다.</font><br />
+<font size=2>우리가 소켓 통신할 URL 주소를 io 객체에 할당한다.</font><br />
+<font size=2>이제부터 webSocket이라는 변수를 이용해서 소켓 통신이 이루어진다.</font><br />
+
+```
+const webSocket = io("http://localhost:5000");
+```
+
+```
+ws:// 프로토콜 없이도 연결이 가능한가?
+
+socket.io에서는 웹 소켓 API와 다르게 ws:// 없이 소켓을 연결했다.
+앞에서 설명한 것처럼 socket.io는 웹 소켓의 구현체가 아니지 때문에 프로토콜 없이 연결할 수 있다.
+```
+
+```
+꼭 함수 밖에서 socket.io 객체를 초기화해야 하나?
+
+꼭 그래야 하는 건 아니다.
+리액트에 있는 useRef, useState를 이용해서 socket.io 객체를 생성할 수 있다.
+그러나 useRef, useState를 이용해서 초기화할 경우 코드 작성 위치에 따라서 소켓 통신이 되지 않을 수 있다.
+예를 들어 다음과 같이 useRef로 만든 코드가 있다고 가정하겠다.
+
+// 1
+useEffect(() => {
+  if ( !socketIo.current ) return;
+  socketIo.current.emit("join", documentId);
+}, []);
+
+// 2
+useEffcet(() => {
+  socketIo.current = io("http://localhost:5000");
+}, []);
+
+이렇게 초기화를 뒤에 작성할 경우 앞에 작성된 socketIo의 코드는 실행되지 않을 수도 있다.
+그래서 socket.io에서는 socket 객체를 외부 파일로 작성해서 불러오는 방법을 추천한다.
+
+자세한 내용은 Part 2 실전 편에서 다루겠다.
+```
+<br />
+
+<font size=2>3. 우리가 사용할 변수를 state와 ref로 할당했다.</font><br /><br />
+<font size=2>4. 서버에서 오는 메시지를 받는 이벤트 리스너를 정의했다.</font><br />
+<font size=2>이벤트는 'sMessage'로 받을 수 있다.</font><br />
+<font size=2>이벤트로 메시지를 받으면 위에서 미리 정의한 setMsgList에 저장해서 채팅 리스트로 출력한다.</font><br />
+<font size=2>전송 받은 데이터 중 type 값을 이용해서 type에 맞는 스타일 처리를 한다.</font><br />
+
+```
+return () => {
+  webSocket.off("sMessage", sMessageCallback);
+}
+
+useEffect로 등록된 이벤트 리스너는 off()를 이용해서 해제하는 작업이 필요하다.
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
