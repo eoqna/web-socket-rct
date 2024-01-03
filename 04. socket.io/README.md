@@ -386,7 +386,232 @@ return () => {
 
 useEffect로 등록된 이벤트 리스너는 off()를 이용해서 해제하는 작업이 필요하다.
 ```
+<br />
 
+<font size=2>5. 로그인을 할 때 아이디를 받는 'sLogin' 이벤트를 등록한다.</font><br />
+<font size=2>이번에는 type 값이 'welcome'으로 오게 되면 'Tom joins the chat'이라는 문구를 채팅창에 출력한다.</font><br />
+
+```
+socket.io 이벤트 등록은 부모 컴포넌트, 자식 컴포넌트 중 어디서 해야 하나?
+
+우리 예제에서는 서버 메시지를 받기 위한 이벤트 등록을 우리가 가지고 있는 단일 컴포넌트인 App.js에 작성했다.
+그러나 만약 규모가 커지면 부모와 자식으로 컴포넌트를 구분하는 일이 발생한다.
+예를 들어 폼 컴포넌트와 그 하위의 자식 컴포넌트인 버튼 컴포넌트와 같은 구조이다.
+
+- src
+  ↳ FormComponent
+   ↳ ButtonComponent
+
+위와 같은 상황에서는 버튼 컴포넌트에 이벤트 등록이 필요하다면 직접 버튼 컴포넌트에 하기보다는 그 상위의 부모 컴포넌트에 이벤트를 등록하는 걸 추천한다.
+자식 컴포넌트는 화면에 렌더링되었다가 사라질 수도 있기 때문이다.
+만약 해당 버튼 컴포넌트가 소켓 이벤트 연결 이후 사라진다면 서버에서 전송된 메시지가 없어지는 현상을 겪을 수 있다.
+```
+<br />
+
+<font size=2>6. 채팅창의 대화 목록이 자연스럽게 내려가도록 한다.</font><br /><br />
+<font size=2>7. 로그인할 때에 아이디를 소켓 서버로 전송한다.</font><br /><br />
+
+```
+webSocket.emit("login", userId);
+
+전송할 때는 emit() 메소드를 사용한다.
+```
+
+<font size=2>8. 아이디 input 박스의 핸들러이다.</font><br /><br />
+<font size=2>9. 채팅 문구를 전송하는 함수이다.</font><br />
+
+```
+const sendData = {
+  data: msg,
+  id: userId,
+};
+webSocket.emit("message", sendData);
+
+전송 데이터로 사용자의 아이디 값을 함께 전송하여 어떤 사람이 대화를 남겼는지 확인하도록 했다.
+```
+<br />
+
+<font size=2>10. 채팅 input 박스 핸들러이다.</font><br /><br />
+<font size=2>11. isLogin 이라는 상태값으로 로그인 화면인지 채팅 화면인지 구분한다.</font><br /><br />
+
+### App.css
+
+```
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.app-container > .wrap > .login-box > .login-title {
+  display: flex;
+  flex-direction: row;
+  font-size: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.app-container > .wrap > .login-box > .login-title > img {
+  border-radius: 50%;
+}
+.app-container > .wrap > .login-box > .login-form {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 20px;
+}
+.app-container > .wrap > .login-box > .login-form input {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+}
+.app-container > .wrap > .login-box > .login-form > button {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #00d8ff;
+  color: #fff;
+}
+.app-container > .wrap > .chat-box .chat {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  border: 1px solid #cecece;
+  border-radius: 10px;
+  width: 300px;
+  height: 300px;
+  overflow: auto;
+}
+.app-container > .wrap > .chat-box .chat li.me {
+  text-align: left;
+}
+.app-container > .wrap > .chat-box .chat li.other {
+  text-align: right;
+}
+.app-container > .wrap > .chat-box .chat li.welcome {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  gap: 10px;
+}
+.app-container > .wrap > .chatbox .chat li.welcome > .line {
+  height: 0.5px;
+  flex: 1 1 auto;
+  padding: 0 10px;
+  background-color: #cecece;
+}
+.app-container > .wrap > .chat-box .chat div.me {
+  padding: 5px;
+  display: inline-block;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #cecece;
+}
+.app-container > .wrap > .chat-box .chat div.other {
+  padding: 5px;
+  display: inline-block;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #000;
+  color: #fff;
+}
+.app-container > .wrap > .chat-box .chat .userId {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.app-container > .wrap > .chat-box .send-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.app-container > .wrap > .chat-box .send-form input {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+}
+.app-container > .wrap > .chat-box .send-form button {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #00d8ff;
+}
+```
+
+### 서버 사이드
+
+<font size=2>이번에는 server.js를 만들겠다.</font><br />
+<font size=2>server 폴더로 이동한 후에 server.js 파일을 생성해준다.</font><br />
+
+<font size=2>또 socket.io 라이브러리를 사용하기 때문에 npm이 필요하다.</font><br />
+<font size=2>npm을 이용해서 package.json을 생성하겠다.</font><br />
+
+```
+npm init
+```
+
+### server.js
+
+```
+필요한 라이브러리
+
+ • socket.io: socket.io를 사용하기 위한 소켓 라이브러리이다.
+```
+
+<font size=2>이제 server.js를 만들면서 socket.io를 설치하겠다.</font><br />
+<font size=2>npm 명령어를 통해서 socket.io를 설치한다.</font><br />
+
+```
+npm install socket.io
+```
+
+<font size=2>이제 본격적으로 server.js를 구현하겠다.</font><br />
+
+```
+// 1
+const { Server } = require("socket.io");
+
+// 2
+const io = new Server("5000", {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+// 3
+io.sockets.on("connection", (socket) => {
+  // 4
+  socket.on("message", (data) => {
+    // 5
+    io.sockets.emit("sMessage", data);
+  });
+
+  socket.on("login", (data) => {
+    io.sockets.emit("sLogin", data);
+  });
+
+  // 6
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
+```
+
+<font size=2>1. socket.io를 프로젝트에 추가한다.</font><br />
+<font size=2>Server라는 생성자를 이용해 소켓 서버를 생성한다.</font><br /><br />
+
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
