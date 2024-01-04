@@ -610,10 +610,121 @@ io.sockets.on("connection", (socket) => {
 <font size=2>1. socket.io를 프로젝트에 추가한다.</font><br />
 <font size=2>Server라는 생성자를 이용해 소켓 서버를 생성한다.</font><br /><br />
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>2. new Server를 이용해 5000번 포트를 가진 소켓 서버를 만든다.</font><br />
+<font size=2>5000번 포트 자리에 http 서버 객체를 만들 수도 있다.</font><br />
+<font size=2>http 서버를 이용하지 않기 떄문에 임의 포트 번호로 대체했다.</font><br /><br />
+
+```
+ • CORS 설정이 추가되었다.
+   CORS 설정을 통해 우리가 만든 소켓 서버에 허락된 브라우저(localhost:3000)만 접근하도록 했다.
+```
+
+```
+CORS?
+
+CORS는 Cross-Origin Resource Sharing의 줄임말로, 
+웹 애플리케이션이 다른 출처의 도메인에서 자유롭게 데이터를 주고받을 수 있도록 허용하는 정책이다.
+이는 SOP(Same Origin Policy)라는 보안 정책에 의해 웹 브라우저에서 적용되는 제약을 완화하기 위해 개발되었다.
+SOP는 웹 보안을 강화하기 위해 만들어진 정책으로, 같은 출처(Origin)에서만 데이터를 교환할 수 있도록 제한한다.
+출처는 프로토콜(HTTP나 HTTPS), 도메인, 포트 번호로 구성되며, 이 세 가지 요소가 모두 동일한 경우에만 출처가 같다고 판단한다.
+SOP는 제삼자의 공격인 CSRF(Cross-Site Request Forgery)와 같은 보안 위협으로부터 서버의 리소스를 보호하는 데 중요한 역할을 한다.
+
+그러나 최근에는 공공 API의 발전과 오픈 API의 활용이 증가하면서, 서로 다른 출처 간에 자유롭게 데이터를 주고받아야 하는 경우가 많아졌다.
+이런 상황에서 SOP는 적절한 제약이 되지 않았다.
+따라서 CORS가 등장하게 되었다.
+CORS는 서버가 허가된 도메인들에 대해서만 데이터에 접근할 수 있도록 설정할 수 있는 방법이다.
+서버는 HTTP 응답 헤더를 사용하여 CORS 정책을 설정하며, 허가된 도메인은 클라이언트의 웹 브라우저에 의해 검사된다.
+허가된 도메인에 대해서는 웹 애플리케이션에서 제한 없이 데이터를 주고받을 수 있게 된다.
+```
+
+```
+socket.io 3버전과 4버전
+
+4버전의 socket.io를 사용한다.
+만약 버전 3의 socket.io를 사용한다면 다음과 같은 설정이 필요하다.
+
+const io = require("socket.io")("5000", {
+  cors: {
+    origin: "https://example.com",
+    method: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+  }
+});
+```
+<br />
+
+<font size=2>3. io.sockets.on()의 connection 이벤트를 이용해 연결된 부분을 확인한다.</font><br /><br />
+
+<font size=2>4. socket.on()를 이용해 커스텀 구분자인 "message"로 클라이언트에서 오는 메시지를 받는다.</font><br />
+<font size=2>"message"라는 이벤트 아래에 "login"이라는 이벤트를 추가로 생성했다.</font><br /><br />
+
+<font size=2>socket.io를 사용하기 전에 구현했던 ws 모듈을 기억하나?</font><br />
+<font size=2>ws 모듈의 경우 요청이 오는 소켓의 type을 구분하기 위해 switch문을 활용했었다.</font><br />
+
+```
+ws 모듈을 이용한 분기 처리
+
+ws.on("message", (res) => {
+  const { type, data, id } = JSON.parse(res);
+
+  switch(type) {
+    case "id":
+      broadCastHandler(
+        JSON.stringify({ type: "welcome", data: data })
+      );
+      break;
+    case "msg":
+      broadCastHandler(
+        JSON.stringify({ type: "other", data: data, id: id })
+      );
+      break;
+    default:
+      break;
+  }
+});
+```
+
+<font size=2>그러나 socket.io에는 별개의 이벤트를 만들어 간편하게 처리했다.</font><br />
+
+```
+socket.on("message", (data) => {
+  io.sockets.emit("sMessage", data);
+});
+
+socket.on("login", (data) => {
+  io.sockets.emit("sLogin", data);
+});
+```
+<br />
+
+<font size=2>5. io.sockets.emit()은 서버에서 클라이언트로 데이터를 전송할 때 사용한다.</font><br />
+<font size=2>한 가지 놀라운 점은 객체의 데이터를 파싱하거나 문자열로 변환하는 작업이 없다는 점이다.</font><br />
+<font size=2>위에서 살펴봤던 서버 소켓의 모듈은 문자열만을 다루기 때문에 데이터를 파싱하는 과정을 추가했다.</font><br />
+
+```
+const { type, data, id } = JSON.parse(res);
+...
+JSON.stringify({ type: "welcome", data: data });
+```
+
+<font size=2>그러나 socket.io는 문자열뿐만 아니라 객체까지 데이터로 전송할 수 있다.</font><br /><br />
+
+<font size=2>6. disconnect 이벤트로 연결이 끊어짐을 확인한다.</font><br /><br />
+
+<font size=2>이제 서버와 클라이언트를 실행하겠다. 먼저 터미널 하나를 열고 서버를 실행한다.</font><br />
+
+```
+> cd server
+> npm run start
+```
+
+<font size=2>서버가 실행됐다면 이번에는 클라이언트를 실행하겠다. 다른 터미널을 열고 다음과 같이 입력한다.</font><br />
+
+```
+> cd client
+> npm run start
+```
+
+<font size=2>클라이언트도 정상적으로 실행됐다. 다음으로 브라우저 창에 http://localhost:5000으로 접속한다.</font><br />
 <font size=2></font><br />

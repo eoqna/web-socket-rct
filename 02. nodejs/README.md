@@ -36,19 +36,19 @@
 <font size=2>따라서 한 손님이 복잡한 주문을 한다면 그 주문을 처리하는 동안 다른 모든 손님은 기다려야 한다.</font><br />
 <font size=2>이런 식으로 요청을 처리하는 방식은 효율성이 떨어진다.</font><br />
 
-![BROWSER_RENDERING](./src/assets/Hamburger.png)
+![BROWSER_RENDERING](./assets/Hamburger.png)
 
 <font size=2>I/O 블로킹을 해결하기 위해 기존 서버는 스레드를 이용하게 됐다.</font><br />
 <font size=2>멀티 스레드는 서버로 오는 요청을 병렬 처리할 수 있도록 했다.</font><br />
 <font size=2>예를 들어 10명의 사람이 동시에 햄버거를 주문한다면 여러 개의 카운터를 만들어 동시에 주문을 받을 수 있다.</font><br />
 
-![BROWSER_RENDERING](./src/assets/Multi_Thread.png)
+![BROWSER_RENDERING](./assets/Multi_Thread.png)
 
 <font size=2>이렇게 보면 너무 순조로운 방법 같지만 이 방법에도 한계가 있다.</font><br />
 <font size=2>스레드는 서버의 CPU 자원을 나눠서 갖는 형태이기 때문에 자원이 고갈되면 요청을 처리하지 못한다.</font><br />
 <font size=2>또한 공통된 자원을 어떻게 공유할 것인가에 대한 문제도 있다.</font><br />
 
-![BROWSER_RENDERING](./src/assets/Empty_Ingredient.png)
+![BROWSER_RENDERING](./assets/Empty_Ingredient.png)
 <br /><br />
 
 ### 이벤트 기반 비동기 방식의 등장 (38p)
