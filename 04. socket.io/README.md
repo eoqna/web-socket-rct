@@ -727,4 +727,31 @@ JSON.stringify({ type: "welcome", data: data });
 ```
 
 <font size=2>클라이언트도 정상적으로 실행됐다. 다음으로 브라우저 창에 http://localhost:5000으로 접속한다.</font><br />
+
+![BROWSER_RENDERING](./assets/IOchat.png)
+
+<font size=2>Tom이 전송한 "Hi"라는 글자가 Tom의 창에서 다른 사람이 작성한 것처럼 출력됐다.</font><br />
+<font size=2>이런 현상은 Jane의 창에서도 마찬가지이다.</font><br />
+<font size=2>우리가 원하는 대로 구현된다면 자신이 보낸 메시지를 자신이 받으면 안된다.</font><br />
+<font size=2>이런 결과가 나오는 이유는 아래처럼 우리가 보낸 메시지를 서버가 모두에게 전송했기 때문이다.</font><br />
+
+```
+io.sockets.emit("sMessage", data);
+```
+
+<font size=2>그렇다면 이런 문제를 어떻게 해결할 수 있을까?</font><br />
+<font size=2>바로 다음에 IOchat-broadcast 예제에서 문제를 해결해 보겠다.</font><br />
+
+### broadcast를 구현한 IOchat (103p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
