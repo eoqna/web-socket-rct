@@ -13,11 +13,15 @@ io.sockets.on("connection", (socket) => {
   // 4
   socket.on("message", (data) => {
     // 5
-    io.sockets.emit("sMessage", data);
+    // io.sockets.emit("sMessage", data);
+    // 1 - broadcast 적용
+    socket.broadcast.emit("sMessage", data);
   });
 
   socket.on("login", (data) => {
-    io.sockets.emit("sLogin", data);
+    // io.sockets.emit("sLogin", data);
+    // 2 - broadcast 적용
+    socket.broadcast.emit("sLogin", data);
   });
 
   // 6
