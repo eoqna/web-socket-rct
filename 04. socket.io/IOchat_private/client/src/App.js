@@ -123,7 +123,7 @@ const App = () => {
                     onClick={onSetPrivateTarget}
                   >
                     <div 
-                      className={v.id --- privateTarget ? "private-user" : "userId"}
+                      className={v.id === privateTarget ? "private-user" : "userId"}
                       data-id={v.id}
                       name={v.id}
                     >

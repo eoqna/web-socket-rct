@@ -954,7 +954,7 @@ const App = () => {
                     onClick={onSetPrivateTarget}
                   >
                     <div 
-                      className={v.id --- privateTarget ? "private-user" : "userId"}
+                      className={v.id === privateTarget ? "private-user" : "userId"}
                       data-id={v.id}
                       name={v.id}
                     >
@@ -1127,6 +1127,15 @@ setMsgList((prev) => [
   background-color: #000;
   color: #fff;
 }
+.app-container > .wrap > .chat-box .chat div.private {
+  padding: 5px;
+  display: inline-block;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #000;
+  color: #fff;
+}
 .app-container > .wrap > .chat-box .chat .userId {
   margin-top: 5px;
   font-size: 13px;
@@ -1251,18 +1260,33 @@ io.sockets.to() 함수를 이용해서 private한 메시지를 전송할 수 있
 <font size=2>모든 준비는 끝났고 결과를 확인해보겠다.</font><br />
 <font size=2>앞 예제에서 했던 과정과 동일하게 두 개의 터미널에 각각 서버와 클라이언트를 실행하고 http://localhost:5000을 실행한다.</font><br />
 <font size=2>이번에는 private을 테스트하기 위해 4개의 채팅창을 열고 확인하겠다.</font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+
+![BROWSER_RENDERING](./assets/IOchat_private_01.png)
+
+<font size=2>Tom, Jane, Chris, Joy로 로그인했고 위와 같이 대화를 진행했다.</font><br />
+<font size=2>그러나 Tom은 Joy에게만 메시지를 전송하고 싶다. Tom은 Joy 아이디를 누르고 메시지를 전송한다.</font><br />
+
+![BROWSER_RENDERING](./assets/IOchat_private_Tom.png)
+![BROWSER_RENDERING](./assets/IOchat_private_Jane.png)
+![BROWSER_RENDERING](./assets/IOchat_private_Chris.png)
+![BROWSER_RENDERING](./assets/IOchat_private_Joy.png)
+
+<font size=2>Tom의 메시지를 받은 Joy도 Tom에게만 메시지를 전송했다.</font><br /><br />
+
+<font size=2>지금까지 기본적인 socket.io의 3가지 통신 방법을 알아봤다.</font><br />
+<font size=2>나를 포함한 모두에게 전송되는 public과 나를 제외하고 모두에게 전송하는 broadcast, 마지막으로 특정한 개인에게 전송되는 private이다.</font><br />
+<font size=2>다음에는 socket.io가 제공하는 다른 기능도 추가적으로 알아보겠다.</font><br />
+
+### 룸 생성 (119p)
+
+<font size=2>socket.io는 룸(room)이라는 개념이 있다.</font><br />
+<font size=2>여기서 말하는 룸은 우리가 흔히 생각하는 단체 대화방이다.</font><br /><br />
+
+<font size=2>앞에서는 socket.io에서 생성되는 socket ID를 이용해서 private 통신을 진행했다.</font><br />
+<font size=2>사실은 private 통신 또한 개인의 방이 생성되어 가능한 매커니즘이다.</font><br />
+<font size=2>우리도 모르는 사이에 룸이라는 개념을 이용한 것이다.</font><br /><br />
+
+<font size=2>socket.io의 룸을 이용해 채팅의 단체방과 비슷한 예제를 만들어 보겠다. 예제를 이용해 룸의 개념을 학습한다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
