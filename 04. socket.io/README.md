@@ -1284,12 +1284,15 @@ io.sockets.to() 함수를 이용해서 private한 메시지를 전송할 수 있
 
 <font size=2>앞에서는 socket.io에서 생성되는 socket ID를 이용해서 private 통신을 진행했다.</font><br />
 <font size=2>사실은 private 통신 또한 개인의 방이 생성되어 가능한 매커니즘이다.</font><br />
-<font size=2>우리도 모르는 사이에 룸이라는 개념을 이용한 것이다.</font><br /><br />
+<font size=2>우리도 모르는 사이에 룸이라는 개념을 이용한 것이다.</font><br />
+<font size=2>socket.io의 룸을 이용해 채팅의 단체방과 비슷한 예제를 만들어 보겠다. 예제를 이용해 룸의 개념을 학습한다.</font><br /><br />
 
-<font size=2>socket.io의 룸을 이용해 채팅의 단체방과 비슷한 예제를 만들어 보겠다. 예제를 이용해 룸의 개념을 학습한다.</font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>이번 예제는 로그인 화면에서 방 번호를 선택하는 UI를 추가한다.</font><br />
+<font size=2>선택한 방에 들어가면 상단에 "Login as a Tom in Room 1"이라는 텍스트가 노출된다.</font><br />
+<font size=2>추가적으로 같은 방을 선택한 사용자끼리만 대화가 가능하게 만들겠다.</font><br /><br />
+
+### 클라이언트 사이드 (120p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
