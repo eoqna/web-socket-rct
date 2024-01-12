@@ -298,7 +298,6 @@ const App = () => {
             </form>
           </div>
         ) : (
-          // 11
           <div className="login-box">
             <div className="login-title">
               <img 
@@ -1293,6 +1292,411 @@ io.sockets.to() 함수를 이용해서 private한 메시지를 전송할 수 있
 
 ### 클라이언트 사이드 (120p)
 
+<font size=2>앞에서 사용한 예제를 그대로 사용한다. 단지 방 선택을 위한 UI가 추가된다. 기존에 사용한 코드를 그대로 복사한다.</font><br />
+
+### App.js
+
+```
+import React, { useRef, useEffect, useState } from "react";
+import './App.css';
+import logo from "./images/iologo.png";
+import { io } from "socket.io-client";
+
+const webSocket = io("http://localhost:5000");
+
+const App = () => {
+  const messagesEndRef = useRef(null);
+  const [ userId, setUserId ] = useState("");
+  const [ isLogin, setIsLogin ] = useState(false);
+  const [ msg, setMsg ] = useState("");
+  const [ msgList, setMsgList ] = useState([]);
+  const [ privateTarget, setPrivateTarget ] = useState("");
+  // 1
+  const [ roomNumber, setRoomNumber ] = useState("1");
+
+  useEffect(() => {
+    if ( !webSocket ) return;
+
+    const sMessageCallback = (msg) => {
+      const { data, id, target } = msg;
+      setMsgList((prev) => [
+        ...prev,
+        {
+          msg: data,
+          type: target ? "private" : "other",
+          id: id,
+        },
+      ]);
+    }
+
+    webSocket.on("sMessage", sMessageCallback);
+
+    return () => {
+      webSocket.off("sMessage", sMessageCallback);
+    };
+  }, []);
+
+  useEffect(() => {
+    if ( !webSocket ) return;
+
+    const sLoginCallback = (msg) => {
+      setMsgList((prev) => [
+        ...prev,
+        {
+          msg: `${msg} joins the chat`,
+          type: "welcome",
+          id: "",
+        },
+      ]);
+    }
+
+    webSocket.on("sLogin", sLoginCallback);
+
+    return () => {
+      webSocket.off("sLogin", sLoginCallback);
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [msgList]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 2
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    webSocket.emit("login", { userId: userId, roomNumber: roomNumber });
+    setIsLogin(true);
+  };
+
+  const onChangeUserIdHandler = (e) => {
+    setUserId(e.target.value);
+  };
+
+  const onSendSubmitHandler = (e) => {
+    e.preventDefault();
+    const sendData = {
+      data: msg,
+      id: userId,
+      target: privateTarget,
+    };
+    webSocket.emit("message", sendData);
+    setMsgList((prev) => [...prev, { msg: msg, type: "me", id: userId }]);
+    setMsg("");
+  };
+
+  const onChangeMsgHandler = (e) => {
+    setMsg(e.target.value);
+  };
+
+  const onSetPrivateTarget = (e) => {
+    const { id } = e.target.dataset;
+    setPrivateTarget((prev) => ( prev === id ? "" : id ));
+  };
+
+  // 3
+  const onRoomChangeHandler = (e) => {
+    setRoomNumber(e.target.value);
+  }
+
+  return (
+    <div className="app-container">
+      <div className="wrap">
+        {isLogin ? (
+          <div className="chat-box">
+            <h3>Login as a "{userId}" in Room {roomNumber}</h3>
+            <ul className="chat">
+              {msgList.map((v, i) => 
+                v.type === "welcome" ? (
+                  <li className="welcome">
+                    <div className="line" />
+                    <div>{v.msg}</div>
+                    <div className="line" />
+                  </li>
+                ) : (
+                  <li 
+                    className={v.type} 
+                    key={`${i}_li`}
+                    name={v.id}
+                    data-id={v.id}
+                    onClick={onSetPrivateTarget}
+                  >
+                    <div 
+                      className={v.id === privateTarget ? "private-user" : "userId"}
+                      data-id={v.id}
+                      name={v.id}
+                    >
+                      {v.id}
+                    </div>
+                    <div className={v.type}>{v.msg}</div>
+                  </li>
+                )
+              )}
+              <li ref={messagesEndRef} />
+            </ul>
+            <form
+              className="send-form"
+              onSubmit={onSendSubmitHandler}
+            >
+              {privateTarget && (
+                <div className="private-target">{privateTarget}</div>
+              )}
+              <input 
+                placeholder="Enter your Message"
+                onChange={onChangeMsgHandler}
+                value={msg}
+              />
+              <button type="submit">send</button>
+            </form>
+          </div>
+        ) : (
+          <div className="login-box">
+            <div className="login-title">
+              <img 
+                src={logo}
+                width={40}
+                height={40}
+                alt="logo"
+              />
+              <div>IOChat</div>
+            </div>
+            <form className="login-form" onSubmit={onSubmitHandler}>
+              <select onChange={onRoomChangeHandler}>
+                <option value="1">Room 1</option>
+                <option value="2">Room 2</option>
+              </select>
+              <input 
+                placeholder="Enter your ID"
+                onChange={onChangeUserIdHandler}
+                value={userId}
+              />
+              <button type="submit">Login</button>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<font size=2>1. 선택한 방 번호를 저장하기 위한 변수 설정이다.</font><br /><br />
+<font size=2>2. 로그인 버튼을 클릭할 때 실행된다.</font><br />
+
+```
+  webSocket.emit("login", { userId: userId, roomNumber: roomNumber });
+
+  기존에는 사용자 아이디만 전송했다면 이번에는 사용자가 속한 방 번호를 같이 전송한다.
+```
+<br />
+
+<font size=2>3. 방 번호를 선택했을 때 실행되는 함수이다.</font><br /><br />
+
+### App.css ( 125p )
+
+```
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.app-container > .wrap > .login-box > .login-title {
+  display: flex;
+  flex-direction: row;
+  font-size: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.app-container > .wrap > .login-box > .login-title > img {
+  border-radius: 50%;
+}
+.app-container > .wrap > .login-box > .login-form {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 20px;
+}
+.app-container > .wrap > .login-box > .login-form select {
+  border: 0;
+  cursor: pointer;
+}
+.app-container > .wrap > .login-box > .login-form input {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+}
+.app-container > .wrap > .login-box > .login-form > button {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #00d8ff;
+  color: #fff;
+}
+.app-container > .wrap > .chat-box .chat {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  border: 1px solid #cecece;
+  border-radius: 10px;
+  width: 300px;
+  height: 300px;
+  overflow: auto;
+}
+.app-container > .wrap > .chat-box .chat li.me {
+  text-align: left;
+}
+.app-container > .wrap > .chat-box .chat li.other {
+  text-align: right;
+  cursor: pointer;
+}
+.app-container > .wrap > .chat-box .chat li.private {
+  text-align: right;
+  color: red;
+  cursor: pointer;
+}
+.app-container > .wrap > .chat-box .chat li.welcome {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  gap: 10px;
+}
+.app-container > .wrap > .chatbox .chat li.welcome > .line {
+  height: 0.5px;
+  flex: 1 1 auto;
+  padding: 0 10px;
+  background-color: #cecece;
+}
+.app-container > .wrap > .chat-box .chat div.me {
+  padding: 5px;
+  display: inline-block;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #cecece;
+}
+.app-container > .wrap > .chat-box .chat div.other {
+  padding: 5px;
+  display: inline-block;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #000;
+  color: #fff;
+}
+.app-container > .wrap > .chat-box .chat div.private {
+  padding: 5px;
+  display: inline-block;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #000;
+  color: #fff;
+}
+.app-container > .wrap > .chat-box .chat .userId {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.app-container > .wrap > .chat-box .chat .private-user {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  color: red;
+}
+.app-container > .wrap > .chat-box .send-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.app-container > .wrap > .chat-box .send-form input {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+}
+.app-container > .wrap > .chat-box .send-form button {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #00d8ff;
+}
+.app-container > .wrap > .chat-box .send-form .private-target {
+  border: 0;
+  padding: 5px;
+  color: green;
+  font-weight: bold;
+}
+```
+
+### 서버사이드 (129p)
+
+<font size=2>이번에는 server.js를 구현하겠다. 기존 코드에서 약간만 변경하면 된다.</font><br />
+<font size=2>추가된 코드를 보면서 socket.io가 제공하는 룸의 개념을 살펴보겠다.</font><br />
+
+```
+const { Server } = require("socket.io");
+
+const io = new Server("5000", {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+const clients = new Map();
+
+io.sockets.on("connection", (socket) => {
+  console.log("user connected");
+  socket.on("message", (res) => {
+    const { target } = res;
+    if( target ) {
+      const toUser = clients.get(target);
+      io.sockets.to(toUser).emit("sMessage", res);
+      return;
+    }
+    // 1
+    const myRooms = Array.from(socket.rooms);
+    if( myRooms.length > 1 ) {
+      socket.broadcast.in(myRooms[1]).emit("sMessage", res);
+      return;
+    }
+    socket.broadcast.emit("sMessage", res);
+  });
+
+  socket.on("login", (data) => {
+    const { userId, roomNumber } = data;
+    // 2
+    socket.join(roomNumber);
+    clients.set(userId, socket.id);
+    socket.broadcast.emit("sLogin", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
+```
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />

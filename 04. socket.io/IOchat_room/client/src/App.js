@@ -11,20 +11,19 @@ const App = () => {
   const [ isLogin, setIsLogin ] = useState(false);
   const [ msg, setMsg ] = useState("");
   const [ msgList, setMsgList ] = useState([]);
-  // 1
   const [ privateTarget, setPrivateTarget ] = useState("");
+  // 1
+  const [ roomNumber, setRoomNumber ] = useState("1");
 
   useEffect(() => {
     if ( !webSocket ) return;
 
     const sMessageCallback = (msg) => {
-      // 2
       const { data, id, target } = msg;
       setMsgList((prev) => [
         ...prev,
         {
           msg: data,
-          // 3
           type: target ? "private" : "other",
           id: id,
         },
@@ -67,9 +66,10 @@ const App = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // 2
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    webSocket.emit("login", userId);
+    webSocket.emit("login", { userId: userId, roomNumber: roomNumber });
     setIsLogin(true);
   };
 
@@ -79,7 +79,6 @@ const App = () => {
 
   const onSendSubmitHandler = (e) => {
     e.preventDefault();
-    // 4
     const sendData = {
       data: msg,
       id: userId,
@@ -94,18 +93,22 @@ const App = () => {
     setMsg(e.target.value);
   };
 
-  // 5
   const onSetPrivateTarget = (e) => {
     const { id } = e.target.dataset;
     setPrivateTarget((prev) => ( prev === id ? "" : id ));
   };
+
+  // 3
+  const onRoomChangeHandler = (e) => {
+    setRoomNumber(e.target.value);
+  }
 
   return (
     <div className="app-container">
       <div className="wrap">
         {isLogin ? (
           <div className="chat-box">
-            <h3>Login as a "{userId}"</h3>
+            <h3>Login as a "{userId}" in Room {roomNumber}</h3>
             <ul className="chat">
               {msgList.map((v, i) => 
                 v.type === "welcome" ? (
@@ -162,6 +165,10 @@ const App = () => {
               <div>IOChat</div>
             </div>
             <form className="login-form" onSubmit={onSubmitHandler}>
+              <select onChange={onRoomChangeHandler}>
+                <option value="1">Room 1</option>
+                <option value="2">Room 2</option>
+              </select>
               <input 
                 placeholder="Enter your ID"
                 onChange={onChangeUserIdHandler}
