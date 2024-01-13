@@ -31,7 +31,7 @@ io.sockets.on("connection", (socket) => {
     // 2
     socket.join(roomNumber);
     clients.set(userId, socket.id);
-    socket.broadcast.emit("sLogin", data);
+    socket.broadcast.emit("sLogin", userId);
   });
 
   socket.on("disconnect", () => {

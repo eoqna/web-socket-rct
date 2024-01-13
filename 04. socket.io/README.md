@@ -1431,7 +1431,7 @@ const App = () => {
                     >
                       {v.id}
                     </div>
-                    <div className={v.type}>{v.msg}</div>
+                    <div className={v.type} data-id={v.id} name={v.id}>{v.msg}</div>
                   </li>
                 )
               )}
@@ -1682,7 +1682,7 @@ io.sockets.on("connection", (socket) => {
     // 2
     socket.join(roomNumber);
     clients.set(userId, socket.id);
-    socket.broadcast.emit("sLogin", data);
+    socket.broadcast.emit("sLogin", userId);
   });
 
   socket.on("disconnect", () => {
@@ -1691,12 +1691,79 @@ io.sockets.on("connection", (socket) => {
 });
 ```
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>1~2. 클라이언트에서 Login 버튼을 누른 후에 전송된 방 번호를 이용해서 socket.join() 번호를 넘겨준다.</font><br />
+<font size=2>join()은 접속한 사용자를 특정한 방에 배정할 수 있는 함수이다.</font><br />
+
+```
+const myRooms = Array.from(socket.rooms);
+if( myRooms.length > 1 ) {
+  socket.broadcast.in(myRooms[1]).emit("sMessage", res);
+  return;
+}
+
+socket.rooms라는 속성을 사용했다.
+socket.rooms라는 속성은 해당 접속자가 어떤 방에 속해있는지 나타낸다.
+```
+
+```
+socket.rooms
+
+socket.rooms로 사용자가 어디에 속해 있는지 알 수 있다.
+console.log(socket.rooms)로 내용을 확인해 보겠다.
+Set(2) { 'iCss-z8DLLmYVgIPAAAD', '1' }
+
+socket.rooms는 Set이라는 자료구조를 사용해 룸을 관리한다.
+첫 번째 값에는 임의의 값이 들어있다. 이 값은 앞에서 미리 확인한 socket.id가 동일하다.
+결국 소켓의 접속한 모든 사용자는 개인의 방이 존재한다는 사실을 확인했다.
+
+두 번째 값에는 우리가 임의로 설정한 방 번호가 있다.
+Set 데이터에 쉽게 접근하기 위해 Array.from()을 이용해 배열 구조로 변경했다.
+```
+
+```
+무조건 방 하나에만 들어가야 하나?
+
+아니다. 코드를 통해서 동시에 여러 방에 소속될 수 있다.
+  socket.broadcast.in('1').in('2').in('3').emit("sMessage", res);
+
+아래 코드처럼 in(또는 to) 메소드를 이용해서 한 번에 여러 방에 소속될 수 있다.
+
+또한 특정 방에 소속되고 싶지 않다면 except()를 이용할 수도 있다.
+  socket.broadcast.in('1').in('2').except('3').emit("sMessage", res);
+
+배열로 변경된 방 정보를 이용해 1보다 크면 가공의 방에 속한 것으로 판단해서 지정된 방에만 메시지를 전송한다.
+socket.broadcast.in()을 이용하면 지정된 방에만 데이터를 전송할 수 있다.
+broadcast를 붙인 이유는 내가 보낸 메시지는 스스로 받지 않기 위함이다.
+```
+
+<font size=2>이제 제대로 구현이 되었는지 확인하겠다.</font><br />
+<font size=2>동일하게 서버와 클라이언트를 실행할 수 있는 터미널을 두 개 열어준다.</font><br />
+<font size=2>이후에 http://localhost:5000으로 접속한다.</font><br />
+
+<font size=2>먼저 Tom으로 로그인하고 방 번호 1을 선택한다.</font><br />
+<font size=2>정확한 테스트를 위해 브라우저 창을 두 개 더 실행하겠다.</font><br />
+<font size=2>Jane은 방 1로 Chris는 방 2로 선택하고 들어가겠다.</font><br /><br />
+
+<font size=2>모두 입장이 완료되면 Tom이 채팅방에 "Hello"를 입력해 전송한다.</font><br />
+
+![BROWSER_RENDERING](./assets/IOchat_Room.png)
+
+<font size=2>예상대로 같은 방에 속해 있는 Jane만 메시지를 받았나?</font><br />
+<font size=2>정확한 테스트를 위해 Chris를 포함한 모두와 메시지를 나누겠다.</font><br />
+
+![BROWSER_RENDERING](./assets/IOchat_Room_2.png)
+
+<font size=2>앞의 그림처럼 1번 방 사람들만 대화하고 Chris의 메시지는 Tom, Jane에게 전달되지 않은 걸 볼 수 있다.</font><br />
+
+```
+방 떠나기
+
+socket.join([roomId])을 이용해서 방에 접속했다면 socket.leave([roomId])를 이용해서 방을 떠날 수 있다.
+또한 socket.io의 disconnect 이벤트로 연결이 끊어지면 자동으로 방에서 나가게 된다.
+```
+
+### 네임 스페이스 (133p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />

@@ -132,7 +132,7 @@ const App = () => {
                     >
                       {v.id}
                     </div>
-                    <div className={v.type}>{v.msg}</div>
+                    <div className={v.type} data-id={v.id} name={v.id}>{v.msg}</div>
                   </li>
                 )
               )}
