@@ -64,6 +64,72 @@ root.render(<App />);
 ```
 
 <font size=2>App.js에서 logo 파일을 사용하는 부분도 삭제한다.</font><br />
+
+```
+import './App.css';
+
+const App = () => {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### App.js (137p)
+
+<font size=2>이제 App.js와 라우팅에 필요한 Page를 하나씩 만들겠다.</font><br />
+
+```
+// 1
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import GoodsPage from "./GoodsPage";
+import UserPage from "./UserPage";
+import './App.css';
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate replace to="/goods" />} />
+        <Route path="/goods" element={<GoodsPage />} />
+        <Route path="/user" element={<UserPage />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+<font size=2>1. 라우팅을 위한 함수를 불러왔다. 또한 각각 라우팅에 구분되는 Page 컴포넌트들도 추가했다.</font><br /><br />
+<font size=2>2. 우리가 설정한 routing은 /goods와 /user 두 가지 이다.</font><br />
+<font size=2>만약 루트("/") 경로로 접근한다면 자동으로 /goods로 리다이렉트되도록 설정했다.</font><br /><br />
+
+### App.css (138p)
+
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
