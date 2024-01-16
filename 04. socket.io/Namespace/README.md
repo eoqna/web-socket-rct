@@ -128,6 +128,89 @@ export default App;
 
 ### App.css (138p)
 
+<font size=2>App.css 내용은 간단하다. 활성/비활성화 처리에 필요한 색상을 스타일링했다.</font><br />
+
+```
+.text-wrap {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.active {
+  color: green;
+}
+.deactive {
+  color: red;
+}
+.btn-box {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+.active-btn {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #00d8ff;
+  cursor: pointer;
+}
+.deactive-btn {
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: red;
+  color: #fff;
+  cursor: pointer;
+}
+```
+
+### socket.js (139p)
+
+```
+import { io } from "socket.io-client";
+
+// 1
+export const socketGoods = io("http://localhost:5000/goods", {
+  autoConnect: false,
+});
+
+// 2
+export const socketUser = io("http://localhost:5000/user", {
+  autoConnect: false,
+});
+```
+
+<font size=2>1~2. 지금까지와는 다른 방식으로 socket.io 객체를 초기화했다.</font><br />
+<font size=2>앞으로 Part 2에서 사용할 예제는 위와 같은 방식으로 진행될 예정이다.</font><br />
+<font size=2>이렇게 객체를 하나의 파일에서 따로 관리할 경우 개발 환경에 따른 분기 처리가 쉽고 가독성 또한 좋아진다.</font><br /><br />
+
+<font size=2>두 개의 객체가 준비되어 있다.</font><br />
+<font size=2>socketGoods는 goods 네임스페이스로 접속된 소켓 객체이고 아래에 있는 socketUser는 user 네임스페이스에 접속된 소켓 객체이다.</font><br />
+<font size=2>마지막으로 autoConnect: false라는 속성이 보인다.</font><br />
+<font size=2>이 속성을 적용할 경우 리액트 컴포넌트가 마운트될 때 자동으로 소켓이 연결되는 것이 아니라 수동으로 socket.connect()라는 함수를 이용해서 연결해야 한다.</font><br />
+
+```
+io([url][, options])
+
+socket.io에서는 소켓을 연결할 때 다양한 옵션이 있다.
+예를 들어 'reconnection', 'autoConnect', 'timeout' 등 연결에 필요한 항목을 선택할 수 있다.
+
+ • 참고 : https://socket.io/docs/v4/client-api/
+```
+
+### UserPage.js와 GoodsPage.js (140p)
+
+<font size=2>UserPage.js와 GoodsPage.js의 코드가 비슷하기 때문에 한 번에 설명하겠다.</font><br />
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
