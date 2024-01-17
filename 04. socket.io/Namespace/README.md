@@ -205,14 +205,156 @@ socket.io에서는 소켓을 연결할 때 다양한 옵션이 있다.
 
 <font size=2>UserPage.js와 GoodsPage.js의 코드가 비슷하기 때문에 한 번에 설명하겠다.</font><br />
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+```
+UserPage.js
+
+import React, { useEffect, useState } from "react";
+import { socketUser } from "./socket";
+
+const UserPage = () => {
+  const [ isConnect, setIsConnect ] = useState(false);
+  
+  useEffect(() => {
+    const onConnect = () => {
+      setIsConnect(true);
+    }
+
+    const onDisConnect = () => {
+      setIsConnect(false);
+    }
+
+    socketUser.on("connect", onConnect);
+    socketUser.on("disconnect", onDisConnect);
+
+    return () => {
+      socketUser.off("connect", onConnect);
+      socketUser.off("disconnect", onDisConnect);
+    };
+  }, []);
+
+  const onConnectHandler = () => {
+    socketUser.connect();
+  };
+
+  const onDisConnectHandler = () => {
+    socketUser.disconnect();
+  };
+
+  return (
+    <div className="text-wrap">
+      <h1>
+        UserNameSpace is
+        {isConnect ? (
+          <em className="active">Connected!</em>
+        ) : (
+          <em className="deactive">Not Connected!</em>
+        )}
+      </h1>
+      <div className="btn-box">
+        <button onClick={onConnectHandler} className="active-btn">
+          Connected
+        </button>
+        <button onClick={onDisConnectHandler} className="deactive-btn">
+          Disconnected
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default UserPage;
+```
+
+```
+GoodsPage.js
+
+import React, { useEffect, useState } from "react";
+// 1
+import { socketGoods } from "./socket";
+
+const GoodsPage = () => {
+  // 2
+  const [ isConnect, setIsConnect ] = useState(false);
+  
+  // 3
+  useEffect(() => {
+    const onConnect = () => {
+      setIsConnect(true);
+    }
+
+    const onDisConnect = () => {
+      setIsConnect(false);
+    }
+
+    socketGoods.on("connect", onConnect);
+    socketGoods.on("disconnect", onDisConnect);
+
+    return () => {
+      socketGoods.off("connect", onConnect);
+      socketGoods.off("disconnect", onDisConnect);
+    };
+  }, []);
+
+  // 4
+  const onConnectHandler = () => {
+    socketGoods.connect();
+  };
+
+  // 5
+  const onDisConnectHandler = () => {
+    socketGoods.disconnect();
+  };
+
+  return (
+    <div className="text-wrap">
+      <h1>
+        GoodsNameSpace is
+        {isConnect ? (
+          <em className="active">Connected!</em>
+        ) : (
+          <em className="deactive">Not Connected!</em>
+        )}
+      </h1>
+      <div className="btn-box">
+        <button onClick={onConnectHandler} className="active-btn">
+          Connected
+        </button>
+        <button onClick={onDisConnectHandler} className="deactive-btn">
+          Disconnected
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GoodsPage;
+```
+
+<font size=2>1. 미리 정의한 socket.js에서 socketGoods 객체를 불러왔다.</font><br /><br />
+
+<font size=2>2. isConnect 변수를 설정했다.</font><br />
+<font size=2>네임스페이스에 소켓이 연결되었다면 true, 아니면 false 값을 가진다.</font><br /><br />
+
+<font size=2>3. useEffect에 'connect', 'disconnect' 이벤트 리스너를 등록했다.</font><br />
+<font size=2>소켓이 연결되었다면 isConnect를 true로 업데이트한다.</font><br /><br />
+
+<font size=2>4. 화면에 Connected 버튼을 클릭하면 실행된다.</font><br />
+<font size=2>socket.io의 connect() 메소드는 소켓을 연결할 때 사용한다.</font><br /><br />
+
+<font size=2>5. Disconnect 버튼을 클릭하면 실행된다.</font><br /><br />
+
+```
+네임스페이스를 여러 개 연결할 경우 소켓이 여러 번 연결되는 건가?
+
+결론부터 말하자면 아니다.
+동일한 메인 도메인의 하위 경로를 추가해서 네임스페이스를 만들었다.
+이럴 경우 socket.io에서는 하나의 웹 소켓 연결만을 생성한 후에 패킷을 알맞은 목적지에 전송하도록 분산 처리한다.
+
+만약 접속의 메인 도메인 주소가 달라진다면 웹 소켓 연결은 두 번 생기게 된다.
+```
+
+### 서버 사이드 (144p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
