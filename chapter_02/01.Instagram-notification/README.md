@@ -91,6 +91,13 @@ root.render(<App />);
 
 ### 서버 사이드
 
+```
+필요한 라이브러리
+
+ • nodemon : nodejs 서버를 모니터링하고 쉽게 재시작하기 위해 사용한다.
+ • socket.io : 소켓 통신을 위해 사용한다.
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
