@@ -305,6 +305,354 @@ socket.io에서 미들웨어를 실행하면 연결 시점에서 딱 한 번만 
 > npm install react-router-dom
 ```
 
+<font size=2>이제 기본적인 준비는 끝났다.</font><br />
+<font size=2>먼저 웹 소켓을 연결하기 위한 준비를 하겠다.</font><br />
+<font size=2>루트 경로에서 socket.js라는 파일을 추가한다.</font><br />
+
+### socket.js (160p)
+
+<font size=2>socket.js 파일은 웹 소켓을 연결하기 위한 socket.io 객체를 초기화한다.</font><br />
+<font size=2>autoConnect: false로 설정해서 사용자 아이디를 로그인할 때에 연결되도록 했다.</font><br />
+
+```
+import { io } from "socket.io-client";
+
+export const socket = io("http://localhost:5000", {
+  autoConnect: false,
+});
+```
+
+### App.js (160p)
+
+<font size=2>라우팅 설정에 필요한 App.js 파일을 수정하겠다.</font><br />
+
+```
+import "./App.css";
+// 1
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { IndexContainer, MainContainer } from "./containers";
+
+const App = () => {
+  return (
+    // 2
+    <Router>
+      <Routes>
+        <Route path="/" element={<IndexContainer />} />
+        <Route path="/main" element={<MainContainer />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+<font size=2>1. react-router-dom에서 라우팅에 필요한 컴포넌트를 불러온다.</font><br /><br />
+
+<font size=2>2. 라우팅을 설정하는 부분이다.</font><br />
+<font size=2>아직 IndexContainer와 MainContainer를 작성하지 않아서 빨간 줄로 표시될 수 있다.</font><br />
+<font size=2>이 부분은 뒤에서 작성하겠다.</font><br /><br />
+
+### 전역 변수를 위한 Context API 설정 (161p)
+
+<font size=2>지금까지 useState, useRef를 이용해서 함수 범위의 변수만 설정했다.</font><br />
+<font size=2>하지만 이런 함수 범위의 변수 처리는 한계가 있다.</font><br />
+<font size=2>다른 페이지에서는 같은 변수를 사용할 수 없기 때문이다.</font><br />
+<font size=2>예를 들어 로그인 페이지에서 선언되고 사용된 변수는 로그인 페이지에서만 사용할 수 있고 다른 페이지에서는 사용할 수 없다.</font><br /><br />
+
+<font size=2>이런 한계를 극복하기 위해 리액트에서는 전역에서 공통으로 사용할 수 있는 전역 변수 API를 제공한다.</font><br />
+<font size=2>설정된 변수는 어떤 페이지에서도 사용할 수 있다.</font><br />
+<font size=2>이렇게 전역으로 상태를 관리하는 API를 Context API라고 한다.</font><br />
+
+```
+전역 상태 관리는 Context API만 있나?
+
+리액트에서 가장 많이 사용했던 전역 상태 관리 라이브러리를 Redux가 있다.
+하지만 버전 16.3 이후부터 리액트가 제공하는 Context API가 등장했다.
+Context API의 등장으로 '굳이 외부 라이브러리인 Redux를 사용해야 할까?' 하는 의문이 생겼다.
+그래서 상황에 맞게 redux와 Context API를 사용하는 추세이다.
+
+현재는 Context API, Redux를 제외한 더 개선된 기능을 제공하는 다양한 라이브러리가 등장했다.
+그 예로 recoil, SWR 등이 있다.
+```
+
+### context 파일 생성 (162p)
+
+<font size=2>이제 우리 인스타그램 예제에서도 전역 변수를 사용할 수 있도록 context 폴더를 추가하겠다.</font><br />
+<font size=2>src 경로로 이동 후에 context 폴더를 생성하고 그 아래에 index.js와 action.js 파일을 만든다.</font><br />
+
+#### action.js
+
+<font size=2>action.js의 내용은 간단하다.</font><br />
+<font size=2>이 파일에서는 Context API로 관리하기 위한 명령어를 작성한다.</font><br />
+<font size=2>AUTH_INFO라는 키워드를 이용해서 사용자 이름을 저장할 예정이다.</font><br />
+
+```
+export const AUTH_INFO = "AUTH_INFO";
+```
+
+#### index.js
+
+<font size=2>Context API를 다루기 위한 핵심 부분이다.</font><br />
+<font size=2>앞에서 배운 리액트에서 다루지 않은 내용이 있기 때문에 천천히 설명하면서 진행하겠다.</font><br />
+
+```
+// 1
+import { createContext, useReducer } from "react";
+import { AUTH_INFO } from "./action";
+
+// 2
+const initialState = {
+  userName: "",
+};
+
+// 3
+const Context = createContext({});
+
+// 4
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case AUTH_INFO:
+      return {
+        ...state,
+        userName: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// 5
+const StoreProvider = ({ children }) => {
+  const [ state, dispatch ] = useReducer(reducer, initialState);
+  const value = { state, dispatch };
+  return <Context.Provider value={value}>{children}</Context.Provider> 
+};
+
+export { Context, StoreProvider };
+```
+
+<font size=2>1. 리엑트에서 제공하는 createContext, useReducer라는 함수를 불러온다.</font><br />
+<font size=2> • createContext : 리액트의 전역 변수를 설정하기 위한 context 객체를 생성하는 함수이다.</font><br />
+<font size=2> • useReducer : 지금까지 useState를 이용해서 상태를 관리했다.</font><br />
+<font size=2> 하지만 useReducer를 이용하면 더 복잡한 상태 관리를 할 수 있다.</font><br />
+<font size=2> 무엇보다 상태 관리라는 로직과 기존의 비즈니스 로직을 분리할 수 있다는 장점이 있다.</font><br /><br />
+
+<font size=2>2. useReducer가 관리할 초기 객체 변수를 설정한다.</font><br />
+<font size=2>사용자 이름을 저장하기 위한 userName을 작성했다.</font><br /><br />
+
+<font size=2>3. createContext를 이용해서 전역으로 관리된 context를 생성했다.</font><br /><br />
+
+<font size=2>4. useReducer의 핵심 기능인 상태를 관리하는 부분이다.</font><br />
+<font size=2>switch 문을 이용해서 들어온 상태의 키워드 값을 구분하고 실행한다.</font><br /><br />
+
+```
+switch (action.type) {
+  case AUTH_INFO:
+    return {
+      ...state,
+      userName: action.payload,
+    }
+  default:
+    return state;
+}
+
+action 객체에는 payload와 type이 있다.
+payload는 상태를 업데이트하는 최신 변수를 받는다.
+또한 앞에서 미리 정의한 AUTH_INFO라는 키워드가 보인다.
+현재는 하나지만 애플리케이션의 규모가 커지면 개수가 늘어난다.
+```
+
+<font size=2>5. storeProvider는 Context API를 사용하는 모든 컴포넌트에게 변화를 알리는 역할을 한다.</font><br />
+<font size=2>현재는 하나만 작성했지만 상황에 따라 여러 개의 store를 생성할 수 있다.</font><br /><br />
+
+### App.js (165p)
+
+<font size=2>마지막으로, 작성한 Context API를 최상위 컴포넌트인 App.js에 적용한다.</font><br />
+
+```
+import "./App.css";
+// 1
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { IndexContainer, MainContainer } from "./containers";
+import { StoreProvider } from "./context";
+
+const App = () => {
+  return (
+    <StoreProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<IndexContainer />} />
+          <Route path="/main" element={<MainContainer />} />
+        </Routes>
+      </Router>
+    </StoreProvider>
+  );
+}
+
+export default App;
+```
+
+<font size=2>StoreProvider로 최상위 컴포넌트를 감싸면서 어디든지 전역 변수에 접근할 수 있도록 한다.</font><br />
+
+### Card 컴포넌트 (165p)
+
+<font size=2>인스타그램과 비슷하게 만들기 위해 상단의 헤더 부분과 포스팅을 위한 Card 컴포넌트를 제작하겠다.</font><br />
+<font size=2>src 폴더 아래 components라는 폴더를 만들고 그 아래에 card와 navbar라는 폴더를 생성한다.</font><br />
+<font size=2>card 폴더 아래에 Card.js와 Card.module.css 파일을 생성한다.</font><br />
+
+```
+Card.js
+
+import { useState } from "react";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { HiOutlinePaperAirplane } from "react-icons/hi";
+import { BiMessageRounded } from "react-icons/bi";
+import { FiMoreVertical } from "react-icons/fi";
+// 1
+import { socket } from "../../socket";
+import styles from "./Card.module.css";
+
+// 2
+const Card = ({ key, post, loginUser }) => {
+  // 3
+  const [ liked, setLiked ] = useState(false);
+
+  // 4
+  const onLikeHandler = (e) => {
+    const { type } = e.target.closest("svg").dataset;
+    setLiked(type === "0");
+    socket.emit("sendNotification", {
+      senderName: loginUser,
+      receiverName: post.userName,
+      type,
+    });
+  };
+
+  return (
+    <div className={styles.card} key={key}>
+      <div className={styles.info}>
+        <div className={styles.userInfo}>
+          <img src={post.userImg} alt="" className={styles.userImg} />
+          <div className={styles.userName}>
+            <div>{post.userName}</div>
+            <div className={styles.loc}>{post.location}</div>
+          </div>
+        </div>
+        <FiMoreVertical size={20} />
+      </div>
+      <img src={post.postImg} alt="" className={styles.postImg} />
+      <div className={styles.icons}>
+        // 5
+        {liked ? (
+          <AiFillHeart 
+            className={styles.fillHeart}
+            size={20}
+            onClick={onLikeHandler}
+            data-type="1"
+          />
+        ) : (
+          <AiOutlineHeart
+            className={styles.heart}
+            size={20}
+            onCanPlay={onLikeHandler}
+            data-type="0"
+          />
+        )}
+        <BiMessageRounded className={styles.msg} size={20} />
+        <HiOutlinePaperAirplane className={styles.airplane} size={20} />
+      </div>
+    </div>
+  );
+};
+
+export default Card;
+```
+
+<font size=2>1. 소켓 통신을 위해 socket 객체를 불러온다.</font><br /><br />
+
+<font size=2>2. Card 컴포넌트에는 리스트를 구분하는 key 값과 포스팅 객체, 로그인 사용자 이름을 전달받는다.</font><br /><br />
+
+<font size=2>3. useState를 이용해서 좋아요를 눌렀는지 누르지 않았는지 상태를 저장한다.</font><br />
+<font size=2>좋아요를 눌렀다면 true, 누르지 않았다면 false이다.</font><br /><br />
+
+<font size=2>4. onLikeHandler()는 좋아요를 클릭하면 호출된다.</font><br />
+<font size=2>좋아요를 클릭했다면 'sendNotification'이라는 소켓 이벤트를 실행시킨다.</font><br />
+<font size=2>그와 동시에 서버로 누른 사람과 좋아요를 받은 사람의 정보를 함께 전송한다.</font><br /><br />
+
+<font size=2>5. liked라는 상태에 따라 꽉 찬 하트 혹은 빈 하트를 노출하게 했다.</font><br /><br />
+
+<font size=2>다음은 Card 컴포넌트의 스타일 파일이다.</font><br />
+
+```
+.card {
+  height: 280px;
+  padding: 10px 0;
+}
+.info {
+  display: flex;
+  align-items: center;
+  padding: 5px 20px;
+  justify-content: space-between;
+  font-weight: 500;
+  font-size: 14px;
+}
+.userInfo {
+  display: flex;
+  flex-direction: row;
+}
+.userName {
+  display: flex;
+  flex-direction: column;
+}
+.loc {
+  font-size: 12px;
+}
+.userImg {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+.postImg {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.icons {
+  display: flex;
+  align-items: center;
+  padding: 5px 20px;
+  position: relative;
+}
+.heart {
+  cursor: pointer;
+}
+.fillHeart {
+  color: red;
+  cursor: pointer;
+}
+.airplane {
+  transform: rotate(45deg);
+  margin-left: 6px;
+  margin-bottom: 5px;
+}
+.msg {
+  margin-left: 5px;
+}
+```
+
+### Navbar 컴포넌트 (170p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
