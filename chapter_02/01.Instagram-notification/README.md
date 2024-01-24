@@ -645,12 +645,299 @@ export default Card;
 
 ### Navbar 컴포넌트 (170p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>이번에는 인스타그램 헤더 부분인 navbar 컴포넌트를 만들겠다.</font><br />
+<font size=2>위에서 만든 navbar 폴더에 Navbar.js와 Navbar.module.css를 생성한다.</font><br />
+
+```
+import { useEffect, useState } from "react";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { HiOutlinePaperAirplane } from "react-icons/hi";
+// 1
+import { socket } from "socket.io-client";
+import styles from "./Navbar.module.css";
+
+const Navbar = () => {
+  // 2
+  const [ notifications, setNotifications ] = useState([]);
+
+  // 3
+  useEffect(() => {
+    const getNofi = (data) => {
+      const { type } = data;
+      const temp = type === "0" ? [...notifications, data] : notifications.pop();
+      
+      setNotifications(temp || []);
+    };
+
+    socket.on("getNotification", getNofi);
+
+    return () => {
+      socket.off("getNotification", getNofi);
+    };
+  }, []);
+
+  return (
+    <div className={styles.navbar}>
+      <span className={styles.logo}>Instagram</span>
+      <div className={styles.icons}>
+        <div className={styles.heartContainer}>
+          {notifications.length > 0 && (
+            <span className={styles.noti}></span>
+          )}
+          <AiOutlineHeart size={20} className={styles.heart} />
+          {notifications.length > 0 && (
+            <div className={styles.likeBubble}>
+              <AiFillHeart size={15} color="#fff" />{" "}
+              <div className={styles.count}>
+                {notifications.length}
+              </div>
+            </div>
+          )}
+        </div>
+        <HiOutlinePaperAirplane className={styles.airplane} size={20} />
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
+```
+
+<font size=2>1. 소켓 통신을 위한 소켓 객체를 불러온다.</font><br /><br />
+
+<font size=2>2. notification이라는 변수는 좋아요를 받은 개수를 저장한다.</font><br />
+<font size=2>저장된 값에 따라 몇 개를 노출할지 화면에 표시된다.</font><br /><br />
+
+<font size=2>3. useEffect를 이용해서 소켓 통신을 대기한다.</font><br />
+<font size=2>'getNotification'이라는 이벤트는 좋아요를 받을 때 서버에서 전송한 데이터를 받을 수 있는 콜백함수이다.</font><br />
+<font size=2>받아온 데이터는 setNotifications() 상태 관리 객체에 배열 형태로 저장된다.</font><br /><br />
+
+```
+Navbar.module.css
+
+.navbar {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  border-bottom: 1px solid #cecece;
+  padding: 0 20px;
+}
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+.icons {
+  display: flex;
+  align-items: center;
+}
+.airplane {
+  transform: rotate(45deg);
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+.heartContainer {
+  display: inline-block;
+  position: relative;
+}
+.noti {
+  display: inline-block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: red;
+  border-radius: 50%;
+  right: 0;
+  top: 0;
+}
+.heart {
+  vertical-align: text-top;
+}
+.likeBubble {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  position: absolute;
+  padding: 5px 10px;
+  background-color: red;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  right: 10px;
+  bottom: -27px;
+}
+.count {
+  color: #fff;
+}
+```
+
+### LoginContainer.js (174p)
+
+<font size=2>이제 앞에서 개발한 모든 컴포넌트와 기능을 조합할 컨테이너를 만들 차례이다.</font><br />
+<font size=2>먼저 웹 서비스의 입구는 LoginContainer부터 작성하겠다.</font><br />
+<font size=2>src 폴더 아래에 containers 폴더를 만들고 그 아래로 loginContainer라는 폴더를 만든다.</font><br />
+<font size=2>loginContainer 아래에 LoginContainer.js와 LoginContainer.module.css 파일을 만든다.</font><br />
+
+```
+import { useEffect, useState, useContext } from "react";
+import styles from "./LoginContainer.module.css";
+// 1
+import { socket } from "../../socket";
+import { Context } from "../../context";
+import { AUTH_INFO } from "../../context/action";
+import logo from "../../images/logo.png";
+import { useNavigate } from "react-router-dom";
+
+const LoginContainer = () => {
+  // 2
+  const navigate = useNavigate();
+
+  // 3
+  const { dispatch, } = useContext(Context);
+  const [ user, setUser ] = useState("");
+
+  // 4
+  useEffect(() => {
+    socket.on("connect_error", (err) => {
+      if(err.message === "invalid username") {
+        console.log("err");
+      }
+    });
+  }, []);
+
+  const setUserNameHandler = (e) => {
+    setUser(e.target.value);
+  };
+
+  // 5
+  const onLoginHandler = (e) => {
+    e.preventDefault();
+    dispatch({
+      type: AUTH_INFO,
+      payload: user,
+    });
+
+    socket.auth = { userName: user };
+    socket.connect();
+    navigate("/post");
+  };
+
+  return (
+    <div className={styles.loginContainer}>
+      <div className={styles.login}>
+        <img src={logo} width={200} alt="logo" />
+        <form className={styles.loginForm} onSubmit={onLoginHandler}>
+          <input 
+            className={styles.input}
+            type="text"
+            value={user}
+            placeholder="Enter your name"
+            onChange={setUserNameHandler}
+          />
+          <button onClick={onLoginHandler} className={styles.button}>
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+};
+
+export default LoginContainer;
+```
+
+<font size=2>1. 필요한 라이브러리와 컴포넌트를 불러온다.</font><br />
+
+```
+import { Context } from "../../context";
+import { AUTH_INFO } from "../../context/action";
+
+특히 위에서 미리 설정한 Context API 액션 값과 Context를 불러와서 로그인할 때에 사용자 이름을 저장한다.
+```
+
+<font size=2>2. useNavigate()는 페이지 라우팅을 위해 설정했다.</font><br /><br />
+
+<font size=2>3. dispatch라는 함수를 통해 전역 변수를 관리한다.</font><br /><br />
+
+<font size=2>4. 소켓 서버에서 사용자 이름 유효성 검사를 확인한 후에 없다면 오류 콜백을 호출한다.</font><br />
+
+```
+socket.on("connect_error", (err) => {
+  if(err.message === "invalid username") {
+    console.log("err");
+  }
+});
+
+'connect_error'라는 이벤트를 통해서 호출되며 위 예제에서는 단순하게 오류 로그를 노출한다.
+```
+
+<font size=2>5. 로그인 버튼을 클릭하면 노출된다.</font><br />
+
+```
+dispatch({
+  type: AUTH_INFO,
+  payload: user,
+});
+
+socket.auth = { userName: user };
+socket.connect();
+navigate("/post");
+
+드디어 위에서 설정한 Context API의 사용 모습이 보인다.
+dispatch 함수에 미리 선언한 AUTH_INFO 타입을 추가하고 payload에 실제 업데이트할 값을 추가한다.
+서버 사이드에서 먼저 살펴봤던 handshake 속성의 auth 부분을 추가하는 부분이다.
+
+socket.auth라는 객체에 userName을 설정한다.
+socket.connect() 메소드로 소켓을 연결한다.
+```
+
+```
+LoginContainer.module.css
+
+.loginContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.login {
+  border: 1px solid #cecece;
+  padding: 20px;
+  height: 400px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.loginForm {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.input {
+  width: calc(100% - 22px);
+  border: 1px solid #cecece;
+  padding: 10px;
+  border-radius: 5px;
+}
+.button {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #6799ff;
+  color: white;
+  cursor: pointer;
+}
+```
+
+### PostingContainer.js (179p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
