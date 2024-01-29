@@ -938,6 +938,89 @@ LoginContainer.module.css
 
 ### PostingContainer.js (179p)
 
+<font size=2>다음은 포스팅 목록을 노출하는 PostingContainer이다.</font><br />
+<font size=2>containers 폴더로 이동한 다음 LoginContainer와 동일하게 postContainer 폴더를 추가한다.</font><br />
+<font size=2>그 아래에 PostingContainer.js 파일을 만든다.</font><br />
+
+```
+PostingContainer
+
+import { useEffect, useState, useContext } from "react";
+import Card from "../../components/card/Card";
+import Navbar from "../../components/navbar/Navbar";
+import { socket } from "../../socket";
+import { Context } from "../../context";
+
+const PostingContainer = () => {
+  // 1
+  const {
+    state: { userName },
+  } = useContext(Context);
+  const [ post, setPost ] = useState([]);
+
+  // 2
+  useEffect(() => {
+    socket.emit("userList", {});
+  }, []);
+
+  // 3
+  useEffect(() => {
+    const setPosting = (data) => {
+      setPost(data);
+    };
+
+    socket.on("user-list", setPosting);
+
+    return () => {
+      socket.off("user-list", setPosting);
+    };
+  }, []);
+
+  return (
+    <div>
+      <h2>{`Login as a ${userName}`}</h2>
+      <div>
+        <Navbar />
+        {post.map((p) => {
+          <Card key={p.id} post={p} loginUser={userName} />
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default PostingContainer;
+```
+
+<font size=2>1. 전역으로 설정한 userName을 불러온다.</font><br /><br />
+
+<font size=2>2. 사용자 리스트를 불러온다.</font><br /><br />
+
+<font size=2>3. 서버에 받아온 사용자 리스트를 setPost에 설정한다.</font><br /><br />
+
+<font size=2>끝으로 작성한 컨테이너를 쉽게 불러올 수 있도록 containers 폴더에 index.js를 작성하겠다.</font><br />
+
+```
+index.js
+
+export { default as LoginContainer } from "./loginContainer/LoginContainer";
+export { default as PostingContainer } from "./postContainer/PostingContainer";
+```
+
+### 테스트 (181p)
+
+<font size=2>아래 명령어로 server.js를 실행한다.</font><br />
+
+```
+> cd server
+> npm run start
+```
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
