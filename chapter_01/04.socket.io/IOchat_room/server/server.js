@@ -17,7 +17,7 @@ io.sockets.on("connection", (socket) => {
       io.sockets.to(toUser).emit("sMessage", res);
       return;
     }
-    // 1
+
     const myRooms = Array.from(socket.rooms);
     if( myRooms.length > 1 ) {
       socket.broadcast.in(myRooms[1]).emit("sMessage", res);
@@ -28,7 +28,7 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("login", (data) => {
     const { userId, roomNumber } = data;
-    // 2
+    
     socket.join(roomNumber);
     clients.set(userId, socket.id);
     socket.broadcast.emit("sLogin", userId);

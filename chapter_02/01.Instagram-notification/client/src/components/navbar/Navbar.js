@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { HiOutlinePaperAirplane } from "react-icons/hi";
-// 1
 import { socket } from "socket.io-client";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
-  // 2
   const [ notifications, setNotifications ] = useState([]);
 
-  // 3
   useEffect(() => {
     const getNofi = (data) => {
       const { type } = data;

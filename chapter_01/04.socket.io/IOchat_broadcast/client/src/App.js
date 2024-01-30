@@ -1,21 +1,17 @@
 import React, { useRef, useEffect, useState } from "react";
 import './App.css';
 import logo from "./images/iologo.png";
-// 1
 import { io } from "socket.io-client";
 
-// 2
 const webSocket = io("http://localhost:5000");
 
 const App = () => {
-  // 3
   const messagesEndRef = useRef(null);
   const [ userId, setUserId ] = useState("");
   const [ isLogin, setIsLogin ] = useState(false);
   const [ msg, setMsg ] = useState("");
   const [ msgList, setMsgList ] = useState([]);
 
-  // 4
   useEffect(() => {
     if ( !webSocket ) return;
 
@@ -38,7 +34,6 @@ const App = () => {
     };
   }, []);
 
-  // 5
   useEffect(() => {
     if ( !webSocket ) return;
 
@@ -60,7 +55,6 @@ const App = () => {
     }
   }, []);
 
-  // 6
   useEffect(() => {
     scrollToBottom();
   }, [msgList]);
@@ -69,19 +63,16 @@ const App = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 7
   const onSubmitHandler = (e) => {
     e.preventDefault();
     webSocket.emit("login", userId);
     setIsLogin(true);
   };
 
-  // 8
   const onChangeUserIdHandler = (e) => {
     setUserId(e.target.value);
   };
 
-  // 9
   const onSendSubmitHandler = (e) => {
     e.preventDefault();
     const sendData = {
@@ -93,7 +84,6 @@ const App = () => {
     setMsg("");
   };
 
-  // 10
   const onChangeMsgHandler = (e) => {
     setMsg(e.target.value);
   };
@@ -102,7 +92,6 @@ const App = () => {
     <div className="app-container">
       <div className="wrap">
         {isLogin ? (
-          // 11
           <div className="chat-box">
             <h3>Login as a "{userId}"</h3>
             <ul className="chat">
@@ -135,7 +124,6 @@ const App = () => {
             </form>
           </div>
         ) : (
-          // 11
           <div className="login-box">
             <div className="login-title">
               <img 

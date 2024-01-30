@@ -2,18 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import './App.css';
 import logo from "./images/websocket.png";
 
-// 1
 const websocket = new WebSocket("ws://localhost:5000");
 
 const App = () => {
-  // 2
   const messagesEndRef = useRef(null);
   const [ userId, setUserId ] = useState("");
   const [ isLogin, setIsLogin ] = useState(false);
   const [ msg, setMsg ] = useState("");
   const [ msgList, setMsgList ] = useState([]);
 
-  // 3
   useEffect(() => {
     if( !websocket ) return;
 
@@ -34,7 +31,6 @@ const App = () => {
     };
   }, []);
 
-  // 5
   useEffect(() => {
     scrollToBottom();
   }, [msgList]);
@@ -43,7 +39,6 @@ const App = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 6
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const sendData = {
@@ -55,12 +50,10 @@ const App = () => {
     setIsLogin(true);
   };
 
-  // 7
   const onChangeUserIdHandler = (e) => {
     setUserId(e.target.value);
   };
 
-  // 8
   const onSendSubmitHandler = (e) => {
     e.preventDefault();
     const sendData = {
@@ -74,7 +67,6 @@ const App = () => {
     setMsg("");
   };
 
-  // 9
   const onChangeMsgHandler = (e) => {
     setMsg(e.target.value);
   };
@@ -83,7 +75,6 @@ const App = () => {
     <div className="app-container">
       <div className="wrap">
         {isLogin ? (
-          // 10
           <div className="chat-box">
             <h3>Login as a "{userId}"</h3>
             <ul className="chat">
@@ -116,7 +107,6 @@ const App = () => {
             </form>
           </div>
         ) : (
-          // 11
           <div className="login-box">
             <div className="login-title">
               <img 

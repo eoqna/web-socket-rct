@@ -11,20 +11,17 @@ const App = () => {
   const [ isLogin, setIsLogin ] = useState(false);
   const [ msg, setMsg ] = useState("");
   const [ msgList, setMsgList ] = useState([]);
-  // 1
   const [ privateTarget, setPrivateTarget ] = useState("");
 
   useEffect(() => {
     if ( !webSocket ) return;
 
     const sMessageCallback = (msg) => {
-      // 2
       const { data, id, target } = msg;
       setMsgList((prev) => [
         ...prev,
         {
           msg: data,
-          // 3
           type: target ? "private" : "other",
           id: id,
         },
@@ -79,7 +76,6 @@ const App = () => {
 
   const onSendSubmitHandler = (e) => {
     e.preventDefault();
-    // 4
     const sendData = {
       data: msg,
       id: userId,
@@ -94,7 +90,6 @@ const App = () => {
     setMsg(e.target.value);
   };
 
-  // 5
   const onSetPrivateTarget = (e) => {
     const { id } = e.target.dataset;
     setPrivateTarget((prev) => ( prev === id ? "" : id ));

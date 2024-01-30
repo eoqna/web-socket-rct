@@ -12,7 +12,6 @@ const App = () => {
   const [ msg, setMsg ] = useState("");
   const [ msgList, setMsgList ] = useState([]);
   const [ privateTarget, setPrivateTarget ] = useState("");
-  // 1
   const [ roomNumber, setRoomNumber ] = useState("1");
 
   useEffect(() => {
@@ -66,7 +65,6 @@ const App = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 2
   const onSubmitHandler = (e) => {
     e.preventDefault();
     webSocket.emit("login", { userId: userId, roomNumber: roomNumber });
@@ -98,7 +96,6 @@ const App = () => {
     setPrivateTarget((prev) => ( prev === id ? "" : id ));
   };
 
-  // 3
   const onRoomChangeHandler = (e) => {
     setRoomNumber(e.target.value);
   }

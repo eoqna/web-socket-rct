@@ -1,4 +1,3 @@
-// 1
 import {
   BrowserRouter as Router,
   Routes,

@@ -5,18 +5,15 @@ import { socket } from "../../socket";
 import { Context } from "../../context";
 
 const PostingContainer = () => {
-  // 1
   const {
     state: { userName },
   } = useContext(Context);
   const [ post, setPost ] = useState([]);
 
-  // 2
   useEffect(() => {
     socket.emit("userList", {});
   }, []);
 
-  // 3
   useEffect(() => {
     const setPosting = (data) => {
       setPost(data);

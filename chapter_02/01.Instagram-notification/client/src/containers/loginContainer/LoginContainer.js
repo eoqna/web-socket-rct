@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import styles from "./LoginContainer.module.css";
-// 1
 import { socket } from "../../socket";
 import { Context } from "../../context";
 import { AUTH_INFO } from "../../context/action";
@@ -8,14 +7,10 @@ import logo from "../../images/logo.png";
 import { useNavigate } from "react-router-dom";
 
 const LoginContainer = () => {
-  // 2
   const navigate = useNavigate();
-
-  // 3
   const { dispatch, } = useContext(Context);
   const [ user, setUser ] = useState("");
 
-  // 4
   useEffect(() => {
     socket.on("connect_error", (err) => {
       if(err.message === "invalid username") {
@@ -28,7 +23,6 @@ const LoginContainer = () => {
     setUser(e.target.value);
   };
 
-  // 5
   const onLoginHandler = (e) => {
     e.preventDefault();
     dispatch({
