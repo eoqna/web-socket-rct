@@ -33,7 +33,6 @@ const Card = ({ key, post, loginUser }) => {
       </div>
       <img src={post.postImg} alt="" className={styles.postImg} />
       <div className={styles.icons}>
-        // 5
         {liked ? (
           <AiFillHeart 
             className={styles.fillHeart}

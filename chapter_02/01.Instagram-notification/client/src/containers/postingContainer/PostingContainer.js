@@ -31,9 +31,9 @@ const PostingContainer = () => {
       <h2>{`Login as a ${userName}`}</h2>
       <div>
         <Navbar />
-        {post.map((p) => {
+        {post.map((p) => (
           <Card key={p.id} post={p} loginUser={userName} />
-        })}
+        ))}
       </div>
     </div>
   );

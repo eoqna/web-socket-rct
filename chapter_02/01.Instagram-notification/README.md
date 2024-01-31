@@ -981,9 +981,9 @@ const PostingContainer = () => {
       <h2>{`Login as a ${userName}`}</h2>
       <div>
         <Navbar />
-        {post.map((p) => {
+        {post.map((p) => (
           <Card key={p.id} post={p} loginUser={userName} />
-        })}
+        ))}
       </div>
     </div>
   );
@@ -1016,9 +1016,31 @@ export { default as PostingContainer } from "./postContainer/PostingContainer";
 > npm run start
 ```
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>마찬가지로 클라이언트도 실행한다.</font><br />
+
+```
+> cd client
+> npm run start
+```
+
+<font size=2>http://localhost:3000으로 접속 후 다음과 같이 보인다면 성공이다.</font><br />
+
+![BROWSER_RENDERING](./assets/Instagram_Login.png)
+
+<font size=2>이제 사용자 이름을 입력하고 로그인 버튼을 클릭한다.</font><br />
+<font size=2>필자는 Tom으로 입력하겠다.</font><br />
+<font size=2>Tom으로 로그인했다는 제목과 함께 랜덤한 사진과 포스팅 글이 나온다.</font><br />
+
+![BROWSER_RENDERING](./assets/Instagram_Login_Tom.png)
+
+<font size=2>이제 http://localhost:3000으로 다른 브라우저 창 하나를 더 띄운다.</font><br />
+<font size=2>이번엔 Jane으로 로그인한다.</font><br />
+
+![BROWSER_RENDERING](./assets/Instagram_Login_Jane.png)
+![BROWSER_RENDERING](./assets/Instagram_Login_Tom2.png)
+
+<font size=2>Jane까지 노출되는 것을 볼 수 있다.</font><br />
+<font size=2>Jane으로 접속한 화면에서 Tom의 포스팅에 좋아요를 눌러본다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
