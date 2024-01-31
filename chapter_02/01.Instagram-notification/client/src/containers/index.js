@@ -1,2 +1,2 @@
 export { default as LoginContainer } from "./loginContainer/LoginContainer";
-export { default as PostingContainer } from "./postContainer/PostingContainer";
+export { default as PostingContainer } from "./postingContainer/PostingContainer";

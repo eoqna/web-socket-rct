@@ -53,7 +53,7 @@ const LoginContainer = () => {
         </form>
       </div>
     </div>
-  )
+  );
 };
 
 export default LoginContainer;
