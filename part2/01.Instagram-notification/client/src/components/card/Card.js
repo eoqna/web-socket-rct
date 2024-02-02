@@ -37,14 +37,14 @@ const Card = ({ key, post, loginUser }) => {
           <AiFillHeart 
             className={styles.fillHeart}
             size={20}
-            onClick={onLikeHandler}
+            onClick={(e) => onLikeHandler(e)}
             data-type="1"
           />
         ) : (
           <AiOutlineHeart
             className={styles.heart}
             size={20}
-            onCanPlay={onLikeHandler}
+            onCanPlay={(e) => onLikeHandler(e)}
             data-type="0"
           />
         )}
