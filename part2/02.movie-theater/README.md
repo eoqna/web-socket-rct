@@ -359,6 +359,353 @@ export const socket = io("http://localhost:5000", {
 <font size=2>HomeContainer는 사용자가 우리 사이트를 방문하면 처음으로 노출되는 화면이다.</font><br />
 <font size=2>HomeContainer에 현재 상영작인 3개의 영화를 노출할 계획이다.</font><br />
 <font size=2>homeContainer 폴더 아래 HomeContainer.js와 HomeContainer.module.css를 추가한다.</font><br />
+
+```
+HomeContainer.module.css
+
+.home_container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.title {
+  text-align: left;
+}
+.wrap_movies {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  list-style: none;
+}
+.movie {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  border-radius: 15px;
+}
+.movie:hover {
+  box-shadow: 5px 5px 5px #cecece;
+}
+.img_wrap {
+  position: relative;
+}
+.number {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+  font-size: 40px;
+  padding: 0;
+  margin: 0;
+}
+.img {
+  border-radius: 15px;
+}
+.movie_title {
+  font-weight: bold;
+  padding: 5px 10px;
+  color: #000;
+}
+```
+
+<font size=2>module을 사용했기 때문에 CSS의 계층 구조를 사용하지 않았다.</font><br />
+
+```
+import React, { useEffect } from "react";
+import styles from "./HomeContainer.module.css";
+import classNames from "classnames/bind";
+import avatar from "../../images/avatar.png";
+import antman from "../../images/antman.png";
+import cat from "../../images/cat.png";
+import { socket } from "socket.io-client";
+import { Link } from "react-router-dom";
+
+// 1
+const cx = classNames.bind(styles);
+
+const HomeContainer = () => {
+  useEffect(() => {
+    socket.connect();
+  }, []);
+
+  return (
+    <div className={cx("home_container")}>
+      <h2 className={cx("title")}>Movie Chart</h2>
+      <ul className={cx("wrap_movies")}>
+        <li className={cx("movie")}>
+          // 2
+          <Link
+            to={`/seat/1/Avatar: The Way of Water`}
+            style={{ textDecoration: "none" }}
+          >
+            <div className={cx("img_wrap")}>
+              <img 
+                src={avatar}
+                width={250}
+                height={300}
+                className={cx("img")}
+                alt="aa"
+              />
+              <h3 className={cx("number")}>1</h3>
+            </div>
+            <div className={cx("movie_title")}>
+              Avatar: The Way of Water
+            </div>
+          </Link>
+        </li>
+        <li className={cx("movie")}>
+          <Link
+            to={`/seat/2/Ant-Man and the Wasp:Quantumania`}
+            style={{ textDecoration: "none" }}
+          >
+            <div className={cx("img_wrap")}>
+              <img 
+                src={antman}
+                width={250}
+                height={300}
+                className={cx("img")}
+                alt="aa"
+              />
+              <h3 className={cx("number")}>2</h3>
+            </div>
+            <div className={cx("movie_title")}>
+              Ant-Man and the Wasp:
+              <br /> Quantumania
+            </div>
+          </Link>
+        </li>
+        <li className={cx("movie")}>
+          <Link
+            to={`/seat/3/Puss in Boots: The Last Wish`}
+            style={{ textDecoration: "none" }}
+          >
+            <div className={cx("img_wrap")}>
+              <img 
+                src={cat}
+                width={250}
+                height={300}
+                className={cx("img")}
+                alt="aa"
+              />
+              <h3 className={cx("number")}>1</h3>
+            </div>
+            <div className={cx("movie_title")}>
+              Puss in Boots: The Last Wish
+            </div>
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+export default HomeContainer;
+```
+
+<font size=2>1. classNames라는 라이브러리를 이용해 스타일을 연결한다.</font><br />
+<font size=2>이후에는 cx() 형태로 정의된 스타일을 사용할 수 있다.</font><br />
+<font size=2>cx('home_container') 문법을 사용하면 조건문을 이용한 스타일도 가능하다.</font><br /><br />
+
+<font size=2>2. react-router-dom에서 제공하는 <Link> 태그를 사용한다.</font><br />
+<font size=2>to 속성을 사용하면 라우팅하는 페이즈이 pathVariable을 쉽게 사용할 수 있다.</font><br />
+<font size=2>이동한 페이지 또한 쉽게 path에 속해 있는 변수값을 추출할 수 있다.</font><br /><br />
+
+### SeatContainer.js (203p)
+
+<font size=2>seatContainer 폴더 아래 SeatContainer.js와 SeatContainer.module.css를 추가한다.</font><br />
+
+```
+SeatContainer.module.css
+
+.seat_container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.title {
+  text-align: left;
+}
+.screen {
+  margin-top: 50px;
+  background-color: #cecece;
+  width: 200px;
+  text-align: center;
+}
+.wrap_seats {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  list-style: none;
+  flex-wrap: wrap;
+  padding: 20px;
+  width: 240px;
+}
+.seat {
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.default {
+  background-color: #cecece;
+}
+.default:hover {
+  background-color: blue;
+}
+.empty {
+  background-color: #fff;
+  cursor: default;
+}
+.active {
+  background-color: blue;
+}
+.soldout {
+  background-color: red;
+  cursor: default;
+}
+.r_wrap {
+  width: 240px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.r_title {
+  margin: 0;
+}
+.r_confirm {
+  border: 0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #6cc0ff;
+  color: #fff;
+  cursor: pointer;
+}
+```
+
+```
+SeatContainer.js
+
+import { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import styles from "./SeatContainer.module.css";
+import classNames from "classnames/bind";
+import { socket } from "socket.io-client";
+
+const cx = classNames.bind(styles);
+
+const SeatContainer = () => {
+  // 1
+  const { id, title } = useParams();
+  const [ booked, setBooked ] = useState("");
+  const [ seats, setSeats ] = useState([]);
+  const [ isDisabled, setIsDisabled ] = useState(false);
+
+  // 2
+  useEffect(() => {
+    socket.emit("join", id);
+
+    return () => {
+      socket.disconnect();
+    }
+  }, []);
+
+  // 3
+  useEffect(() => {
+    const setSeat = (data) => {
+      setSeats(data);
+    };
+
+    socket.on("sSeatMessage", setSeat);
+
+    return () => {
+      socket.off("sSeatMessage", setSeat);
+    };
+  }, []);
+
+  // 4
+  const onClickHandler = (e) => {
+    if( isDisabled ) return;
+
+    const { id, status } = e.target.dataset;
+
+    if( status === "3" || status === "0" ) return;
+
+    setBooked(id);
+
+    const tempSeats = seats.map((s) => {
+      return s.map((i) => {
+        let temp = {...i};
+        
+        if( i.seatNumber === id ) {
+          temp = {...i, status: 2};
+        } else {
+          temp = {...i, status: i.status === 2 ? 1 : i.status};
+        }
+        return temp;
+      });
+    });
+
+    setSeats(tempSeats);
+  };
+
+  // 5
+  const onConfirmHandler = () => {
+    if( !booked ) return;
+
+    socket.emit("addSeat", booked);
+    setIsDisabled(true);
+  };
+
+  return (
+    <div className={cx("seat_container")}>
+      <h2 className={cx("title")}>{title}</h2>
+      <div className={cx("screen")}>screen</div>
+      <ul className={cx("wrap_seats")}>
+        // 6
+        {seats.map((v) => {
+          return v.map((i, idx) => {
+            <li
+              key={`seat_${idx}`}
+              data-id={i.seatNumber}
+              data-status={i.status}
+              className={cx(
+                "seat",
+                i.status === 0 && "empty",
+                i.status === 1 && "default",
+                i.status === 2 && "active",
+                i.status === 3 && "soldout"
+              )}
+              onClick={onClickHandler}
+            ></li>
+          });
+        })}
+      </ul>
+      <div className={cx("r_wrap")}>
+        <h4 className={cx("r_title")}>{booked}</h4>
+        {!isDisabled && (
+          <button
+            className={cx("r_confirm")}
+            onClick={onConfirmHandler}
+          >
+            Confirm
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SeatContainer;
+```
+
+<font size=2>1. useParam()을 이용해서 param path로 들어온 id와 title 값을 추출한다.</font><br /><br />
+
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
