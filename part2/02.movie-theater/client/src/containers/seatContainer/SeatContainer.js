@@ -2,9 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./SeatContainer.module.css";
 import classNames from "classnames/bind";
-import { socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
 const cx = classNames.bind(styles);
+const socket = io("http://localhost:5000");
 
 const SeatContainer = () => {
   const { id, title } = useParams();
@@ -70,7 +71,7 @@ const SeatContainer = () => {
       <div className={cx("screen")}>screen</div>
       <ul className={cx("wrap_seats")}>
         {seats.map((v) => {
-          return v.map((i, idx) => {
+          return v.map((i, idx) => (
             <li
               key={`seat_${idx}`}
               data-id={i.seatNumber}
@@ -84,7 +85,7 @@ const SeatContainer = () => {
               )}
               onClick={onClickHandler}
             ></li>
-          });
+          ));
         })}
       </ul>
       <div className={cx("r_wrap")}>

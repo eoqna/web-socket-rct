@@ -4,10 +4,11 @@ import classNames from "classnames/bind";
 import avatar from "../../images/avatar.png";
 import antman from "../../images/antman.png";
 import cat from "../../images/cat.png";
-import { socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
+const socket = io("http://localhost:5000");
 
 const HomeContainer = () => {
   useEffect(() => {
@@ -72,7 +73,7 @@ const HomeContainer = () => {
                 className={cx("img")}
                 alt="aa"
               />
-              <h3 className={cx("number")}>1</h3>
+              <h3 className={cx("number")}>3</h3>
             </div>
             <div className={cx("movie_title")}>
               Puss in Boots: The Last Wish

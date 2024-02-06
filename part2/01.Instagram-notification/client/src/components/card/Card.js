@@ -3,7 +3,7 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { HiOutlinePaperAirplane } from "react-icons/hi";
 import { BiMessageRounded } from "react-icons/bi";
 import { FiMoreVertical } from "react-icons/fi";
-import { socket } from "../../socket";
+import socket from "../../socket";
 import styles from "./Card.module.css";
 
 const Card = ({ key, post, loginUser }) => {

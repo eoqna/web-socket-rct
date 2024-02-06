@@ -420,7 +420,7 @@ import classNames from "classnames/bind";
 import avatar from "../../images/avatar.png";
 import antman from "../../images/antman.png";
 import cat from "../../images/cat.png";
-import { socket } from "socket.io-client";
+import socket from "socket.io-client";
 import { Link } from "react-router-dom";
 
 // 1
@@ -594,7 +594,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./SeatContainer.module.css";
 import classNames from "classnames/bind";
-import { socket } from "socket.io-client";
+import socket from "socket.io-client";
 
 const cx = classNames.bind(styles);
 
@@ -705,7 +705,71 @@ export default SeatContainer;
 
 <font size=2>1. useParam()을 이용해서 param path로 들어온 id와 title 값을 추출한다.</font><br /><br />
 
-<font size=2></font><br />
+<font size=2>2. 좌석 페이지에 최초로 진입할 때 소켓의 'join' 이벤트를 호출한다.</font><br />
+<font size=2>호출과 동시에 지금 어느 상영관인지를 구분하기 위해 구분값으로 아이디 값을 함께 전송한다.</font><br />
+<font size=2>전송된 아이디 값은 socket.io의 room 구분값으로 사용된다.</font><br />
+
+```
+return () => {
+  socket.disconnect();
+}
+```
+
+<font size=2>또한 페이지가 언마운트되었을때 소켓 연결을 해제하기 위한 콜백 함수를 정의했다.</font><br /><br />
+
+<font size=2>3. 'sSeatMessage'는 페이지에 진입할 때 서버에 저장된 좌석 배치를 받아오는 이벤트다.</font><br />
+<font size=2>이 이벤트를 통해서 접속자는 남아 있는 좌석을 파악하고 예약할 수 있다.</font><br />
+<font size=2>받아온 데이터는 setSeats라는 객체에 저장되서 관리된다.</font><br /><br />
+
+<font size=2>4. onClickHandler()는 사용자가 좌석을 클릭하면 호출된다.</font><br />
+<font size=2>회색을 클릭하는 경우 파란색으로 변하게 되고 빨간색 혹은 통로쪽은 클릭할 수 없도록 return 처리를 했다.</font><br /><br />
+
+<font size=2>5. onConfirmHandler()는 Confirm 버튼을 클릭하면 실행된다.</font><br />
+<font size=2>최종적으로 선택된 좌석의 이름 값을 소켓 서버로 전송한다.</font><br />
+<font size=2>이걸 받은 서버는 빨간색으로 status를 변경하고 다시 클라이언트에게 업데이트된 내용을 돌려준다.</font><br />
+<font size=2>Confirm 버튼을 한 번 클릭했기 때문에 Confirm 버튼을 보이지 않게 하는 처리를 추가했다.</font><br /><br />
+
+<font size=2>6. map()을 이용해서 좌석을 배치하는 문장이다.</font><br />
+<font size=2>classnames 라이브러리를 이용해서 status 값에 따른 CSS 처리를 추가했다.</font><br /><br />
+
+<font size=2>마지막으로 containers 폴더에 index.js를 추가한다.</font><br />
+<font size=2>export 설정을 함으로써 다른 컴포넌트에서 사용할 때 간단하게 import 할 수 있다.</font><br />
+
+```
+export { default as HomeContainer } from "./homeContainer/HomeContainer";
+export { default as SeatContainer } from "./seatContainer/SeatContainer";
+```
+
+### App.js (209p)
+
+```
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HomeContainer, SeatContainer } from "./containers";
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomeContainer />} />
+        <Route path="/seat/:id/:title" element={<SeatContainer />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+<font size=2>react-router-dom을 이용해서 라우팅을 설계한다.</font><br />
+<font size=2>:id, :title을 이용해서 동적으로 path 값을 변경할 수 있다.</font><br /><br />
+
+### 테스트 (209p)
+
+<font size=2>이제는 http://localhost:3000으로 접속해서 우리가 만든 서비스가 잘 동작하는지 확인한다.</font><br />
+
+![BROWSER_RENDERING](./assets/HomeContainer.png)
+
+<font size=2>이 중 아바타를 선택한다. 선택한다면 다음과 같이 좌석을 선택하는 화면이 나온다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
