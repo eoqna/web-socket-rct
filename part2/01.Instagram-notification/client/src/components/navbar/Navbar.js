@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { HiOutlinePaperAirplane } from "react-icons/hi";
-import socket from "../../socket";
+import { socket } from "../../socket";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {

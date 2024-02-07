@@ -555,7 +555,7 @@ const Card = ({ key, post, loginUser }) => {
           <AiOutlineHeart
             className={styles.heart}
             size={20}
-            onCanPlay={onLikeHandler}
+            onClick={onLikeHandler}
             data-type="0"
           />
         )}
