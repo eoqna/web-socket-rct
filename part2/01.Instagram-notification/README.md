@@ -1041,11 +1041,11 @@ export { default as PostingContainer } from "./postContainer/PostingContainer";
 
 <font size=2>Jane까지 노출되는 것을 볼 수 있다.</font><br />
 <font size=2>Jane으로 접속한 화면에서 Tom의 포스팅에 좋아요를 눌러본다.</font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+
+![BROWSER_RENDERING](./assets/Instagram_Liked_Jane.png)
+![BROWSER_RENDERING](./assets/Instagram_Liked_Tom.png)
+
+<font size=2>좋아요 클릭과 동시에 Tom의 헤더에 알림이 표시된다.</font><br /><br />
+
+<font size=2>이번 예제를 통해서 Context API 설정 방법과 socket.io의 handshake 속성을 살펴봤다.</font><br />
+<font size=2>여기서 배운 기능을 토대로 남아 있는 Part 2의 실전 예제를 진행할 예정이다.</font><br />

@@ -770,8 +770,19 @@ export default App;
 ![BROWSER_RENDERING](./assets/HomeContainer.png)
 
 <font size=2>이 중 아바타를 선택한다. 선택한다면 다음과 같이 좌석을 선택하는 화면이 나온다.</font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+
+![BROWSER_RENDERING](./assets/Movie_Theater_Seats.png)
+
+<font size=2>좌석을 선택하면 파란 표시와 함께 좌석 번호가 함께 출력된다.</font><br />
+
+![BROWSER_RENDERING](./assets/Movie_Theater_Select_Seat.png)
+
+<font size=2>이제 Confirm 버튼을 눌러서 좌석을 확정하겠다.</font><br />
+<font size=2>이와 동시에 다른 브라우저로 http://localhost:3000으로 접속해서 동일하게 아바타를 선택한다.</font><br />
+<font size=2>그림처럼 임의의 자리를 선택한다.</font><br />
+
+![BROWSER_RENDERING](./assets/Movie_Theater_Confirm_Seat.png)
+![BROWSER_RENDERING](./assets/Movie_Theater_Other_User.png)
+
+<font size=2>선택과 동시에 기존에 있던 좌석에도 빨간새긍로 체크되는 걸 확인할 수 있다.</font><br />
+<font size=2>위의 예제를 간단한 기능만을 구현했지만 이 원리를 이용해서 더 멋진 예약 서비스도 만들 수 있다.</font><br />
