@@ -1,0 +1,11 @@
+{
+  "name": "03.google-docs",
+  "version": "1.0.0",
+  "description": "<font size=2>구글 문서(Google Docs)는 구글에서 제공하는 온라인 문서 편집 도구이다.</font><br />\r <font size=2>구글 문서를 이용해서 언제 어디서든지 간편하게 워드 파일을 작성하고 공유할 수 있다.</font><br />\r <font size=2>구글 문서의 가장 큰 특징은 동시에 여러 사용자와 함께 문서를 제작/편집할 수 있다는 점이다.</font><br />\r <font size=2>이번에 우리가 만들어볼 웹 서비스는 구글 문서의 클론 버전으로 동시에 문서를 편집할 수 있는 기능과 일정 시간이 지나면 자동으로 저장되는 기능을 만들어보겠다.</font><br />",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

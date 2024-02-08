@@ -21,8 +21,66 @@
 > npx create-react-app client
 ```
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>server 폴더로 이동해서 npm 프로젝트를 설정하고 server.js 파일을 생성한다.</font><br />
+
+```
+> cd server
+> npm init
+```
+
+<font size=2>client 폴더에서 사용하지 않는 파일은 삭제한다.</font><br />
+
+```
+ - App.css
+ - App.test.js
+ - index.css
+ - logo.svg
+ - reportWebVitals.js
+ - setupTests.js
+```
+
+<font size=2>App.js에서 방금 지웠던 import 항목들과 로고를 사용하는 부분을 삭제한다.</font><br />
+
+```
+const App = () => {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<font size=2>추가적으로 index.js에서 참조하지 않는 파일과 React.strictMode를 제거한다.</font><br />
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+```
+
+<font size=2>google-docs 프로젝트에는 사용자가 입력한 내용을 저장할 수 있는 공간이 필요하다.</font><br />
+<font size=2>그 공간으로 mongoDB를 사용할 예정이다.</font><br />
+<font size=2>이 책 부록에 있는 mongoDB에서 기본적인 connection url 설정을 확인하라.</font><br />
+
+### 서버 사이드 (216p)
+
 <font size=2></font><br />
 <font size=2></font><br />
