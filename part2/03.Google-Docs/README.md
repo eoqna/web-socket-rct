@@ -85,10 +85,17 @@ root.render(<App />);
 ```
 필요한 라이브러리
 
-mogoonse : mongoDB를 사용하기 위한 인터페이스 기능을 제공한다.
+mongoose : mongoDB를 사용하기 위한 인터페이스 기능을 제공한다.
 nodemon : nodejs 서버를 모니터링하고 쉽게 재시작하기 위해 사용한다.
 socket.io : 소켓 통신을 위해 사용한다.
 ```
 
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
