@@ -90,7 +90,183 @@ nodemon : nodejs 서버를 모니터링하고 쉽게 재시작하기 위해 사�
 socket.io : 소켓 통신을 위해 사용한다.
 ```
 
-<font size=2></font><br />
+<font size=2>또 서버를 시작하기 위해 package.json에 아래 스크립트를 추가하겠다.</font><br />
+
+```
+"start": "nodemon server.js",
+```
+
+### Schema.js (217p)
+
+<font size=2>google-docs 프로젝트에서는 사용자가 입력한 정보를 저장하기 위해 mongoDB를 사용한다.</font><br />
+<font size=2>mongoDB는 데이터베이스이기 때문에 스키마 정보를 필요로 한다.</font><br />
+
+```
+스키마란?
+
+데이터베이스의 스키마(schema)는 데이터의 자료구조와 연관관계 등을 기술한 메타데이터이다.
+그래서 스키마를 통해 사람들은 애플리케이션의 데이터 관계를 파악하고 제약조건을 빠르게 이해할 수 있다.
+스키마는 개체(entity), 속성(attribute), 관계(relation) 등으로 이루어져 있다.
+```
+
+<font size=2>먼저 server 폴더에 Schema.js 파일을 만들어준다.</font><br />
+<font size=2>우리가 만들 스키마 내용을 추가한다.</font><br />
+
+```
+const { Schema, model } = require("mongoose");
+
+const googleDocsSchema = new Schema({
+    _id: String,
+    data: Object,
+});
+
+module.exports = model("GoogleDocs", googleDocsSchema);
+```
+
+<font size=2>mongoose에는 Schema와 model 이라는 함수를 이용해서 간단하게 스키마를 만들고 모델화할 수 있다.</font><br />
+<font size=2>_id와 data 이름을 갖는 도큐먼트를 만든다.</font><br />
+<font size=2>_id는 문자열 속성을 가지고 data는 객체의 속성을 가진다.</font><br />
+
+### server.js (218p)
+
+<font size=2>이제는 server.js를 작성하겠다.</font><br />
+<font size=2>server.js는 socket.io를 이용해서 만든 소켓 서버이다.</font><br />
+<font size=2>또한 mongoDB를 연결하는 작업도 포함한다.</font><br />
+
+```
+// 1
+const mongoose = require("mongoose");
+const Document = require("./Schema");
+
+const uri = "mongodb+srv://google-docs:1111@cluster0.6suahnm.mongodb.net/?retryWrites=true&w=majority";
+
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(uri)
+  .then(() => console.log("MongoDB Connected..."))
+  .catch((err) => console.log(err));
+
+// 2
+const io = require("socket.io")(5000, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+const userMap = new Map();
+
+io.on("connection", (socket) => {
+  let _documentId = "";
+
+  // 3
+  socket.on("join", async (documentId) => {
+    _documentId = documentId;
+    const document = await findOrCreateDocument(documentId);
+
+    socket.join(documentId);
+    socket.emit("initDocument", {
+      _document: document.data,
+      userList: userMap.get(documentId) || [],
+    });
+
+    const myId = Array.from(socket.rooms)[0];
+    setUserMap(_documentId, myId);
+    socket.broadcast.to(_documentId).emit("newUser", myId);
+  });
+
+  // 4
+  socket.on("save-document", async (data) => {
+    await Document.findByIdAndUpdate(_documentId, { data });
+  });
+
+  // 5
+  socket.on("send-changes", (delta) => {
+    socket.broadcast.to(_documentId).emit("receive-changes", delta);
+  });
+
+  // 6
+  socket.on("cursor-changes", (range) => {
+    const myRooms = Array.from(socket.rooms);
+    
+    socket.broadcast.to(_documentId).emit("receive-cursor", { range: range, id: myRooms[0] });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("disconnect...");
+  });
+});
+
+// 7
+function setUserMap(documentId, myId) {
+  const tempUserList = userMap.get(documentId);
+
+  if( !tempUserList ) {
+    userMap.set(documentId, [myId]);
+  } else {
+    userMap.set(documentId, [...tempUserList, myId]);
+  }
+};
+
+// 8
+async function findOrCreateDocument(id) {
+  if( id === null ) return;
+
+  const document = await Document.findById(id);
+
+  if( document ) return document;
+
+  return await Document.create({ _id: id, data: defaultValue });
+};
+```
+
+<font size=2>1. mongoose 라이브러리와 미리 작성한 Schema.js 파일을 불러온다.</font><br />
+<font size=2>또한 부록에서 설정한 mongoDB 연결 정보를 uri에 복사/붙여넣기 했다.</font><br />
+<font size=2>mongoose에서는 strictQuery가 true로 설정되어 있다.</font><br />
+<font size=2>false로 변경한다면 mongoDB에 유연하게 접근할 수 있다.</font><br />
+<font size=2>그러나 보안의 이유로 실제 운영하는 서비스라면 true를 추천한다.</font><br />
+<font size=2>connect(uri) 함수를 이용해서 우리가 미리 설정한 mongoDB에 접속할 수 있다.</font><br />
+
+```
+mongoose.connect(uri)
+
+uri 정보에는 아이디와 비밀번호가 노출된다.
+실제 운영 환경에서는 소스에 직접 입력하기보다는 환경변수와 같은 다른 방법을 추천한다.
+```
+
+<font size=2>2. socket.io를 이용해서 소켓 서버를 생성한다.</font><br />
+<font size=2>우리가 만든 소켓 서버는 5000번 포트를 가지며 http://localhost:3000에서 오는 요청을 허용한다.</font><br />
+<font size=2>접속한 사용자의 정보를 userMap이라는 객체에 저장할 예정이다.</font><br />
+<font size=2>사용자의 정보는 Map 형태로 저장되며 키 값으로는 도큐먼트 아이디, 값으로는 접속한 사용자의 아이디를 배열 형태로 저장한다.</font><br /><br />
+
+<font size=2>3. 최초 사용자가 google-docs에 진입하면 'join'이라는 소켓 이벤트를 호출하게 된다.</font><br />
+<font size=2>'join' 이벤트는 기본적으로 documentId라는 변수를 함께 넘기게 되어있다.</font><br />
+<font size=2>findOrCreateDocument()는 클라이언트에서 전달받은 documentId를 이용해서 기존에 작성한 문서가 있는지 확인하고</font><br />
+<font size=2>있다면 기존 문서를 반환하고 없다면 비어 있는 문서를 반환하는 함수이다.</font><br />
+<font size=2>각 문서마다 정보를 다르게 관리하기 위해 socket.join()을 이용해서 documentId에 맞는 방을 생성했다.</font><br />
+<font size=2>'initDocument' 이벤트를 이용해서 접속한 사용자에게 현재 문서의 내용과 접속되어 있는 사용자 정보를 전송한다.</font><br />
+<font size=2>전송된 사용자 정보는 실시간으로 다른 사람의 커서 정보를 확인할 수 있는 기본 데이터가 된다.</font><br />
+<font size=2>socket.rooms를 이용해서 socket.io가 제공하는 기본적인 socket ID(사용자 아이디)를 확인할 수 있다.</font><br />
+<font size=2>setUserMap()으로 현재 아이디 값을 Map에 저장하고 나를 제외한 같은 방에 속해 있는 모든 사람에게 나의 socket ID를 전송한다.</font><br /><br />
+
+<font size=2>4. 'save-document' 이벤트를 이용해서 현재 작성 중인 글을 저장한다.</font><br />
+<font size=2>findByIdAndUpdate()는 mongoose에서 제공되는 함수로 데이터를 업데이트하는데 사용한다.</font><br /><br />
+
+<font size=2>5. 'send-changes' 이벤트는 클라이언트에서 작성되는 글을 실시간으로 전송받아서 다른 사용자에게 전송하는 역할을 한다.</font><br />
+<font size=2>여기서 중요한 것은 'delta'라는 객체이다.</font><br />
+<font size=2>'delta'는 우리가 사용하는 quill이라는 에디터에서 사용하는 객체이다.</font><br />
+<font size=2>delta를 사용하면 quill 문서의 내용과 변화 등 다양한 부분을 표현할 수 있다.</font><br /><br />
+
+<font size=2>6. 'cursor-changes' 이벤트는 실시간으로 다른 사용자의 커서 클릭을 감지한다.</font><br />
+<font size=2>만약 나의 커서가 클릭을 했다면 라를 제외한 모든 사람들에게 커서의 위치 정보와 나의 사용자 아이디가 전송된다.</font><br /><br />
+
+<font size=2>7. setUserMap()은 우리가 위에서 작성한 userMap 객체를 관리하는 함수이다.</font><br />
+<font size=2>기본적으로 자바스크립트의 Map은 set(), get() 메소드를 이용해서 데이터를 추가하고 가져와서 사용할 수 있다.</font><br /><br />
+
+<font size=2>8. findOrCreateDocument()는 mongoDB에 접근해서 문서의 유무를 확인한다.</font><br />
+<font size=2>기존에 문서가 없다면 create() 메소드를 이용해서 생성한다.</font><br /><br />
+
+### 클라이언트 사이드 (223p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
