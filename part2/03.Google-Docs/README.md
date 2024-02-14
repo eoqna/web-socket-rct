@@ -267,6 +267,15 @@ uri 정보에는 아이디와 비밀번호가 노출된다.
 
 ### 클라이언트 사이드 (223p)
 
+```
+필요한 라이브러리
+
+ • @emotion/react
+  - emotionjs는 CSS 스타일을 위한 라이브러리이다.
+  - emotionjs를 이용해서 module.css와 scss 같은 기능을 간편하게 사용할 수 있다.
+
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
