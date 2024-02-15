@@ -274,7 +274,79 @@ uri 정보에는 아이디와 비밀번호가 노출된다.
   - emotionjs는 CSS 스타일을 위한 라이브러리이다.
   - emotionjs를 이용해서 module.css와 scss 같은 기능을 간편하게 사용할 수 있다.
 
+ • lodash-es
+  - lodash는 자바스크립트의 대표적인 utility 기능을 모아놓은 라이브러리이다.
+  - 함수형 프로그래밍으로 되어 있기 때문에 가독성 좋은 코딩이 가능하다.
+
+ • quill-cursors
+  - quill 에디터의 멀티 커서 기능을 사용하기 위해 추가했다.
+
+ • react-quill
+  - quill은 대표적인 자바스크립트 에디터 라이브러리이다.
+  - quill을 이용하면 우리가 흔히 사용하는 블로그와 문서 형식의 웹 서비스를 간편하게 제작할 수 있다.
+  - 여기서는 리액트 지원 버전인 react-quill을 사용할 예정이다.
+
+ • react-router-dom
+  - 리액트 라우팅을 위해 사용한다.
+
+ • socket.io-client
+  - 브라우저의 소켓 통신을 위해 사용한다.
+
+ • uuid
+  - UUID는 Universally Uique IDentifier의 약자로 네트워크에서 고유한 아이디 값을 표현하는 규약이다.
+  - 흔히 UUID를 생성한다고 하면 고유의 키 값이 필요할 때 사용한다.
+  - 작성 중인 문서를 구분하기 위한 키 값으로 사용할 예정이다.
+
+ • @craco/craco
+  - CRACO는 Create-React-App Configuration Override의 약자로 우리가 사용하는 CRA를 쉽게 설정할 수 있는 기능을 제공한다. 
+
+CRACO를 꼭 사용해서 설정해야 하나?
+
+CRA로 리액트 프로젝트를 시작한 경우 꼭 CRACO를 이용해서 설정 파일을 건드리지 않아도 된다.
+다만 CRACO를 이용하지 않는다면 CRA에서 제공하는 eject라는 명령어를 이용해서 실행해야 한다.
+
+eject 명령어는 CRA 프로젝트가 설정해놓은 모든 파일을 공개적으로 프로젝트 폴더에 노출하게 하는 명령어이다.
+여기서 말하는 설정 파일은 웹팩과 바벨 같은 설정을 말한다.
+
+그러나 eject를 실행한 CRA 프로젝트는 다시 전 상태로 돌릴 수 없으며 CRA에서 관리되는 리액트 버전을 관리하는 데 번거로움이 있다.
+특히 프로젝트 디렉터리가 어지럽게 변하는 단점이 있다.
+
+ • @emotion/babel-preset-css-prop
+  - emotionjs를 사용하기 위한 바벨 설정 파일이다.
 ```
+
+<font size=2>클라이언트를 위한 라이브러리를 먼저 설치하겠다.</font><br />
+
+```
+ > npm i @emotion/react
+ > npm i lodash-es
+ > npm i quill-cursors
+ > npm i react-router-dom
+ > npm i socket.io-client
+ > npm i uuid
+ > npm i --save-dev @craco/craco
+ > npm i --save-dev @emotion/babel-preset-css-prop
+```
+
+<font size=2>설치하는 과정에서 --save-dev라는 설정값이 추가되었다.</font><br />
+<font size=2>--save-dev 명령어로 설치된 라이브러리는 package.json의 'devDependencies'로 관리된다.</font><br />
+<font size=2>또한 production으로 배포될 때는 빌드되는 파일에는 포함되지 않는 특징을 가지고 있다.</font><br /><br />
+
+<font size=2>스타일 라이브러리인 emotionjs를 CRA에서 사용하기 위한 CRACO 라이브러리 설정이 필요하다.</font><br />
+<font size=2>루트 디렉터리인 client에서 craco.config.js 파일을 생성하고 아래 코드를 작성한다.</font><br />
+
+```
+module.exports = {
+  babel: {
+    presets: ['@emotion/babel-preset-css-prop'],
+  },
+}
+```
+
+<font size=2>이제 클라이언트 프로젝트를 위한 모든 준비는 끝났다.</font><br />
+<font size=2>컴포넌트부터 하나씩 작성을 시작하겠다.</font><br />
+
+### socket.js (227p)
 
 <font size=2></font><br />
 <font size=2></font><br />
