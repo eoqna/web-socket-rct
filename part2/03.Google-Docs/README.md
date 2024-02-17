@@ -348,6 +348,132 @@ module.exports = {
 
 ### socket.js (227p)
 
+<font size=2>소켓을 연결하기 위한 socket.js 파일을 추가한다.</font><br />
+<font size=2>socket.js 파일은 웹 소켓을 연결하기 위한 socket.io 객체를 초기화한다.</font><br />
+
+```
+import { io } from "socket.io-client";
+
+export const socket = io("http://localhost:5000");
+```
+
+### TextEditor.js (227p)
+
+<font size=2>먼저 src 아래 components라는 폴더를 생성하고 그 아래에 textEditor라는 폴더를 만든다.</font><br />
+<font size=2>TextEditor.js와 textEditor.style.js 파일을 textEditor 폴더 아래에 생성한다.</font><br />
+
+```
+// 1
+import { css } from "@emotion/react";
+import QuillCursors from "quill-cursors";
+import { containr } from "./textEditor.style";
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
+// 2
+const modules = {
+  cursors: true,
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ font: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["bold", "italic", "underline", "strike"],
+    [{ color: [] }, { background: [] }],
+    [{ script: "sub" }, { script: "super" }],
+    [{ align: [] }],
+    ["image", "blockquote", "code-block"],
+    ["clean"],
+  ],
+};
+
+Quill.register("module/cursors", QuillCursors);
+
+// 3
+const TextEditor = ({
+  text,
+  onChangeTextHandler,
+  reactQuillRef,
+  onChangeSelection,
+}) => {
+  return (
+    <div css={container}>
+      <ReactQuill
+        theme="snow"
+        modules={modules}
+        value={text}
+        onChange={onChangeTextHandler}
+        onChangeSelection={onChangeSelection}
+        ref={(el) => {
+          reactQuillRef.current = el;
+        }}
+      />
+    </div>
+  );
+};
+
+export default TextEditor;
+```
+
+<font size=2>1. 우리가 사용할 emotionjs와 ReactQuill을 추가한다.</font><br />
+<font size=2>또한 Quill 테마 중에 snow라는 CSS 스타일을 가져와서 quill 스타일을 적용한다.</font><br />
+<font size=2>quill-cursors를 이용해서 다중 사용자의 커서 위치를 확인할 수 있다.</font><br />
+<font size=2>emotionjs에서는 'css'라는 속성을 이용해서 CSS 스타일을 정의한다.</font><br /><br />
+
+<font size=2>2. Quill 라이브러리에서는 객체 구조를 이용해서 에디터의 다양한 도구를 구현하고 사용할 수 있다.</font><br />
+<font size=2>modules라는 객체 안에 toolbar 배열을 확인하면 우리가 흔히 볼 수 있는 에디터의 편집 도구를 확인할 수 있다.</font><br />
+<font size=2>Quill 라이브러리에는 다양한 모듈을 추가할 수 있다.</font><br />
+<font size=2>제공되는 기본적인 모듈의 사용부터 사용자가 직접 제작할 수 있는 커스텀 모듈까지 에디터를 추가할 수 있다.</font><br /><br />
+
+<font size=2>3. TextEditor라는 재사용 가능한 컴포넌트를 정의했다.</font><br />
+<font size=2>TextEditor는 속성으로 작성된 글 정보와 onChange, onChangeSelection이라는 이벤트 함수를 받는다.</font><br />
+<font size=2>마지막으로 Quill 정보를 부모 컴포넌트에서 참조하기 위해 리액트의 ref 속성을 이용했다.</font><br />
+
+```
+// 1
+import { css } from "@emotion/react";
+
+export const container = css`
+  .quill {
+    height: 100vh;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    background-color: #fff;
+  }
+  .ql-container.ql-snow {
+    border: none;
+    display: flex;
+    justify-content: center;
+  }
+  .ql-container.ql-editor {
+    width: 100%;
+  }
+  .ql-toolbar.ql-snow {
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f3f3f3;
+    border: none;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  }
+`;
+```
+
+<font size=2>1. emotionjs를 이용해서 우리가 사용할 CSS 스타일을 정의한다.</font><br />
+<font size=2>특이한 점은 파일명이 css가 아니라 js로 되어 있다는 점이다.</font><br />
+<font size=2>emotionjs를 대표적인 CSS-in-JS 라이브러리이다.</font><br />
+<font size=2>그래서 js파일 형태처럼 작성되고 js처럼 export, import가 가능하다.</font><br />
+<font size=2>CSS-in-JS이기 때문에 TextEditor.js 파일에 동시에 작성할 수 있다.</font><br />
+<font size=2>그러나 스타일을 분리해서 작성하면 프로젝트 파일 관리와 가독성이 뛰어난 장점이 있다.</font><br />
+
+### EditorContainer.js (231p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
