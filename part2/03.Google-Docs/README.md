@@ -470,10 +470,166 @@ export const container = css`
 
 ### EditorContainer.js (231p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>TextEditor 컴포넌트를 불러와서 사용하는 컨테이너를 정의하겠다.</font><br />
+<font size=2>src 아래 containers 폴더를 추가하고 그 아래에 editorContainer 폴더를 만든다.</font><br />
+<font size=2>editorContainer 폴더 아래 EditorContainer.js 파일을 추가한다.</font><br />
+<font size=2>EditorContainer.js는 소켓 통신과 Quill 이벤트를 관장하는 역할을 한다.</font><br />
+
+```
+import React, { useEffect, useRef, useState } from "react";
+// 1
+import { useParams } from "react-router-dom";
+import { debounce } from "lodash-es";
+import TextEditor from "../../components/textEditor";
+import { socket } from "../../socket";
+
+// 2
+const cursorMap = new Map();
+const cursorColor = [
+  "#ff0000",
+  "#ff5e00",
+  "#ffbb00",
+  "#ffe400",
+  "#abf200",
+  "#1ddb16",
+  "#00d8ff",
+  "#0054ff",
+];
+
+const EditorContainer = () => {
+  const timerRef = useRef(null);
+  const cursorRef = useRef(null);
+  const reactQuillRef = useRef(null);
+  // 3
+  const { id: documentId } = useParams();
+  const [ text, setText ] = useState("");
+
+  // 4
+  useEffect(() => {
+    socket.emit("join", documentId);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  // 5
+  useEffect(() => {
+    socket.once("initDocument", (res) => {
+      const { _document, userList } = res;
+      
+      setText(_document);
+      userList.forEach((u) => {
+        setCursor(user);
+      });
+    });
+  }, []);
+
+  // 6
+  useEffect(() => {
+    function setCursorHandler(user) {
+      setCursor(user);
+    };
+
+    socket.on("newUser", setCursorHandler);
+
+    return () => {
+      socket.off("newUser", setCursorHandler);
+    }
+  }, []);
+
+  // 7
+  useEffect(() => {
+    if(!reactQuillRef.current) return;
+
+    cursorRef.current = reactQuillRef.current.getEditor().getModule("cursors");
+  }, []);
+
+  // 8
+  useEffect(() => {
+    function updateContentHandler(delta) {
+      reactQuillRef.current.getEditor().updateContents(delta);
+    }
+
+    socket.on("receive-changes", updateContentHandler);
+
+    return () => {
+      socket.off("receive-changes", updateContentHandler);
+    };
+  }, []);
+
+  // 9
+  useEffect(() => {
+    function updateHandler(res) {
+      const { range, id } = res;
+      debouncedUpdate(range, id);
+    }
+
+    socket.on("receive-cursor", updateHandler);
+
+    return () => {
+      socket.off("receive-cursor", updateHandler);
+    };
+  }, []);
+
+  // 10
+  const onChangeTextHandler = (content, delta, source, editor) => {
+    if( timerRef.current !== null ) {
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        socket.emit(
+          "save-document",
+          reactQuillRef.current.getEditor().getContents()
+        );
+
+        timerRef.current = null;
+      }, 1000);
+
+      if( source !== "user" ) return;
+
+      socket.emit("send-changes", delta);
+    }
+  };
+
+  // 11
+  function setCursor(id) {
+    if( !cursorMap.get(id) ) {
+      cursorRef.current.createCursor(
+        id,
+        id,
+        cursorColor[Math.floor(Math.random() * 8)]
+      );
+
+      cursorMap.set(id, cursorRef.current);
+    }
+  };
+
+  // 12
+  const debouncedUpdate = debounce((range, id) => {
+    cursorMap.get(id).moveCursor(id, range);
+  }, 500);
+
+  // 13
+  const onChangeSelection = (selection, source, editor) => {
+    if( source !== "user" ) return;
+
+    socket.emit("cursor-changes", selection);
+  };
+
+  return (
+    <TextEditor 
+      text={text}
+      onChangeTextHandler={onChangeTextHandler}
+      onChangeSelection={onChangeSelection}
+      reactQuillRef={reactQuillRef}
+    />
+  );
+};
+
+export default EditorContainer;
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
