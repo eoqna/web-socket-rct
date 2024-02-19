@@ -630,9 +630,9 @@ const EditorContainer = () => {
 export default EditorContainer;
 ```
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>1. 앞에서 만든 socket 객체를 불러왔다.</font><br />
+<font size=2>또한 react-router-dom에서 제공하는 useParams()를 이용해서 라우팅으로 생성된 UUID 값을 쉽게 사용할 수 있도록 했다.</font><br />
+<font size=2>마지막으로 우리가 위에서 작성한 TextEditor 컴포넌트를 추가했다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
