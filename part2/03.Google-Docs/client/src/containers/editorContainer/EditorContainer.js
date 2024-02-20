@@ -36,7 +36,7 @@ const EditorContainer = () => {
       const { _document, userList } = res;
       
       setText(_document);
-      userList.forEach((u) => {
+      userList.forEach((user) => {
         setCursor(user);
       });
     });

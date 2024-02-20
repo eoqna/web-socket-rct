@@ -519,7 +519,7 @@ const EditorContainer = () => {
       const { _document, userList } = res;
       
       setText(_document);
-      userList.forEach((u) => {
+      userList.forEach((user) => {
         setCursor(user);
       });
     });
@@ -632,7 +632,115 @@ export default EditorContainer;
 
 <font size=2>1. 앞에서 만든 socket 객체를 불러왔다.</font><br />
 <font size=2>또한 react-router-dom에서 제공하는 useParams()를 이용해서 라우팅으로 생성된 UUID 값을 쉽게 사용할 수 있도록 했다.</font><br />
-<font size=2>마지막으로 우리가 위에서 작성한 TextEditor 컴포넌트를 추가했다.</font><br />
+<font size=2>마지막으로 우리가 위에서 작성한 TextEditor 컴포넌트를 추가했다.</font><br /><br />
+
+<font size=2>2. cursorMap이라는 Map 객체를 생성했다.</font><br />
+<font size=2>cursorMap은 다양한 사용자의 실시간 커서 위치를 반영하기 위해 만들었다.</font><br />
+<font size=2>새로운 사용자가 접속하면 cursorMap에 추가되고 관리된다.</font><br />
+<font size=2> 바로 아래 cursorColor는 사용자의 커서의 색을 표현하기 위해 사용한다.</font><br /><br />
+
+<font size=2>3. useParams()를 이용해 파라미터로 넘어오는 documentId 값을 확인한다.</font><br /><br />
+
+<font size=2>4. 처음 사용자가 http://localhost:3000에 접속하면 소켓의 'join' 이벤트를 호출한다.</font><br />
+<font size=2>join과 동시에 클라이언트에서 획득한 documentId를 함꼐 전송한다.</font><br /><br />
+
+<font size=2>5. socket.io의 once()는 소켓 연결 이후 무조건 한 번만 실행되는 함수이다.</font><br />
+<font size=2>'initDocument'라는 이벤트를 통해서 미리 작성된 문서의 내용과 현재 접속 중인 사용자 리스트 정보를 가져올 수 있다.</font><br />
+<font size=2>배열 형태로 내려온 사용자 정보는 순회하면서 setCursor()라는 함수를 호출한다.</font><br /><br />
+
+<font size=2>6. 새로운 사용자가 접속하면 'newUser'라는 이벤트를 통해서 데이터를 받는다.</font><br />
+<font size=2>받아온 데이터는 setCursor() 함수를 이용해서 커서의 노출을 설정한다.</font><br /><br />
+
+<font size=2>7. 우리가 추가한 quill-cursors라는 모듈을 설정하는 부분이다.</font><br />
+<font size=2>ReactQuill에서 getEditor()라는 함수를 이용해 에디터의 정보를 가져올 수 있다.</font><br /><br />
+
+<font size=2>8. 다른 사용자가 텍스트를 작성하게 되면 'receive-changes'라는 이벤트로 작성된 내용만 전달받는다.</font><br />
+<font size=2>전달받은 데이터는 quill에서 제공하는 delta 객체로 updateContents()라는 함수를 통해서 에디터 내용을 수정할 수 있다.</font><br /><br />
+
+<font size=2>9. 'receive-cursor'는 다른 사용자가 마우스로 커서를 움직이게 되면 움직인 index 번호를 받는 함수이다.</font><br />
+<font size=2>내부에는 debounceUpdate()라는 함수를 실행한다.</font><br />
+<font size=2>해당 함수는 아래에서 더 자세히 설명하겠다.</font><br /><br />
+
+<font size=2>10. 문서에 글을 작성하면 호출되는 함수이다.</font><br />
+<font size=2>리액트에서 input에 사용하는 기본적인 onChange()와는 다른 파라미터값을 가지고 있다.</font><br />
+<font size=2>이유는 quill 에디터에서 제공되는 함수이기 때문이다.</font><br />
+<font size=2>파라미터 중 delta 값을 'send-changes' 이벤트를 이용해서 서버로 전송한다.</font><br />
+<font size=2>위 함수 안에는 문서의 내용을 저장하는 'save-document' 이벤트가 있다.</font><br />
+<font size=2>텍스트를 입력할 때마다 'save-document'를 호출할 수도 있다.</font><br />
+<font size=2>그러나 매번 호출된다면 연속된 타이핑의 순간에는 비효율적이기 때문에 timer라는 객체를 생성해서 마지막 순간에 한 번만 실행되도록 설정했다.</font><br /><br />
+
+<font size=2>11. setCursor()는 커서를 생성하고 cursorMap 객체에 저장하는 역할을 한다.</font><br />
+<font size=2>createCursor() 함수는 quill-cursors에서 제공되는 함수로 색상과 id를 정의할 수 있다.</font><br /><br />
+
+<font size=2>12. cursorMap에 저장되어 있는 커서 객체의 위치를 실시간으로 이동시키는 역할을 한다.</font><br />
+<font size=2>이 부분에서 중요한 점은 debounce()를 이용한다는 점이다.</font><br />
+
+```
+debounce와 throttle
+
+debounce는 다수의 이벤트를 모았다가 한 번에 처리하는 로직을 말한다.
+그와 반대로 throttle은 일정한 주기를 기준으로 무조건 한 번씩 일어나는 방법이다.
+
+debounce의 대표적인 예제로는 브라우저의 리사이즈마다 일어나는 이벤트가 있으며 
+throttle은 특정한 구간 동안 반복해서 발생하는 스크롤링 이벤트가 있다.
+```
+
+<font size=2>13. onChangeSelection()은 quill에서 제공되는 함수로 커서의 위치를 반환한다.</font><br />
+<font size=2>사용자가 커서를 움직이면 'cursor-changes'라는 이벤트를 이용해서 서버로 정보를 전송한다.</font><br />
+
+### App.js (237p)
+
+<font size=2>기존에 App.js에 작성되어 있던 내용은 모두 지우고 아래의 코드를 작성한다.</font><br />
+
+```
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+// 1
+import { v4 as uuidV4 } from "uuid";
+import EditorContainer from "./containers/editorContainer/EditorContainer";
+
+const App = () => {
+  // 2
+  return (
+    <Router>
+      <Routes>
+        <Route 
+          path="/"
+          element={<Navigate replace to={`/documents/${uuidV4()}`} />}
+        />
+        <Route path="/documents/:id" element={<EditorContainer />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+<font size=2>1. UUID 라이브러리를 이용해서 문서를 구분할 수 있는 URL을 생성한다.</font><br /><br />
+
+<font size=2>2. 라우팅을 설정한다. 여기서 살펴봐야 할 부분은 다음 부분이다.</font><br />
+<font size=2>replace를 사용해서 http://localhost:3000으로 접속했을 때 자동으로 /documents/{uuid} 기반에 주소로 리다이렉트된다.</font><br /><br />
+
+### 테스트 (238p)
+
+<font size=2>이제 테스트를 한다. 먼저 server.js부터 실행한다.</font><br />
+
+```
+> cd server
+> npm run start
+```
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
