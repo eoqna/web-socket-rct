@@ -45,8 +45,9 @@ io.on("connection", (socket) => {
 
   socket.on("cursor-changes", (range) => {
     const myRooms = Array.from(socket.rooms);
-    
-    socket.broadcast.to(_documentId).emit("receive-cursor", { range: range, id: myRooms[0] });
+    socket.broadcast
+      .to(_documentId)
+      .emit("receive-cursor", { range: range, id: myRooms[0] });
   });
 
   socket.on("disconnect", () => {
