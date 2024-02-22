@@ -725,24 +725,3 @@ export default App;
 
 <font size=2>2. 라우팅을 설정한다. 여기서 살펴봐야 할 부분은 다음 부분이다.</font><br />
 <font size=2>replace를 사용해서 http://localhost:3000으로 접속했을 때 자동으로 /documents/{uuid} 기반에 주소로 리다이렉트된다.</font><br /><br />
-
-### 테스트 (238p)
-
-<font size=2>이제 테스트를 한다. 먼저 server.js부터 실행한다.</font><br />
-
-```
-> cd server
-> npm run start
-```
-
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
