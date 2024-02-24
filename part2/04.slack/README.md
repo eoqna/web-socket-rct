@@ -104,5 +104,84 @@ root.render(<App />);
 
 ### 서버 사이드 (246p)
 
+```
+필요한 라이브러리
+
+ • mongoose : mongoDB를 사용하기 위한 인터페이스 기능을 제공한다.
+ • nodemon : nodejs 서버를 모니터링하고 쉽게 재시작하기 위해 사용한다.
+ • socket.io : 소켓 통신을 위해 사용한다.
+```
+
+<font size=2>서버 사이드에 필요한 라이브러리를 설치한다.</font><br />
+
+```
+> npm install mongoose
+> npm install nodemon
+> npm install socket.io
+```
+
+<font size=2>또 서버를 시작하기 위해 package.json에 아래 스크립트를 추가한다.</font><br />
+
+```
+ "start": "nodemon server.js",
+```
+
+### server.js (247p)
+
+<font size=2>서버의 루트에 해당하는 server.js를 생성한다.</font><br />
+<font size=2>server.js 아래로 1:1 메시지를 담당하는 privateMsg.js와 그룹 메시지인 groupMsg.js, 마지막으로 공통 로직을 처리하는 common.js를 생성한다.</font><br />
+<font size=2>각각의 기능들은 위에서 학습했던 socket.io의 네임스페이스를 사용한다.</font><br />
+
+```
+server.js
+
+// 1
+const privateMsg = require("./privateMsg");
+const groupMsg = require("./groupMsg");
+const common = require("./common");
+const mongoose = require("mongoose");
+
+// 2
+const uri = "Mongo DB URI";
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(uri)
+  .then(() => console.log("MongDB Connected..."))
+  .catch((err) => console.log(err));
+
+// 3
+const io = require("socket.io")(5000, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+// 4
+common.commoninit(io);
+groupMsg.groupMsginit(io);
+privateMsg.privateMsginit(io);
+```
+
+<font size=2>1. 앞에서 미리 설명한 각각의 네임스페이스에 해당하는 로직을 불러왔다.</font><br />
+<font size=2>추가적으로 mongoDB와 연결하기 위한 mongoose 라이브러리도 포함했다.</font><br /><br />
+
+<font size=2>2. mongoDB를 연결하기 위한 설정이다.</font><br />
+<font size=2>이 책 부록에 있는 mongoDB 환경 설정 부분을 참고해라.</font><br />
+
+```
+ uri 정보에는 아이디와 비밀번호가 노출된다.
+ 실제 운영 환경에서는 소스에 직접 입력하기보다는 환경변수와 같은 다른 방법을 추천한다.
+```
+
+<font size=2>3. socket.io를 이용해서 소켓 서버를 생성한다. 포트는 5000번이다.</font><br /><br />
+
+<font size=2>4. 우리가 불러온 각각의 로직을 실행하는 메소드이다.</font><br />
+<font size=2>각각의 메소드는 socket.io 객체를 받는다.</font><br /><br />
+
+### common.js (249p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
