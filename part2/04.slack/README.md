@@ -180,8 +180,61 @@ privateMsg.privateMsginit(io);
 
 ### common.js (249p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>common.js는 공통적인 로직을 수행한다.</font><br />
+<font size=2>사용자가 처음 슬랙 메신저에 접속했을 때 사용자 등록과 기존에 등록된 사용자 리스트를 클라이언트로 전송한다.</font><br />
+<font size=2>먼저 server 폴더 아래 common.js 파일을 생성하고 아래의 코드를 작성해준다.</font><br />
+
+```
+const User = require("./schema/User");
+const common = (io) => {
+  io.use(async (socket, next) => {
+    const userId = socket.handshake.auth.userId;
+
+    if( !userId ) {
+      console.log("err");
+      return next(new Error("invalid userId"));
+    } 
+
+    socket.userId = userId;
+    await findOrCreateUser(socket.userId, socket.id);
+    next();
+  });
+
+  io.on("connection", async (socket) => {
+    io.sockets.emit("user-list", await User.find());
+
+    socket.on("disconnect", async () => {
+      await User.findOneAndUpdate(
+        { _id: socket.userId },
+        { status: false }
+      );
+
+      io.sockets.emit("user-list", await User.find());
+      console.log("disconnect...");
+    });
+  });
+};
+
+async function findOrCreateUser(userId, socketId) {
+  if( userId === null ) return;
+
+  const document = await User.findOneAndUpdate(
+    { _id: userId },
+    { status: true }
+  );
+
+  if( document ) return document;
+    
+  return await User.create({
+    _id: userId,
+    status: true,
+    userId: userId,
+    socketId: socketId,
+  });
+}
+
+module.exports.commoninit = common;
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
