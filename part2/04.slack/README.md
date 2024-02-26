@@ -185,6 +185,7 @@ privateMsg.privateMsginit(io);
 <font size=2>먼저 server 폴더 아래 common.js 파일을 생성하고 아래의 코드를 작성해준다.</font><br />
 
 ```
+// 1
 const User = require("./schema/User");
 const common = (io) => {
   io.use(async (socket, next) => {
@@ -236,5 +237,13 @@ async function findOrCreateUser(userId, socketId) {
 module.exports.commoninit = common;
 ```
 
+<font size=2>1. </font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
