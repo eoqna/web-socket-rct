@@ -237,11 +237,13 @@ async function findOrCreateUser(userId, socketId) {
 module.exports.commoninit = common;
 ```
 
-<font size=2>1. </font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>1. User 테이블의 스키마 내용을 불러온다. 지금은 정의되지 않는 오류가 날 수 있다.</font><br /><br />
+
+<font size=2>2. 미들웨어를 이용해서 접속한 소켓의 초기 설정을 담당한다.</font><br />
+<font size=2>클라이언트에서 받은 userId를 해당 소켓에 등록한다.</font><br />
+<font size=2>만약 넘어온 userId가 없다면 오류를 반환한다.</font><br />
+<font size=2>해당 함수를 이용해서 mongoDB에 사용자를 등록한다.</font><br /><br />
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
