@@ -244,7 +244,7 @@ module.exports.commoninit = common;
 <font size=2>만약 넘어온 userId가 없다면 오류를 반환한다.</font><br />
 <font size=2>해당 함수를 이용해서 mongoDB에 사용자를 등록한다.</font><br /><br />
 
-<font size=2>3. </font><br />
+<font size=2>3.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
