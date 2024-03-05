@@ -244,7 +244,119 @@ module.exports.commoninit = common;
 <font size=2>만약 넘어온 userId가 없다면 오류를 반환한다.</font><br />
 <font size=2>해당 함수를 이용해서 mongoDB에 사용자를 등록한다.</font><br /><br />
 
-<font size=2>3.</font><br />
+<font size=2>3. 소켓이 연결되면 mongoDB에 등록되어 있는 사용자 리스트를 클라이언트로 전송한다.</font><br />
+<font size=2>User.find() 함수는 mongoose에서 제공하는 함수로 등록되어 있는 모든 데이터를 가져오는 역할을 한다.</font><br />
+<font size=2>소켓 연결이 끊겼을 때 findOneAndUpdate 메소드를 이용해서 사용자의 접속 상태를 false로 변경한다.</font><br /><br />
+
+<font size=2>4. findOrCreateUser()는 사용자를 등록하는 함수이다.</font><br />
+<font size=2>실행 전에 먼저 User 테이블에 정보가 있는지 확인한 후에 있다면 접속 상태를 true로 변환한다.</font><br />
+<font size=2>기존에 데이터가 없다면 User 스키마에 맞게 신규 데이터를 등록한다.</font><br /><br />
+
+### privateMsg.js
+
+<font size=2>privateMsg는 1:1 채팅을 담당한다.</font><br />
+<font size=2>common.js와 동일하게 server 폴더 아래에 privateMsg.js 파일을 생성한다.</font><br />
+
+```
+// 1
+const { PrivateRoom, PrivateMsg } = require("./schema/Private");
+
+const privateMsg = (io) => {
+  // 2
+  io.of("/private").use((socket, next) => {
+    const userId = socket.handshake.auth.userId;
+    if (!userId) {
+      console.log("err");
+      return next(new Error("invalid userId"));
+    }
+    socket.userId = userId;
+    next();
+  });
+
+  io.of("/private").on("connection", (socket) => {
+    // 3
+    socket.on("msgInit", async (res) => {
+      const { targetId } = res;
+      const userId = targetId[0];
+      const privateRoom = await getRoomNumber(userId, socket.userId);
+      if (!privateRoom) return;
+      const msgList = await PrivateMsg.find({ roomNumber: privateRoom._id }).exec();
+      io.of("/private").to(privateRoom._id).emit("private-msg-init", { msg: msgList });
+    });
+    // 4
+    socket.on("privateMsg", async (res) => {
+      const { msg, toUserId, time } = res;
+      const privateRoom = await getRoomNumber(toUserId, socket.userId);
+      if (!privateRoom) return;
+      socket.broadcast.in(privateRoom._id).emit("private-msg", {
+        msg: msg,
+        toUserId: toUserId,
+        fromUserId: socket.userId,
+        time: time,
+      });
+      await createMsgDocument(privateRoom._id, res);
+    });
+    // 5
+    socket.on("reqJoinRoom", async (res) => {
+      const { targetId, targetSocketId } = res;
+      let privateRoom = await getRoomNumber(targetId, socket.userId);
+      if (!privateRoom) {
+        privateRoom = `${targetId}-${socket.userId}`;
+        await findOrCreateRoomDocument(privateRoom);
+      } else {
+        privateRoom = privateRoom._id;
+      }
+      socket.join(privateRoom);
+      io.of("/private")
+        .to(targetSocketId)
+        .emit("msg-alert", { roomNumber: privateRoom });
+    });
+    // 6
+    socket.on("resJoinRoom", (res) => {
+      socket.join(res);
+    });
+  });
+};
+
+// 7
+async function getRoomNumber(fromId, toId) {
+  return (
+    (await PrivateRoom.findById(`${fromId}-${toId}`)) ||
+    (await PrivateRoom.findById(`${toId}-${fromId}`))
+  );
+}
+
+// 8
+async function findOrCreateRoomDocument(room) {
+  if (room == null) return;
+
+  const document = await PrivateRoom.findById(room);
+  if (document) return document;
+  return await PrivateRoom.create({
+    _id: room,
+  });
+}
+
+// 9
+async function createMsgDocument(roomNumber, res) {
+  if (roomNumber == null) return;
+
+  return await PrivateMsg.create({
+    roomNumber: roomNumber,
+    msg: res.msg,
+    toUserId: res.toUserId,
+    fromUserId: res.fromUserId,
+    time: res.time,
+  });
+}
+
+module.exports.privateMsginit = privateMsg;
+```
+
+<font size=2>1. private 스키마의 두 기능인 방 생성과 채팅을 불러온다.</font><br />
+<font size=2>스키마 구조에 대한 이야기는 뒤에서 자세히 설명하겠다.</font><br /><br />
+
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
