@@ -252,7 +252,7 @@ module.exports.commoninit = common;
 <font size=2>실행 전에 먼저 User 테이블에 정보가 있는지 확인한 후에 있다면 접속 상태를 true로 변환한다.</font><br />
 <font size=2>기존에 데이터가 없다면 User 스키마에 맞게 신규 데이터를 등록한다.</font><br /><br />
 
-### privateMsg.js
+### privateMsg.js (252p)
 
 <font size=2>privateMsg는 1:1 채팅을 담당한다.</font><br />
 <font size=2>common.js와 동일하게 server 폴더 아래에 privateMsg.js 파일을 생성한다.</font><br />
@@ -356,7 +356,40 @@ module.exports.privateMsginit = privateMsg;
 <font size=2>1. private 스키마의 두 기능인 방 생성과 채팅을 불러온다.</font><br />
 <font size=2>스키마 구조에 대한 이야기는 뒤에서 자세히 설명하겠다.</font><br /><br />
 
-<font size=2></font><br />
+<font size=2>2. 미들웨어를 이용해서 접속한 사용자의 아이디를 등록한다.</font><br /><br />
+
+<font size=2>3. 1:1 채팅방에 들어가면 실행되는 'msgInit' 이벤트이다.</font><br />
+<font size=2>'msgInit' 이벤트의 주요 기능은 과거의 채팅이력을 가져오는 역할을 한다.</font><br />
+<font size=2>클라이언트에서 보내온 userId와 소켓에 등록된 사용자 아이디를 이용해서 기존에 1:1로 등록된 방이 있는지 검색한다.</font><br />
+<font size=2>기존 대화한 방이 있다면 find() 함수를 이용해서 대화 내역을 가져온다.</font><br />
+<font size=2>그 대화 내역을 'private-msg-init' 이벤트를 이용해서 클라이언트에게 전송한다.</font><br /><br />
+
+<font size=2>4. 'privateMsg'는 1:1 메시지를 전송하는 이벤트이다.</font><br />
+<font size=2>방이 있다면 broadcast.in() 메소드를 이용해서 해당 방에 있는 사용자에게 메시지를 전송한다.</font><br />
+<font size=2>추가적으로 createMsgDocument()는 메시지를 mongoDB에 저장하는 역할을 한다.</font><br /><br />
+
+<font size=2>5. 'reqJoinRoom' 이벤트는 1:1 대화방에 자신을 포함시키는 것은 물론 상대방에게 들어오라는 메시지를 전송한다.</font><br />
+<font size=2>물론 해당 로직은 다른 사용자가 모르게 소켓 로직에 의해서만 진행한다.</font><br />
+<font size=2>생성된 방이 없다면 새로 생성하고 있다면 기존 방에 입장한다.</font><br />
+<font size=2>방에 들어가는 건 socket.io의 join() 함수를 사용한다.</font><br />
+<font size=2>해당 방에 들어오라는 초대장을 'msg-alert'라는 이벤트를 이용해서 상대방에게 전송한다.</font><br />
+<font size=2>전송 내용에는 방 번호가 함께 전송된다.</font><br /><br />
+
+<font size=2>6. 만약 초대를 받은 상대방이라면 'resJoinRoom' 이라는 이벤트가 자동으로 호출된다.</font><br />
+<font size=2>자신도 모르는 사이에 해당 방에 들어가게 된다.</font><br /><br />
+
+<font size=2>7. getRoomNumber() 함수는 mongoDB에 등록되어 있는 방을 검색하는 역할을 한다.</font><br />
+<font size=2>여기서 의아한 건 1:1 사용자의 아이디를 뒤집어서 한 번 더 검색하는 것이다.</font><br />
+<font size=2>만약 Kyle과 Tom이 1:1 대화를 시작한다면 방은 시작 순서에 따라서 Kyle-Tom으로 생성될 수도 있고 Tom-Kely로 생성될 수도 있다.</font><br />
+<font size=2>그래서 중복 방지를 위해 두 번 검색하는 로직을 추가했다.</font><br /><br />
+
+<font size=2>8. findOrCreateRoom()은 방을 생성하는 역할을 한다.</font><br />
+<font size=2>만약 해당 방이 이미 존재한다면 기존 방을 반환한다.</font><br /><br />
+
+<font size=2>9. createMsgDocument()는 메시지를 생성하는 역할을 한다.</font><br /><br />
+
+### groupMsg.js (257p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
