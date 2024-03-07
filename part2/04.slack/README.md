@@ -390,6 +390,15 @@ module.exports.privateMsginit = privateMsg;
 
 ### groupMsg.js (257p)
 
+<font size=2>그룹 메시지와 관련된 네임스페이스 설정이다.</font><br />
+<font size=2>privateMsg와 거의 비슷한 내용을 담고 있다.</font><br />
+<font size=2>server 폴더 아래로 groupMsg.js 파일을 생성한다.</font><br />
+
+```
+```
+
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
