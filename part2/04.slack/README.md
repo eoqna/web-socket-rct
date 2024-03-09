@@ -517,6 +517,57 @@ async function createMsgDocument(roomNumber, res) {
 module.exports.groupMsginit = groupMsg;
 ```
 
+<font size=2>1. groupMsg.js에는 총 3개의 스키마를 가지고 있다.</font><br />
+<font size=2>하나는 그룹 채팅을 사용하는 사용자, 두 번째는 그룹 메시지, 마지막은 그룹방이다.</font><br />
+<font size=2>스키마 부분에서 더 자세히 말하겠다.</font><br /><br />
+
+<font size=2>2. 그룹 메시지도 위와 동일하게 서버에서 오는 사용자 아이디를 소켓에 등록한다.</font><br />
+<font size=2>추가적으로 createGroupUser()를 이용해서 해당 사용자를 그룹 채팅을 사용하는 사용자에 초기화한다.</font><br /><br />
+
+<font size=2>3. 처음 접속할 때 접속한 사용자가 그룹방을 가지고 있는지 확인한다.</font><br />
+<font size=2>find()를 이용해서 해당 사용자의 아이디로 조회한다.</font><br />
+<font size=2>'group-list'라는 이벤트로 클라이언트에게 그룹방 리스트를 전송한다.</font><br /><br />
+
+<font size=2>4. 'msgInit'은 그룹방에 처음 입장할 때 과거의 대화 내역을 가져오는 이벤트이다.</font><br />
+<font size=2>방 번호로 그룹방의 대화 내역을 가져온다.</font><br />
+<font size=2>'group-msg-init' 이벤트를 이용해서 해당 방에 속해 있는 모두에게 이벤트를 전송한다.</font><br /><br />
+
+<font size=2>5. 1:1 채팅과는 다르게 다수의 사용자가 함께 참여하는 방이기 때문에 참여한 모든 사용자에게 초대 메시지를 전송하는 이벤트이다.</font><br />
+<font size=2>mongoose의 where, in 문을 이용해서 속한 모든 사람의 데이터를 가져온다.</font><br /><br />
+
+<font size=2>6. 그룹 메시지를 전송하고 저장하는 이벤트이다.</font><br /><br />
+
+<font size=2>7. 'joinGroupRoom' 이벤트는 사용자가 다른 대화를 하다가 다시 그룹방으로 들어왔을 때 호출된다.</font><br />
+<font size=2>해당 방에 다시 참여하는 로직을 가지고 있다.</font><br /><br />
+
+<font size=2>8. 방에 초대받은 사용자가 방에 들어가기 위한 기능을 한다.</font><br />
+<font size=2>전송된 roomNumber를 이용해서 join()으로 방에 들어간다.</font><br />
+<font size=2>createGroupRoom()은 개인이 참가한 방을 생성하는 함수이다.</font><br />
+<font size=2>개인마다 참여하는 방이 다르기 때문에 다음과 같은 로직이 추가되었다.</font><br />
+
+```
+ socket.join(roomNumber);
+ await createGroupRoom(socket.userId, roomNumber, roomNumber);
+```
+
+<font size=2>마지막으로 사용자 아이디를 검색해서 그 사용자가 가지고 있는 그룹방을 모두 클라이언트로 전송한다.</font><br /><br />
+
+<font size=2>9. createGroupRoom()은 개인별로 방을 생성하는 함수이다.</font><br /><br />
+
+<font size=2>10. createGroupUser()는 그룹방에 속하기 위한 아이디를 mongoDB에 저장한다.</font><br /><br />
+
+<font size=2>11. createMsgDocument()는 그룹 메시지를 저장하는 함수이다.</font><br /><br />
+
+<font size=2>이렇게 private과 group을 나누는 이유는 로직의 복잡도를 줄이고 코드의 가독성을 높이기 위한 방법이다.</font><br />
+<font size=2>사실 private과 group의 로직은 비슷하지만 다른 점이 있다.</font><br />
+<font size=2>조금만 다르다는 이유로 같은 곳에 코드를 작성한다면 나중에 관리가 어려워질 수 있다.</font><br />
+<font size=2>그래서 약간의 차이가 있지만 아예 분리해서 코드를 관리하는 방법도 좋다.</font><br />
+<font size=2>이제 스키마 구조를 살펴보겠다.</font><br />
+
+### 스키마 (263p)
+
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
