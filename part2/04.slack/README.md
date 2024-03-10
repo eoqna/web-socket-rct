@@ -566,10 +566,102 @@ module.exports.groupMsginit = groupMsg;
 
 ### 스키마 (263p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>server 폴더 아래에 schema 폴더를 만들고 User.js, Private.js, Group.js 파일을 생성한다.</font><br />
+
+### User.js (263p)
+
+<font size=2>User.js는 사용자 리스트를 정의한 스키마가 있다.</font><br />
+
+```
+const { Schema, model } = require("mongoose");
+
+const user = new Schema({
+  _id: String,
+  status: Boolean,
+  userId: String,
+  socketId: String,
+});
+
+module.exports = model("User", user);
+```
+
+<font size=2>User 스키마에는 사용자가 현재 접속했는지 확인할 수 있는 status 속성과 소켓의 현재 연결 값인 socketId가 있다.</font><br />
+
+### Private.js (263p)
+
+<font size=2>Private 스키마에는 두 개의 스키마가 있다.</font><br />
+<font size=2>하나는 1:1 채팅방을 저장하는 것이고 다른 하나는 1:1 채팅 대화를 저장하는 스키마이다.</font><br />
+
+```
+const { Schema, model } = require("mongoose");
+
+const msg = new Schema({
+  roomNumber: String,
+  msg: String,
+  toUserId: String,
+  fromUserId: String,
+  time: String,
+});
+
+const room = new Schema({
+  _id: String,
+});
+
+module.exports = {
+  PrivateMsg: model("Private-msg", msg),
+  PrivateRoom: model("Private-room", room),
+};
+```
+
+### Group.js (264p)
+
+<font size=2>그룹 채팅을 관리하기 위해서 3개의 스키마를 생성했다.</font><br />
+
+```
+const { Schema, model } = require("mongoose");
+
+// 1
+const groupUserList = new Schema({
+  status: Boolean,
+  userId: String,
+  socketId: String,
+});
+
+// 2
+const groupRoom = new Schema({
+  loginUserId: String,
+  status: Boolean,
+  userId: String,
+  socketId: String,
+  type: String,
+});
+
+// 3
+const msg = new Schema({
+  roomNumber: String,
+  msg: String,
+  toUserId: String,
+  fromUserId: String,
+  time: String,
+});
+
+module.exports = {
+  GroupUserList: model("Group-user", groupUserList),
+  GroupRoom: model("Group-room", groupRoom),
+  GroupMsg: model("Group-msg", msg),
+};
+```
+
+<font size=2>1. groupUserList는 그룹 채팅과 관련된 사용자를 따로 관리하기 위해 생성했다.</font><br />
+<font size=2>기존에 User 도큐먼트를 그대로 사용하게 된다면 사람마다 다른 그룹 채팅을 구분할 수 없기 때문에 아예 그룹 채팅만을 위한 관리 포인트를 만들었다.</font><br /><br />
+
+<font size=2>2. groupRoom은 그룹 채팅을 위한 스키마이다.</font><br />
+<font size=2>하나의 방에는 여러 명의 사용자가 속해 있기 때문에 동일한 객체가 생성되지만 loginUserId는 각각 다르게 만들어진다.</font><br /><br />
+
+<font size=2>3. 그룹 채팅 메시지를 저장하기 위한 스키마이다.</font><br /><br />
+
+### 클라이언트 사이드 (266p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
