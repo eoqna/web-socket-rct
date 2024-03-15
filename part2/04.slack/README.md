@@ -662,6 +662,77 @@ module.exports = {
 
 ### 클라이언트 사이드 (266p)
 
+```
+필요한 라이브러리
+
+ • @emotion/react
+  - emotionjs는 CSS 스타일을 위한 라이브러리이다.
+  - emotionjs를 이용해서 module.css와 scss 같은 기능을 간편하게 사용할 수 있다.
+
+ • react-icons
+  - 아이콘 이미지를 간편하게 사용하기 위한 라이브러리이다.
+
+ • react-quill
+  - quill을 이용하면 우리가 흔히 사용하는 블로그와 문서 형식의 웹 서비스를 간편하게 제작할 수 있다.
+
+ • react-router-dom
+  - 리액트 라우팅을 위해 사용한다.
+
+ • socket.io-client
+  - 브라우저의 소켓 통신을 위해 사용한다.
+
+ • dayjs
+  - 현재 채팅 날짜를 표현하기 위해 사용한다.
+
+ • @craco/craco
+  - CRACO는 CRA를 쉽게 설정할 수 있는 기능을 제공한다.
+
+ • @emotion/babel-preset-css-props
+  - emotionjs를 사용하기 위한 바벨 설정 파일이다.
+```
+
+<font size=2>클라이언트를 위한 라이브러리를 먼저 설치한다.</font><br />
+
+```
+ npm install @emotion/react
+ npm install react-icons
+ npm install react-quill
+ npm install react-router-dom
+ npm install socket.io-client
+ npm install dayjs
+ npm install @craco/craco --dev
+ npm install @emotion/babel-preset-css-prop --dev
+```
+
+<font size=2>설치하는 과정에서 --dev라는 설정값이 추가됐다.</font><br />
+<font size=2>--dev 명령어로 설치된 라이브러리는 package.json의 'devDependencies'로 관리된다.</font><br />
+<font size=2>또한 production으로 배포될 때 빌드되는 파일에는 포함하지 않는 특징을 가지고 있다.</font><br />
+<font size=2>스타일 라이브러리인 emotionjs를 CRA에서 사용하기 위한 CRACO 라이브러리 설정이 필요하다.</font><br />
+<font size=2>루트 디렉터리인 client에서 craco.config.js 파일을 생성한다.</font><br />
+<font size=2>아래 코드를 그대로 작성해준다.</font><br />
+
+```
+module.exports = {
+  babel: {
+    presets: ['@emotion/babel-preset-css-prop'],
+  },
+};
+```
+
+<font size=2>이제 클라이언트 프로젝트를 위한 모든 준비는 끝났다.</font><br />
+<font size=2>소켓 설정부터 하나씩 진행하겠다.</font><br />
+
+### socket.js (269p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
