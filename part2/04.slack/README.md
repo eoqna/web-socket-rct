@@ -724,11 +724,33 @@ module.exports = {
 
 ### socket.js (269p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>src 폴더 아래 socket.js 파일을 생성한다.</font><br />
+<font size=2>채팅을 하기 위한 소켓 설정이다.</font><br />
+<font size=2>슬랙에서는 개인 메시지, 그룹 메시지, 공통 로직을 위한 네임스페이스를 정의한다.</font><br />
+
+```
+import { io } from "socket.io-client";
+
+export const socket = io("http://localhost:5000", {
+  autoConnect: false,
+});
+
+// 1
+export const socketPrivate = io("http://localhost:5000/private", {
+  autoConnect: false,
+});
+
+// 2
+export const socketGroup = io("http://localhost:5000/group", {
+  autoConnect: false,
+});
+```
+
+<font size=2>1~2. private와 group 네임스페이스를 생성했다.</font><br />
+<font size=2>소켓 연결이 자동으로 되지 않도록 autoConnect:false로 설정한다.</font><br /><br />
+
+### context (270p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
