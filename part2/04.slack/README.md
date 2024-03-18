@@ -751,7 +751,104 @@ export const socketGroup = io("http://localhost:5000/group", {
 
 ### context (270p)
 
-<font size=2></font><br />
+<font size=2>슬랙 채팅에서는 다양한 컴포넌트와 컨테이너 영역에 데이터를 전달할 수 있도록 전역 변수를 설정할 예정이다.</font><br />
+<font size=2>전역 변수 설정을 위해 Context API를 사용하겠다.</font><br />
+<font size=2>src 폴더 아래 context 폴더를 만든 후 그 아래에 action.js와 index.js 파일을 생성한다.</font><br />
+
+### action.js (270p)
+
+<font size=2>Context API를 실행하기 위한 액션을 설정한다.</font><br />
+
+```
+export const AUTH_INFO = "AUTH_INFO";
+export const USER_LIST = "USER_LIST";
+export const GROUP_LIST = "GROUP_LIST";
+export const CURRENT_CHAT = "CURRENT_CHAT";
+export const GROUP_CHAT = "GROUP_CHAT";
+```
+
+### index.js (271p)
+
+```
+import { createContext, useReducer } from "react";
+import {
+  AUTH_INFO,
+  USER_LIST,
+  CURRENT_CHAT,
+  GROUP_CHAT,
+  GROUP_LIST,
+} from "./action";
+
+// 1
+const initialState = {
+  loginInfo: {
+    userId: "",
+    socketId: "",
+  },
+  userList: [],
+  groupList: [],
+  currentChat: {
+    targetId: [],
+    roomNumber: "",
+    targetSocketId: "",
+  },
+  groupChat: {
+    textBarStatus: false,
+    groupChatNames: [],
+  },
+};
+
+const Context = createContext({});
+
+// 2
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case AUTH_INFO:
+      return {
+        ...state,
+        loginInfo: action.payload,
+      };
+    case USER_LIST:
+      return {
+        ...state,
+        userList: action.payload,
+      };
+    case GROUP_LIST:
+      return {
+        ...state,
+        groupList: action.payload,
+      };
+    case CURRENT_CHAT:
+      return {
+        ...state,
+        currentChat: action.payload,
+      };
+    case GROUP_CHAT:
+      return {
+        ...state,
+        groupChat: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+const StoreProvider = ({ children }) => {
+  const [ state, dispatch ] = useReducer(reducer, initialState);
+  const value = { state, dispatch };
+  return <Context.Provider value={value}>{children}</Context.Provider>
+};
+
+export { Context, StoreProvider };
+```
+
+<font size=2>1. 전역 변수의 초기값이다.</font><br />
+<font size=2>전역 변수로는 현재 접속한 사용자의 정보, 사용자 리스트, 그룹 채팅 활성화 등이 있다.</font><br /><br />
+
+<font size=2>2. 전역 변수를 업데이트하기 위한 switch 문이다.</font><br /><br />
+
+### containers (273p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
