@@ -849,10 +849,10 @@ export { Context, StoreProvider };
 
 ### containers (273p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>컨테이너에는 처음 로그인 화면과 소켓 연결 공통 로직을 불러오기 위한 설정을 한다.</font><br />
+<font size=2>먼저 로그인 페이지부터 구현하겠다.</font><br />
+<font size=2>src 폴더에 containers 폴더를 만들고 그 아래에 IndexContainer 폴더를 생성한다.</font><br />
+<font size=2>마지막으로 IndexContainer 폴더 아래에 IndexContainer.js와 IndexContainer.style.js 파일을 만든다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
