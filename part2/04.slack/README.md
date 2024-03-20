@@ -853,6 +853,153 @@ export { Context, StoreProvider };
 <font size=2>먼저 로그인 페이지부터 구현하겠다.</font><br />
 <font size=2>src 폴더에 containers 폴더를 만들고 그 아래에 IndexContainer 폴더를 생성한다.</font><br />
 <font size=2>마지막으로 IndexContainer 폴더 아래에 IndexContainer.js와 IndexContainer.style.js 파일을 만든다.</font><br />
+
+### IndexContainer.js (274p)
+
+```
+import React, { useState, useEffect } from "react";
+import { css } from "@emotion/react";
+import {
+  indexContainerCss,
+  loginWrapCss,
+  headerCss,
+  loginFormCss,
+  inputCss,
+  btnCss,
+} from "./IndexContainer.style";
+// 1
+import { socket, socketPrivate, socketGroup } from "../../socket";
+import { useNavigate } from "react-router-dom";
+import logo from "../../images/logo.png";
+
+const IndexContainer = () => {
+  const [ user, setUser ] = useState("");
+  const navigate = useNavigate();
+
+  // 2
+  useEffect(() => {
+    socket.on("connect_error", (err) => {
+      if( err.message === "invalid username") {
+        console.log("err");
+      }
+    });
+  }, []);
+
+  // 3
+  const onLoginHandler = (e) => {
+    e.preventDefault();
+
+    if( !user ) return;
+
+    socket.auth = { userId: user };
+    socket.connect();
+
+    socketPrivate.auth = { userId: user };
+    socketPrivate.connect();
+
+    socketGroup.auth = { userId: user };
+    socketGroup.connect();
+    navigate("/main");
+  };
+
+  // 4
+  const onUserNameHandler = (e) => {
+    setUser(e.target.value);
+  };
+
+  return (
+    <div css={indexContainerCss}>
+      <div css={loginWrapCss}>
+        <h1 css={headerCss}>
+          <img src={logo} width={100} height="auto" alt="logo"  />
+        </h1>
+        <form css={loginFormCss} onSubmit={onLoginHandler}>
+          <input 
+            css={inputCss}
+            type="text"
+            value={user}
+            placeholder="Enter your ID"
+            onChange={onUserNameHandler}
+          />
+          <button onClick={onLoginHandler} css={btnCss}>
+            Sign in
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+};
+
+export default IndexContainer;
+```
+
+<font size=2>1. 미리 설정한 socket.io의 네임스페이스 객체를 불러온다.</font><br />
+<font size=2>또한 sign in 버튼을 클릭하면 메인 페이지로 이동하기 위해 useNavigate라는 훅을 추가했다.</font><br /><br />
+
+<font size=2>2. 만약 userId를 서버에 넘기지 않고 로그인했다면 오류 콜백을 받을 수 있는 함수를 정의했다.</font><br /><br />
+
+<font size=2>3. sign in 버튼을 클릭하면 실행된다.</font><br />
+<font size=2>각각의 네임스페이스에 동일한 userId를 추가했다.</font><br />
+<font size=2>이렇게 설정한 이유는 네임스페이스마다 고유한 socketId가 부여되는 별개의 환경이기 때문에 이렇게 설정되었다.</font><br /><br />
+
+<font size=2>4. 사용자 아이디를 작성하는 함수이다.</font><br /><br />
+
+### IndexContainer.style.js (276p)
+
+```
+import { css } from "@emotion/react";
+
+export const indexContainerCss = css`
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const loginWrapCss = css`
+  width: 300px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const headerCss = css`
+  text-align: center;
+`;
+
+export const loginFormCss = css`
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+`;
+
+export const inputCss = css`
+  width: calc(100% - 22px);
+  border: 1px solid #cecece;
+  padding: 10px;
+  border-radius: 5px;
+`;
+
+export const btnCss = css`
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #4a154b;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+`;
+```
+
+### MainContainer.js (277p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
