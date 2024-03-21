@@ -996,8 +996,123 @@ export const btnCss = css`
 
 ### MainContainer.js (277p)
 
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>MainContainer에서는 소켓 연결 해제와 공통 데이터를 가져오는 작업을 한다.</font><br />
+<font size=2>여기서 말하는 공통 데이터는 사용자 리스트 정보와 그룹 대화방 리스트이다.</font><br /><br />
+
+<font size=2>IndexContainer와 동일하게 containers 폴더 아래로 mainContainer라는 폴더를 생성한다.</font><br />
+<font size=2>바로 아래 MainContainer.js와 MainContainer.style.js 파일을 만든다.</font><br />
+
+```
+import React, { useEffect, useState, useContext } from "react";
+import { css } from "@emotion/react";
+import {
+  mainContainerCss,
+  slackMainCss,
+  slackHeaderCss,
+  slackWindowCss,
+  mainContentCss,
+} from "./MainContainer.style";
+import { socket, socketPrivate, socketGroup } from "../../socket";
+import { SideBar, ChatRoom } from "../../components";
+import { USER_LIST, AUTH_INFO, GROUP_LIST } from "../../context/action";
+import { Context } from "../../context";
+
+const MainContainer = () => {
+  // 1
+  const {
+    state: { loginInfo },
+    dispatch,
+  } = useContext(Context);
+
+  // 2
+  useEffect(() => {
+    socket.on("connect", () => {
+      dispatch({
+        type: AUTH_INFO,
+        payload: {
+          userId: socket.auth.userId,
+          socketId: socket.id,
+        },
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+      socketPrivate.disconnect();
+      socketGroup.disconnect();
+    };
+  }, []);
+
+  // 3
+  useEffect(() => {
+    function setUserListHandler(data) {
+      dispatch({
+        type: USER_LIST,
+        payload: data || [],
+      });
+    };
+
+    socketGroup.on("user-list", setUserListHandler);
+
+    return () => {
+      socket.off("user-list", setUserListHandler);
+    };
+  }, []);
+  
+  // 4
+  useEffect(() => {
+    function setGroupListHandler(data) {
+      dispatch({
+        type: GROUP_LIST,
+        payload: data || [],
+      });
+    };
+
+    socketGroup.on("group-list", setGroupListHandler);
+
+    return () => {
+      socket.off("group-list", setGroupListHandler);
+    };
+  }, []);
+
+  useEffect(() => {
+    function setGroupListHandler(data) {
+      dispatch({
+        type: GROUP_LIST,
+        payload: data || [],
+      });
+    };
+
+    socketGroup.on("group-list", setGroupListHandler);
+
+    return () => {
+      socket.off("group-list", setGroupListHandler);
+    };
+  }, []);
+
+  return (
+    <div css={mainContainerCss}>
+      <div css={slackMainCss}>
+        <header css={slackHeaderCss}>
+          <ul css={slackWindowCss}>
+            <li className="red"></li>
+            <li className="orange"></li>
+            <li className="green"></li>
+          </ul>
+          <div className="user">{loginInfo.userId}</div>
+        </header>
+        <article css={mainContainerCss}>
+          <SideBar />
+          <ChatRoom />
+        </article>
+      </div>
+    </div>
+  );
+};
+
+export default MainContainer;
+```
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
