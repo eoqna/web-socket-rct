@@ -1113,8 +1113,104 @@ const MainContainer = () => {
 export default MainContainer;
 ```
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>1. useContext() 훅을 이용해서 전역 변수로 선언된 loginInfo 변수를 불러온다.</font><br /><br />
+
+<font size=2>2. 소켓이 연결되면 'connect'라는 이벤트로 콜백을 받는다.</font><br />
+<font size=2>콜백 안에는 socket 객체에 선언된 userId 값을 가지고 있다.</font><br />
+<font size=2>이 값을 전역 변수에 선언할 예정이다.</font><br />
+<font size=2>마지막으로 MainContainer가 언마운트되면 소켓 연결을 해제한다.</font><br /><br />
+
+<font size=2>3. 'user-list'라는 소켓 이벤트로 mongoDB에 저장된 사용자 리스트를 받아온다.</font><br />
+<font size=2>사용자 리스트 또한 전역 변수에 저장한다.</font><br /><br />
+
+<font size=2>4. 'group-list' 소켓 이벤트로 그룹 대화방에 해당하는 그룹 리스트를 받아온다.</font><br /><br />
+
+### MainContainer.style.js (281p)
+
+```
+import { css } from "@emotion/react";
+
+export const mainContainerCss = css`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const slackMainCss = css`
+  display: flex;
+  flex-direction: column;
+  /* height: 60vh; */
+  width: 100%;
+  max-width: 1000px;
+  border: 1px solid #4a154b;
+  border-radius: 5px;
+`;
+
+export const slackHeaderCss = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  width: calc(100% - 40px);
+  background-color: #340e36;
+  .user {
+    color: #fff;
+    font-weight: bold;
+  }
+`;
+
+export const slackWindowCss = css`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li.green {
+    cursor: pointer;
+    background-color: #26c840;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+  li.red {
+    cursor: pointer;
+    background-color: #fe5f58;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+  li.orange {
+    cursor: pointer;
+    background-color: #febc2e;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+`;
+
+export const mainContentCss = css`
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+`;
+```
+
+<font size=2>마지막으로 작성한 컨테이너를 쉽게 불러올 수 있도록 containers 폴더에 index.js를 작성한다.</font><br />
+<font size=2>containers 폴더로 이동한 후에 index.js를 생성한다.</font><br />
+
+### index.js (283p)
+
+```
+export { default as IndexContainer } from "./IndexContainer/IndexContainer";
+export { default as MainContainer } from "./MainContainer/MainContainer";
+```
+
+### components (283p)
+
 <font size=2></font><br />
 <font size=2></font><br />
