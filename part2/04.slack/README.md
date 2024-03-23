@@ -1212,5 +1212,87 @@ export { default as MainContainer } from "./MainContainer/MainContainer";
 
 ### components (283p)
 
+<font size=2>다음으로 슬랙 메신저에서 사용할 컴포넌트를 작성할 차례이다.</font><br />
+<font size=2>src 폴더 아래 components라는 폴더를 만든다.</font><br />
+<font size=2>그 아래에 하나씩 컴포넌트를 작성하겠다.</font><br />
+
+### User.js (284p)
+
+<font size=2>user 컴포넌트는 왼쪽에 표시되는 사용자 아이디와 접속 여부를 표현한다.</font><br />
+<font size=2>components 폴더 아래 user라는 폴더를 생성한다.</font><br />
+<font size=2>user 폴더에 User.js와 User.style.js라는 파일을 생성하겠다.</font><br />
+
+```
+import { css } from "@emotion/react";
+import { userCss } from "./User.style";
+
+const User = ({ id, status, onClick, socket, type }) => {
+  return (
+    <div
+      css={userCss}
+      data-id={id}
+      data-type={type}
+      data-socket={socket}
+      data-status={status}
+      onClick={onClick}
+    >
+      <span className={status ? "active" : "deactive"} />
+      <span
+        data-type={type}
+        className="user"
+        data-id={id}
+        data-socket={socket}
+        data-status={status}
+      >
+        {id}
+      </span>
+    </div>
+  );
+};
+
+export default User;
+```
+
+<font size=2>1. User 컴포넌트는 접속 상태를 표현하기 위한 status 값을 받는다.</font><br />
+<font size=2>또한 각각의 socket 아이디 값을 할당받아 클릭하면 어떤 채팅방에 속해 있는지 여부를 확인할 수 있도록 했다.</font><br /><br />
+
+### User.style.js (285p)
+
+```
+import { css } from "@emotion/react";
+
+export const userCss = css`
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  color: #cecece;
+  font-size: 14px;
+  padding: 7px 20px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(234, 234, 234, 0.2);
+  }
+  .action {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #29ac76;
+  }
+  .deactive {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: 1px solid #cecece;
+  }
+`;
+```
+
+### TextEditor.js (286p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
