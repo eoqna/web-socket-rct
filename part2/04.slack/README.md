@@ -1290,6 +1290,106 @@ export const userCss = css`
 
 ### TextEditor.js (286p)
 
+<font size=2>TextEditor 컴포넌트는 채팅을 입력할 수 있는 창이다.</font><br />
+<font size=2>앞에서 미리 사용한 react-quill을 변형해서 간편하게 사용할 예정이다.</font><br />
+<font size=2>components 폴더 아래 textEditor 폴더를 만들고 TextEditor.js와 TextEditor.style.js 파일을 생성한다.</font><br />
+
+```
+// 1
+import { css } from "@emotion/react";
+import { containerCss, sendCss }  from "./TextEditor.style";
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { HiPaparAirplane } from "react-icons/hi2";
+
+// 2
+const modules = {
+  toolbar: {
+    container: [
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["bold", "italic", "underline", "strike" ],
+      [{ script: "sub" }, { script: "super" }],
+    ],
+  },
+};
+
+const TextEditor = ({
+  text,
+  onChangeTextHandler,
+  reactQuillRef,
+  onSendHandler,
+}) => {
+  return (
+    <div css={containerCss}>
+      <HiPaparAirplane css={sendCss} onClick={onSendHandler} />
+      <ReactQuill
+        theme="snow"
+        modules={modules}
+        value={text}
+        onChange={onChangeTextHandler}
+        ref={(el) => {
+          reactQuillRef.current = el;
+        }}
+      ></ReactQuill>
+    </div>
+  );
+};
+
+export default TextEditor;
+```
+
+<font size=2>1. input 박스를 만들기 위한 react-quill을 불러온다.</font><br />
+<font size=2>또한 quill의 snow 스타일을 적용하기 위해 quill, snow.css도 적용했다.</font><br /><br />
+
+<font size=2>2. react-quill 박스에 포함될 모듈을 설정한다.</font><br />
+<font size=2>슬랙과 비슷한 모양을 만들기 위해 간단하게 설정한다.</font><br /><br />
+
+### TextEditor.style.js (288p)
+
+```
+import { css } from "@emotion/react";
+
+export const containerCss = css`
+  position: relative;
+  width: 800px;
+  .quill {
+    margin: 20px;
+    background-color: #fff;
+    border: 1px solid #cecece;
+    border-radius: 15px;
+  }
+  .qi-container.ql-snow {
+    border: none;
+    display: flex;
+  }
+  .ql-container.ql-editor {
+    width: 100%;
+  }
+  .ql-toolbar.ql-snow {
+    width: calc(100% - 30px);
+    border-top-left-radius: 15px;
+    border-top-rigth-radius: 15px;
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border: none;
+  }
+`;
+
+export const sendCss = css`
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  height: 25px;
+  width: 25px;
+  color: #29ac76;
+  cursor: pointer;
+`;
+```
+
+### GroupTextInput.js (289p)
+
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
