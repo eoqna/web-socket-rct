@@ -1390,6 +1390,81 @@ export const sendCss = css`
 
 ### GroupTextInput.js (289p)
 
+<font size=2>GroupTextInput은 단체방을 만들기 위해 사용자를 초대하는 input 박스이다.</font><br />
+<font size=2>슬랙의 Direct Messages라는 버튼을 누르면 활성화된다.</font><br />
+<font size=2>위 컴포넌트와 동일하게 components 폴더 아래 groupTextInput 폴더를 추가하고 GroupTextInput.js와 GroupTextInput.style.js 파일을 만든다.</font><br />
+
+```
+import { css } from "@emotion/react";
+import {
+  groupTextContainerCss,
+  titleCss,
+  inputCss,
+  groupFormCss,
+  nameBoxCss,
+  tagCss,
+  joinBtnCss,
+} from "./GroupTextInput.style";
+
+// 1
+const GroupTextInput = ({
+  groupText,
+  onChangeGroupTextHandler,
+  onGroupSendHandler,
+  groupChatUserList,
+  groupChatUserCloseClick,
+  onJoinClick
+}) => {
+  return (
+    <div css={groupTextContainerCss}>
+      <span css={titleCss}>to:</span>
+      <ul css={nameBoxCss}>
+        {
+          // 2
+          groupChatUserList.map((v, i) => (
+            <li css={tagCss} key={`${i}-${v}`}>
+              {v}
+              <span
+                className="close"
+                data-id={v}
+                onClick={groupChatUserCloseClick}
+              >
+                x
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <form onSubmit={onGroupSendHandler} css={groupFormCss}>
+        <input
+          type="text"
+          value={groupText}
+          css={inputCss}
+          onChange={onChangeGroupTextHandler}
+          onChangeGroupTextHandler={onChangeGroupTextHandler}
+        />
+      </form>
+      <button css={joinBtnCss} onClick={onJoinClick}>
+        Join
+      </button>
+    </div>
+  )
+};
+
+export default GroupTextInput;
+```
+
+<font size=2>1-2. 그룹 채팅은 많은 사용자가 참여하기 때문에 사용자 값을 리스트로 전달받는다.</font><br />
+<font size=2>그 리스트를 순회하면서 추가한 사용자의 아이디 값을 노출하게 했다.</font><br />
+
+### Chatroom.js (291p)
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
