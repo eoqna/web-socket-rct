@@ -1459,9 +1459,9 @@ export default GroupTextInput;
 
 ### Chatroom.js (291p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>가장 중요한 컴포넌트인 Chatroom.js와 SideBar.js는 layout이라는 폴더를 만들어서 따로 관리하겠다.</font><br />
+<font size=2>components 폴더 아래에 layout 폴더를 추가하고 그 아래 chatRoom이라는 폴더를 만든다.</font><br />
+<font size=2>그리고 ChatRoom.js와 ChatRoom.style.js 파일을 생성한다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
