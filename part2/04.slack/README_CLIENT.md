@@ -1193,7 +1193,7 @@ export const textBoxCss = css``;
 
 ### SideBar.js (303p)
 
-<font size=2></font><br />
+<font size=2>Sidebar 컴포넌트는 채팅할 수 있는 사용자 리스트와 그룹 채팅 리스트를 보여준다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
