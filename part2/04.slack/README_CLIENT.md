@@ -1194,6 +1194,192 @@ export const textBoxCss = css``;
 ### SideBar.js (303p)
 
 <font size=2>Sidebar 컴포넌트는 채팅할 수 있는 사용자 리스트와 그룹 채팅 리스트를 보여준다.</font><br />
+<font size=2>앞에서 만들었던 ChatRoom 컴포넌트와 동일하게 layout 폴더 아래 sideBar 폴더를 추가한다.</font><br />
+<font size=2>sideBar 폴더 아래로 SideBar.js와 SideBar.style.js를 만든다.</font><br />
+
+```
+import React, { useContext, useEffect } from "react";
+import { css } from "@emotion/react";
+import { Context }  from "../../../context";
+import { CURRENT_CHAT, GROUP_CHAT } from "../../../context/action";
+import {
+  navBarWrapCss,
+  titleCss,
+  userListCss,
+  directMsgCss,
+} from "./SideBar.style";
+import { User } from "../../index";
+import { socketPrivate, socketGroup, socket } from "../../../socket";
+
+const SideBar = () => {
+  // 1
+  const {
+    state: { userList, loginInfo, currentChat, groupList },
+    dispatch,
+  } = useContext(Context);
+
+  // 2
+  useEffect(() => {
+    if( currentChat.targetId.length > 1 ) {
+      socketGroup.emit("msgInit", {
+        targetId: currentChat.targetId,
+      });
+    } else {
+      socketPrivate.emit("msgInit", {
+        targetId: currentChat.targetId,
+      });
+    }
+  }, [currentChat.targetId]);
+
+  // 3
+  useEffect(() => {
+    function setMsgAlert(data) {
+      socketPrivate.emit("resJoinRoom", data.roomNumber);
+    }
+    socketPrivate.on("msg-alert", setMsgAlert);
+    
+    return () => {
+      socketPrivate.off("msg-alert", setMsgAlert);
+    };
+  }, []);
+
+  // 4
+  useEffect(() => {
+    function setGroupChat(data) {
+      socketGroup.emit("resGroupJoinRoom", {
+        roomNumber: data.roomNumber,
+        socketId: data.socketId,
+      });
+    }
+
+    socketGroup.on("group-chat-req", setGroupChat);
+
+    return () => {
+      socketGroup.off("group-chat-req", setGroupChat);
+    }
+  }, []);
+
+  // 5
+  const onUserClickHandler = (e) => {
+    const { id } = e.target.dataset;
+
+    dispatch({
+      type: CURRENT_CHAT,
+      payload: {
+        targetId: [id],
+        roomNumber: `${loginInfo.userId}-${id}`,
+        targetSocketId: e.target.dataset.socket,
+      },
+    });
+
+    socketPrivate.emit("reqJoinRoom", {
+      targetId: id,
+      targetSocketId: e.target.dataset.socket,
+    });
+
+    dispatch({
+      type: GROUP_CHAT,
+      payload: {
+        textBarStatus: false,
+        groupChatNames: [],
+      },
+    });
+  };
+
+  // 6
+  const onMakeGroupChat = () => {
+    dispatch({
+      type: GROUP_CHAT,
+      payload: {
+        textBarStatus: true,
+        groupChatNames: [],
+      },
+    });
+  };
+
+  // 7
+  const onGroupUserClickHandler = (e) => {
+    const { id } = e.target.dataset;
+
+    dispatch({
+      type: CURRENT_CHAT,
+      payload: {
+        targetId: [...id.split(",")],
+        roomNumber: id,
+        targetSocketId: e.target.dataset.socket,
+      },
+    });
+
+    socketGroup.emit("joinGroupRoom", {
+      roomNumber: id,
+      socketId: e.target.dataset.socket,
+    });
+
+    dispatch({
+      type: GROUP_CHAT,
+      payload: {
+        textBarStatus: false,
+        groupChatNames: [],
+      },
+    });
+  };
+
+  return (
+    <nav css={navBarWrapCss}>
+      <div css={titleCss}> Slack</div>
+      <ul css={userListCss}>
+        <li css={directMsgCss} onClick={onMakeGroupChat}>
+          <BiChevronDown size="20" /> Direct Messages +
+        </li>
+        {userList.map((v, i) => (
+          <li key={`${i}-user`}>
+            <User
+              id={v.userId}
+              status={v.status}
+              socket={v.socketId}
+              type={v.type}
+              onClick={
+                v.type === "group"
+                  ? onGroupUserClickHandler
+                  : onUserClickHandler
+              }
+            />
+          </li>
+        ))}
+        {groupList.map((v, i) => (
+          <li key={`${i}-user`}>
+            <User
+              id={v.userId}
+              status={v.status}
+              socket={v.socketId}
+              type={v.type}
+              onClick={
+                v.type === "group"
+                  ? onGroupUserClickHandler
+                  : onUserClickHandler
+              }
+            />
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+};
+
+export default SideBar;
+```
+
+<font size=2>1. 사이드바에 필요한 사용자 리스트와 그룹 리스트를 가져온다.</font><br /><br />
+
+<font size=2>2. 현재 클릭한 userId를 'msgInit'이라는 이벤트에 보낸다.</font><br />
+<font size=2>if 문의 targetId.length 값이 1보다 크면 그룹 채팅을 의미한다.</font><br />
+<font size=2>그룹 채팅일 경우 socketGroup 네임스페이스 객체를 이용하고 개인 채팅이라면 socketPrivate 객체를 이용한다.</font><br /><br />
+
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
+<font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
