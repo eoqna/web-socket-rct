@@ -4,20 +4,19 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { v4 as uuidV4 } from "uuid";
-import EditorContainer from "./containers/editorContainer/EditorContainer";
+import { IndexContainer, MainContainer } from "./containers";
+import { StoreProvider } from "./context";
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route 
-          path="/"
-          element={<Navigate replace to={`/documents/${uuidV4()}`} />}
-        />
-        <Route path="/documents/:id" element={<EditorContainer />} />
-      </Routes>
-    </Router>
+    <StoreProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<IndexContainer />}/>
+          <Route path="/main" element={<MainContainer />} />
+        </Routes>
+      </Router>
+    </StoreProvider>
   );
 }
 

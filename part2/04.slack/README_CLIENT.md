@@ -1375,12 +1375,107 @@ export default SideBar;
 <font size=2>if 문의 targetId.length 값이 1보다 크면 그룹 채팅을 의미한다.</font><br />
 <font size=2>그룹 채팅일 경우 socketGroup 네임스페이스 객체를 이용하고 개인 채팅이라면 socketPrivate 객체를 이용한다.</font><br /><br />
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>3. 개인 채팅의 초대를 받으면 실행된다.</font><br />
+<font size=2>만약 A라는 사람이 먼저 B와 개인 대화를 시작하면 B는 'msg-alert'라는 이벤트를 이용해서 A의 초대 방 번호를 받는다.</font><br />
+<font size=2>A는 'resJoinRoom'이라는 이벤트로 해당 방 번호를 서버로 전송해서 스스로 방에 입장한다.</font><br /><br />
+
+<font size=2>4. 위의 개인 채팅과 동일하게 그룹 채팅에 입장하는 로직이다.</font><br />
+<font size=2>특정한 그룹방에 초대받으면 'group-chat-req'라는 이벤트로 방 번호를 전달받는다.</font><br />
+<font size=2>'resGroupJoinRoom'이라는 이벤트로 자신을 해당 방에 입장시킨다.</font><br /><br />
+
+<font size=2>5. 사이드바에 노출된 개인을 클릭하면 실행된다.</font><br />
+<font size=2>CURRENT_CHAT이라는 액션 값을 이용해서 현재 자신이 대화하고 있는 방에 정보를 전역 변수에 저장한다.</font><br />
+<font size=2>대화하고 싶은 상대에게 초대장을 보내고 초대장에는 통신하는 상대의 소켓 아이디가 포함되어 있다.</font><br /><br />
+
+<font size=2>6. 사이드바에 있는 Direct Messages를 클릭하면 실행된다.</font><br />
+<font size=2>클릭 이후 그룹 대화를 만들 수 있는 input 박스가 활성화된다.</font><br />
+<font size=2>해당 변수는 물론 전역 변수로 관리된다.</font><br /><br />
+
+<font size=2>7. 개인 채팅과 동일하게 그룹 채팅을 클릭하면 실행되는 함수이다.</font><br />
+<font size=2>개인 채팅과는 다르게 그룹 채팅이다 보니 대화하는 상대를 ','로 구분지어 문자열로 관리한다.</font><br />
+<font size=2>그룹 채팅의 방 번호는 ','를 이용한 문자열로 관리되기 때문에 서버에서 해당 문자를 ','로 잘라서 배열로 관리한다.</font><br />
+<font size=2>하나씩 순회하면서 그룹 채팅 참가자들에게 초대장을 전송한다.</font><br /><br />
+
+### SideBar.style.js (310p)
+
+```
+import { css } from "@emotion/react";
+
+export const navBarWrapCss = css`
+  height: 100%;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  background-color: #4a154b;
+`;
+export const titleCss = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  padding: 0 20px;
+  height: 50px;
+  border-bottom: 1px solid rgba(234, 234, 234, 0.2);
+`;
+export const directMsgCss = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #cecece;
+  font-size: 14px;
+  padding: 7px 20px 7px 14px;
+  cursor: pointer;
+  &: hover {
+    background-color: rgba(234, 234, 234, 0.2);
+  }
+`;
+export const userListCss = css`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+`;
+```
+
+<font size=2>끝으로 작성한 컴포넌트를 쉽게 불러올 수 있도록 componentsㅍ 폴더에 index.js를 작성한다.</font><br />
+
+```
+export { default as SideBar } from "./layout/sideBar/SideBar";
+export { default as User } from "./user/User";
+export { default as ChatRoom } from "./layout/chatRoom/ChatRoom";
+export { default as TextEditor } from "./textEditor/TextEditor";
+export { default as GroupTextInput } from "./groupTextInput/GroupTextInput";
+```
+
+### App.js (311p)
+
+<font size=2>마지막으로 App.js에 라우팅을 설정한다.</font><br />
+<font size=2>라우팅은 단순하게 로그인 페이지와 채팅을 하는 메인 페이지이다.</font><br />
+
+```
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { IndexContainer, MainContainer } from "./containers";
+import { StoreProvider } from "./context";
+
+const App = () => {
+  return (
+    <StoreProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<IndexContainer />}/>
+          <Route path="/main" element={<MainContainer />} />
+        </Routes>
+      </Router>
+    </StoreProvider>
+  );
+}
+
+export default App;
+```
