@@ -22,9 +22,10 @@
 
 ### 프로젝트 초기 설정 (322p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>socketjs라는 프로젝트 폴더를 생성하고 그 아래에 server와 client 폴더를 만든다.</font><br />
+<font size=2>client 폴더 생성은 CRA를 이용한다.</font><br /><br />
+
+<font size=2>다음으로 server 폴더로 이동해서 npm 프로젝트를 설정하고 server.js 파일을 생성한다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
