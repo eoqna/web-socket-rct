@@ -15,9 +15,9 @@
 
 ### mongoDB 환경 구성 (339p)
 
-<font size=2></font><br />
-<font size=2></font><br />
-<font size=2></font><br />
+<font size=2>mongoDB를 사용하기 위해서는 회원가입을 해야한다.</font><br />
+<font size=2>먼저 mongoDB 사이트(https://www.mongodb.com/)로 접속한다.</font><br />
+<font size=2>사이트에서 화면 상단의 [sign-up]을 클릭해서 회원가입을 진행한다.</font><br />
 <font size=2></font><br />
 <font size=2></font><br />
 <font size=2></font><br />
